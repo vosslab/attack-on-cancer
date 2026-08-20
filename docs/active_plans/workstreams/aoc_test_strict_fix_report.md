@@ -15,5 +15,5 @@ Playwright strict mode despite correct UI behavior.
 
 - PASS: `npx tsc --noEmit -p tsconfig.json`
 - PASS: `bash run_playwright_tests.sh --build tests/playwright/game.spec.ts`
-  outside the browser sandbox — 3 passed, including the corrected Inspect
+  outside the browser sandbox - 3 passed, including the corrected Inspect
   assertion.

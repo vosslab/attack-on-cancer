@@ -11,6 +11,7 @@
 - Tightened Challenge to 260 starting TP and 7 allowed metastases for a sharper resource constraint.
 - Added a persisted 4x simulation speed control for fast wave cleanup.
 - Increased Challenge wave groups by 40 percent while retaining their fixed enemy composition.
+- Refreshed the README landing page with a newcomer quick start, project promise, and documentation map.
 
 ### Decisions and Failures
 
