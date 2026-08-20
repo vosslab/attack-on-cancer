@@ -1,0 +1,532 @@
+:root {
+  color: #173858;
+  background: #d9eef7;
+  font-family:
+    Avenir Next,
+    Avenir,
+    Arial,
+    sans-serif;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  min-width: 320px;
+}
+button {
+  border: 0;
+  border-radius: 10px;
+  background: #eaf4fb;
+  color: #173858;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  padding: 0.6rem 0.8rem;
+}
+button:hover:not(:disabled),
+button.active {
+  background: #1764a7;
+  color: #fff;
+}
+button:focus-visible {
+  outline: 3px solid #f3ad2d;
+  outline-offset: 2px;
+}
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+.game-shell {
+  background: #f9fcff;
+  box-shadow: 0 12px 44px #2c668544;
+  margin: auto;
+  max-width: 1500px;
+  min-height: 100svh;
+  padding: clamp(0.8rem, 2vw, 1.6rem);
+  position: relative;
+}
+.top-bar {
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+h1,
+h2,
+p {
+  margin: 0;
+}
+h1 {
+  color: #12335d;
+  font-size: clamp(1.5rem, 3vw, 2.4rem);
+  letter-spacing: -0.05em;
+}
+.eyebrow {
+  color: #bd5270;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.hud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  justify-content: center;
+}
+.hud span {
+  background: #f2f8fb;
+  border: 1px solid #c9deeb;
+  border-radius: 99px;
+  padding: 0.4rem 0.65rem;
+  white-space: nowrap;
+}
+.hud b {
+  color: #bd5270;
+}
+.settings-button {
+  background: #e8e1f3;
+}
+.difficulty-row {
+  display: flex;
+  gap: 0.45rem;
+  margin: 1rem 0;
+  overflow-x: auto;
+}
+.difficulty-row button {
+  border: 1px solid #c9deeb;
+  text-align: left;
+  white-space: nowrap;
+}
+.difficulty-row small {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 500;
+  margin-top: 0.2rem;
+}
+.battle-area {
+  aspect-ratio: 16 / 10;
+  border: 5px solid #173858;
+  border-radius: 25px;
+  margin-inline: auto;
+  max-height: min(62svh, 680px);
+  overflow: hidden;
+  position: relative;
+}
+.playfield {
+  display: block;
+  height: 100%;
+  touch-action: none;
+  width: 100%;
+}
+.playfield text {
+  fill: #173858;
+  font-size: 13px;
+  font-weight: 800;
+  pointer-events: none;
+}
+.route-flow {
+  animation: circulation 1.25s linear infinite;
+}
+.tumor-source {
+  animation: tumor-breathe 2.8s ease-in-out infinite;
+  transform-origin: 52px 324px;
+}
+.blood-exit {
+  animation: vessel-pulse 2.1s ease-in-out infinite;
+  transform-origin: 919px 246px;
+}
+.tissue-cell {
+  animation: tissue-drift 7s ease-in-out infinite;
+  transform-origin: center;
+}
+.tissue-cell-2 {
+  animation-delay: -1.8s;
+}
+.tissue-cell-3 {
+  animation-delay: -3.7s;
+}
+.tissue-cell-4 {
+  animation-delay: -5.2s;
+}
+.tower {
+  cursor: pointer;
+}
+.tower-aura {
+  animation: tower-scan 2.4s ease-out infinite;
+  transform-origin: center;
+}
+.tower-t_cell .tower-aura {
+  animation-duration: 1.35s;
+}
+.tower-radiation .tower-aura {
+  animation-duration: 3.2s;
+}
+.enemy-body {
+  animation: cell-wiggle 0.48s ease-in-out infinite alternate;
+  transform-origin: center;
+}
+.enemy-fast .enemy-body {
+  animation-duration: 0.28s;
+}
+.enemy-tough .enemy-body {
+  animation-duration: 0.8s;
+}
+.marked-halo {
+  animation: mark-orbit 1.1s linear infinite;
+  transform-origin: center;
+}
+.tower text {
+  fill: #fff;
+  font-size: 10px;
+}
+.enemy {
+  transition: transform 0.08s linear;
+}
+.placement-ghost {
+  animation: placement-pulse 1.1s ease-in-out infinite;
+}
+.attack-effect {
+  animation: attack-flash 0.22s ease-out both;
+  transform-origin: center;
+}
+.attack-effect line {
+  stroke-linecap: round;
+  stroke-width: 6;
+}
+.attack-doctor line {
+  stroke: #3178c6;
+  stroke-dasharray: 3 5;
+  stroke-width: 3;
+}
+.attack-doctor path {
+  fill: #e9f8ff;
+  stroke: #3178c6;
+  stroke-width: 3;
+}
+.attack-chemotherapy circle {
+  animation: chemo-burst 0.32s ease-out both;
+  fill: #c977e9aa;
+  stroke: #8134a3;
+  stroke-width: 3;
+}
+.attack-t_cell line {
+  stroke: #e5534b;
+  stroke-dasharray: 9 7;
+  stroke-width: 4;
+}
+.attack-t_cell path {
+  fill: none;
+  stroke: #ffb3a9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 4;
+}
+.attack-radiation line {
+  filter: drop-shadow(0 0 7px #ec9c27);
+  stroke: #f7bd4a;
+  stroke-width: 13;
+}
+.attack-radiation .radiation-core {
+  filter: none;
+  stroke: #fff5c6;
+  stroke-width: 3;
+}
+.attack-radiation rect {
+  animation: radiation-lock 0.22s ease-out both;
+  fill: #ec9c2744;
+  stroke: #fff1a9;
+  stroke-width: 3;
+}
+.attack-antibody line {
+  stroke: #18a890;
+  stroke-dasharray: 3 7;
+  stroke-width: 3;
+}
+.attack-antibody circle {
+  fill: #bff9e8;
+  stroke: #18a890;
+  stroke-width: 3;
+}
+.attack-antibody circle:last-child {
+  animation: antibody-ring 0.38s ease-out both;
+  fill: none;
+}
+.terminal-overlay {
+  align-items: center;
+  background: #102f5de8;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  inset: 0;
+  justify-content: center;
+  padding: 1rem;
+  position: absolute;
+  text-align: center;
+}
+.terminal-overlay h2 {
+  font-size: clamp(1.8rem, 5vw, 3.5rem);
+  letter-spacing: 0.03em;
+}
+.terminal-overlay p {
+  margin: 0.7rem 0 1rem;
+}
+.terminal-overlay button {
+  background: #f3ad2d;
+  color: #173858;
+}
+.controls-panel {
+  border-bottom: 1px solid #d2e2eb;
+  padding: 0.85rem 0;
+}
+.wave-controls,
+.treatment-tray {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+.wave-controls span {
+  color: #62778a;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-left: auto;
+}
+.wave-controls button:first-child {
+  background: #c54267;
+  color: #fff;
+}
+.treatment-tray {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  margin-top: 0.65rem;
+}
+.treatment-tray button {
+  border: 1px solid #c9deeb;
+  min-height: 58px;
+  padding: 0.45rem;
+  text-align: left;
+}
+.treatment-tray b,
+.treatment-tray span,
+.treatment-tray em {
+  display: block;
+}
+.treatment-tray span {
+  color: #bd5270;
+  font-size: 0.78rem;
+  margin-top: 0.2rem;
+}
+.treatment-tray em {
+  color: #62778a;
+  font-size: 0.68rem;
+  font-style: normal;
+  font-weight: 600;
+  margin-top: 0.15rem;
+}
+.treatment-tray button.active span,
+.treatment-tray button:hover span,
+.treatment-tray button.active em,
+.treatment-tray button:hover em {
+  color: #fff;
+}
+.tower-card,
+.inspect,
+.settings-popover {
+  background: #f0f7fb;
+  border: 1px solid #c9deeb;
+  border-radius: 14px;
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+}
+.tower-card {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+.tower-card h2 {
+  font-size: 1rem;
+}
+.tower-card p {
+  flex: 1 1 230px;
+  font-size: 0.9rem;
+}
+.tower-card button:last-child {
+  background: #f8d8d8;
+  color: #812b42;
+}
+.inspect p {
+  font-size: 0.9rem;
+  margin-top: 0.55rem;
+}
+.settings-popover {
+  background: #fff;
+  box-shadow: 0 8px 24px #17385833;
+  position: absolute;
+  right: 1.6rem;
+  top: 5rem;
+  width: min(310px, calc(100% - 2rem));
+  z-index: 5;
+}
+.settings-popover label {
+  display: block;
+  font-weight: 700;
+  margin: 0.7rem 0;
+}
+.settings-popover input {
+  margin-right: 0.45rem;
+}
+.settings-popover p,
+footer {
+  color: #62778a;
+  font-size: 0.8rem;
+}
+footer {
+  margin: 0.85rem 0 0.2rem;
+  text-align: center;
+}
+@media (min-width: 900px) and (min-aspect-ratio: 8 / 5) {
+  .game-shell {
+    max-width: min(1500px, calc(100svh * 1.72));
+    padding-block: clamp(0.65rem, 1.5svh, 1.2rem);
+  }
+  .difficulty-row {
+    margin-block: 0.65rem;
+  }
+  .controls-panel {
+    padding-block: 0.65rem;
+  }
+  .battle-area {
+    max-height: min(58svh, 670px);
+  }
+  footer {
+    margin-top: 0.55rem;
+  }
+}
+@media (max-width: 720px) {
+  .battle-area {
+    aspect-ratio: 16 / 10;
+    max-height: none;
+  }
+  .top-bar {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .settings-button {
+    margin-left: auto;
+  }
+  .hud {
+    justify-content: flex-start;
+    order: 3;
+    width: 100%;
+  }
+  .treatment-tray {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .treatment-tray button:last-child {
+    grid-column: span 2;
+  }
+  .wave-controls span {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+@keyframes circulation {
+  to {
+    stroke-dashoffset: -28px;
+  }
+}
+@keyframes tumor-breathe {
+  50% {
+    filter: drop-shadow(0 0 12px #d34c6a99);
+    transform: scale(1.06);
+  }
+}
+@keyframes vessel-pulse {
+  50% {
+    filter: drop-shadow(0 0 10px #d34c5d99);
+    transform: scale(1.035);
+  }
+}
+@keyframes tissue-drift {
+  50% {
+    transform: translateY(-7px) scale(1.04);
+  }
+}
+@keyframes tower-scan {
+  0% {
+    opacity: 0.7;
+    transform: scale(0.8);
+  }
+  75%,
+  100% {
+    opacity: 0;
+    transform: scale(1.45);
+  }
+}
+@keyframes cell-wiggle {
+  to {
+    transform: scale(1.08) rotate(3deg);
+  }
+}
+@keyframes mark-orbit {
+  to {
+    stroke-dashoffset: -20px;
+    transform: rotate(360deg);
+  }
+}
+@keyframes placement-pulse {
+  50% {
+    opacity: 0.68;
+  }
+}
+@keyframes attack-flash {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes chemo-burst {
+  from {
+    opacity: 1;
+    r: 10px;
+  }
+  to {
+    opacity: 0;
+    r: 54px;
+  }
+}
+@keyframes radiation-lock {
+  from {
+    opacity: 1;
+    transform: rotate(25deg) scale(0.3);
+  }
+  to {
+    opacity: 0;
+    transform: rotate(45deg) scale(1.5);
+  }
+}
+@keyframes antibody-ring {
+  from {
+    opacity: 1;
+    transform: scale(0.35);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.6);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -8,7 +8,7 @@
 # Contract:
 #   - Wipes dist/ from scratch.
 #   - Type-checks via 'tsc --noEmit -p tsconfig.json'.
-#   - Resolves the entry: src/main.ts preferred, src/init.ts legacy fallback.
+#   - Resolves the entry: src/main.tsx, src/main.ts, then src/init.ts.
 #     Aborts with an actionable error if neither exists.
 #   - Verifies src/index.html and src/style.css exist before copying;
 #     aborts with an actionable error if missing.
@@ -26,7 +26,9 @@ set -euo pipefail
 cd "$(git rev-parse --show-toplevel)"
 
 # Resolve entry point.
-if [ -f "src/main.ts" ]; then
+if [ -f "src/main.tsx" ]; then
+	ENTRY="src/main.tsx"
+elif [ -f "src/main.ts" ]; then
 	ENTRY="src/main.ts"
 elif [ -f "src/init.ts" ]; then
 	ENTRY="src/init.ts"
@@ -62,14 +64,7 @@ mkdir -p dist
 
 npx tsc --noEmit -p tsconfig.json
 
-npx esbuild "$ENTRY" \
-	--bundle \
-	--format=esm \
-	--target=es2020 \
-	--platform=browser \
-	--minify \
-	--sourcemap \
-	--outfile=dist/main.js
+node tools/build_solid.mjs "$ENTRY"
 
 cp src/index.html dist/index.html
 cp src/style.css dist/style.css
