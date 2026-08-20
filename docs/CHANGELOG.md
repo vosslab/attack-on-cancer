@@ -13,6 +13,7 @@
 - Increased Challenge wave groups by 40 percent while retaining their fixed enemy composition.
 - Added a beating Wave 15 Tumor Mass that sheds Basic cells as it travels and ruptures into fragments.
 - Strengthened Tumor Mass motion with rhythmic pulse, rotating vascular rings, shifting nodules, and shed cues.
+- Simplified Tumor Mass motion to one readable double heartbeat and an event-only shed cue.
 - Added the confirmed GitHub Pages play link to the README landing page.
 - Enabled sound by default for new players while retaining gesture-activated browser audio.
 - Refreshed the README landing page with a newcomer quick start, project promise, and documentation map.
