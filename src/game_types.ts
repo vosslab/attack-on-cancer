@@ -1,6 +1,6 @@
 export type DifficultyId = "practice" | "standard" | "challenge";
 export type TowerId = "doctor" | "chemotherapy" | "t_cell" | "radiation" | "antibody";
-export type EnemyId = "basic" | "fast" | "tough" | "dividing" | "immune_evasive";
+export type EnemyId = "basic" | "fast" | "tough" | "dividing" | "immune_evasive" | "tumor_mass";
 export type GameStatus = "briefing" | "playing" | "paused" | "won" | "lost";
 
 export interface Point {
@@ -58,6 +58,7 @@ export interface Enemy {
   health: number;
   pathDistance: number;
   markedUntil: number;
+  nextShedDistance?: number;
 }
 
 export interface Tower {

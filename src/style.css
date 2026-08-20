@@ -173,6 +173,46 @@ h1 {
 .enemy-tough .enemy-body {
   animation-duration: 0.8s;
 }
+.enemy-tumor_mass .enemy-body {
+  animation: tumor-mass-pulse 1.15s cubic-bezier(0.38, 0, 0.26, 1) infinite;
+  transform-origin: center;
+}
+.tumor-mass-shell {
+  animation: tumor-mass-shell 1.15s cubic-bezier(0.38, 0, 0.26, 1) infinite;
+  transform-origin: center;
+}
+.tumor-mass-vein {
+  transform-origin: center;
+}
+.tumor-mass-vein-a {
+  animation: tumor-mass-vein-a 2.4s linear infinite;
+}
+.tumor-mass-vein-b {
+  animation: tumor-mass-vein-b 1.6s linear infinite reverse;
+}
+.tumor-mass-nodule {
+  transform-origin: center;
+}
+.tumor-mass-nodule-a {
+  animation: tumor-mass-nodule 1.15s ease-in-out infinite;
+}
+.tumor-mass-nodule-b {
+  animation: tumor-mass-nodule 1.15s ease-in-out -0.38s infinite;
+}
+.tumor-mass-nodule-c {
+  animation: tumor-mass-nodule 1.15s ease-in-out -0.76s infinite;
+}
+.tumor-mass-shed-cue {
+  animation: tumor-mass-shed-cue 1.15s ease-in-out infinite;
+  opacity: 0.25;
+}
+.tumor-mass-shedding .tumor-mass-shed-cue {
+  animation: tumor-mass-shed 0.32s ease-out infinite;
+  opacity: 1;
+}
+.tumor-mass-shedding .tumor-mass-shell {
+  stroke: #fff0f6;
+}
 .marked-halo {
   animation: mark-orbit 1.1s linear infinite;
   transform-origin: center;
@@ -469,6 +509,76 @@ footer {
 @keyframes cell-wiggle {
   to {
     transform: scale(1.08) rotate(3deg);
+  }
+}
+@keyframes tumor-mass-pulse {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 3px #74254f66);
+    transform: scale(0.93);
+  }
+  30% {
+    filter: drop-shadow(0 0 15px #f081b4cc);
+    transform: scale(1.12);
+  }
+  52% {
+    transform: scale(0.98);
+  }
+  72% {
+    filter: drop-shadow(0 0 12px #f081b4aa);
+    transform: scale(1.08);
+  }
+}
+@keyframes tumor-mass-shell {
+  0%,
+  100% {
+    opacity: 0.28;
+    transform: scale(0.86);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+  72% {
+    opacity: 0.7;
+    transform: scale(1.08);
+  }
+}
+@keyframes tumor-mass-vein-a {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes tumor-mass-vein-b {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes tumor-mass-nodule {
+  30% {
+    transform: scale(1.45);
+  }
+  72% {
+    transform: scale(1.22);
+  }
+}
+@keyframes tumor-mass-shed-cue {
+  30% {
+    opacity: 0.75;
+    transform: translateX(-5px);
+  }
+  72% {
+    opacity: 0.4;
+  }
+}
+@keyframes tumor-mass-shed {
+  from {
+    stroke-dasharray: 3 6;
+    transform: translateX(0);
+  }
+  to {
+    stroke-dasharray: 12 4;
+    transform: translateX(-16px);
   }
 }
 @keyframes mark-orbit {

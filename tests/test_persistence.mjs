@@ -29,7 +29,7 @@ test("settings loading accepts only the versioned save boundary", () => {
   const missing = createStorage(null);
   assert.deepEqual(loadSettings(missing), {
     version: 1,
-    soundEnabled: false,
+    soundEnabled: true,
     preferredSpeed: 1,
     bestResults: {},
   });

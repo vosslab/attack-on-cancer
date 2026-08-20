@@ -155,6 +155,15 @@ export const ENEMIES: Record<EnemyId, EnemyConfig> = {
     color: "#5666d9",
     description: "Resists T Cell damage until antibody-marked.",
   },
+  tumor_mass: {
+    name: "Tumor Mass",
+    health: 1050,
+    speed: 20,
+    reward: 230,
+    color: "#74254f",
+    description:
+      "A MOAB-inspired tumor mass. It ruptures into six Basic and four Tough cells when destroyed.",
+  },
 };
 
 export const WAVES: readonly (readonly WaveEntry[])[] = [
@@ -211,5 +220,6 @@ export const WAVES: readonly (readonly WaveEntry[])[] = [
     { type: "tough", count: 8, gap: 0.48 },
     { type: "dividing", count: 10, gap: 0.36 },
     { type: "immune_evasive", count: 12, gap: 0.34 },
+    { type: "tumor_mass", count: 1, gap: 0.5 },
   ],
 ] as const;

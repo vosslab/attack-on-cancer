@@ -8,7 +8,7 @@ export interface SettingsUpdate {
   bestResults?: Partial<Record<DifficultyId, number>>;
 }
 
-const DEFAULT_SOUND_ENABLED = false;
+const DEFAULT_SOUND_ENABLED = true;
 const DEFAULT_PREFERRED_SPEED = 1;
 
 function createDefaultSettings(): SettingsSave {

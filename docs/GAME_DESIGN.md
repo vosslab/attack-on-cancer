@@ -46,21 +46,24 @@ configuration tables so balance changes do not alter simulation rules.
 
 ## Cancer cells
 
-| Cell type      | Identity                                           | First wave |
-| -------------- | -------------------------------------------------- | ---------: |
-| Basic          | Standard low-health cell.                          |          1 |
-| Fast           | Low-health, high-speed cell.                       |          4 |
-| Tough          | Slow, high-health cell.                            |          5 |
-| Dividing       | Releases two Basic cells at its destruction point. |          7 |
-| Immune-Evasive | Takes half T Cell damage until antibody-marked.    |         10 |
+| Cell type      | Identity                                                                 | First wave |
+| -------------- | ------------------------------------------------------------------------ | ---------: |
+| Basic          | Standard low-health cell.                                                |          1 |
+| Fast           | Low-health, high-speed cell.                                             |          4 |
+| Tough          | Slow, high-health cell.                                                  |          5 |
+| Dividing       | Releases two Basic cells at its destruction point.                       |          7 |
+| Immune-Evasive | Takes half T Cell damage until antibody-marked.                          |         10 |
+| Tumor Mass     | Slow MOAB-inspired capstone that sheds cells and ruptures into ten more. |         15 |
 
 Cells stay on the fixed path from the primary tumor source to the blood-vessel
-exit. A destroyed cell awards configured TP. No v1 enemy is a boss.
+exit. A destroyed cell awards configured TP. The Tumor Mass is the v1 capstone boss.
 
 ## Waves and outcomes
 
 The level has 15 fixed waves. Early waves teach Basic cells; later waves
-introduce each new type and progressively mix them. Wave 15 combines every type.
+introduce each new type and progressively mix them. Wave 15 combines every type and ends with one
+Tumor Mass. It beats as it travels, shedding Basic cells along the route, then ruptures into six
+Basic and four Tough cells when destroyed.
 
 - `CANCER CONTAINED`: Wave 15 is clear and no cells remain.
 - `CANCER HAS METASTASIZED`: Escapes reach the selected capacity.
@@ -72,7 +75,7 @@ introduce each new type and progressively mix them. Wave 15 combines every type.
 - Players can pause, choose 1x or 2x speed, sell treatments, and inspect actors.
 - Pointer, touch, and keyboard placement provide equivalent core actions.
 - The inspect panel is collapsed by default and contains optional descriptions.
-- Sound starts off by default; reduced-motion presentation remains readable.
+- Sound starts on by default; reduced-motion presentation remains readable.
 
 ## Persistence
 
@@ -84,7 +87,7 @@ preferred speed, and the best result per difficulty. A refresh begins a new run.
 V1 ships one strong level rather than a partial campaign. It does not include:
 
 - Additional maps, branching paths, campaign progression, or metastatic side maps.
-- Bosses, Tumor Clusters, or in-progress run saves.
+- Additional bosses, Tumor Clusters, or in-progress run saves.
 - NK Cells, Cancer Vaccine, Oncolytic Virus, Surgery, CAR-T, or Proton Therapy.
 - Mutation, biomarkers, receptor matching, clinical decision-making, or outcomes.
 - Accounts, analytics, backend services, routing, external art assets, or mandatory audio.

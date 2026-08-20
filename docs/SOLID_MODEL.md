@@ -48,7 +48,8 @@ or unknown data falls back to safe defaults. A game run is never restored.
 
 ## Sound feedback
 
-Sound uses the browser Web Audio API only after the player enables it. Short
-semantic cues distinguish placement, waves, each treatment attack, victory,
-and defeat. The game never creates or resumes an audio context while sound is
-off, and it rate-limits rapid treatment sounds so busy waves remain readable.
+Sound is enabled by default, but the browser Web Audio API still waits for the
+player's first sound-enabled interaction. Short semantic cues distinguish
+placement, waves, each treatment attack, victory, and defeat. The game never
+creates or resumes an audio context while sound is off, and it rate-limits rapid
+treatment sounds so busy waves remain readable.

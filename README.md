@@ -6,6 +6,8 @@ Tissue route with readable cancer treatments rather than memorize biology facts.
 **Status:** playable v1 vertical slice. It builds as a static GitHub Pages site with no account,
 backend, analytics, or external art assets.
 
+**Play online:** [vosslab.github.io/attack-on-cancer](https://vosslab.github.io/attack-on-cancer/)
+
 ## One path, five treatments
 
 The signature promise is a complete tower-defense loop with biology as optional flavor: cartoon
@@ -53,6 +55,7 @@ earn Treatment Points (TP); every cell reaching the blood-vessel exit adds one m
 - Reaching the selected metastasis capacity ends the run.
 - Select a placed treatment to upgrade its three linear tiers or sell it.
 - Open the optional inspect panel for concise biology flavor about a selected treatment or cell.
+- Face the Wave 15 Tumor Mass: a beating capstone that sheds cells while moving and ruptures when destroyed.
 
 > Example: Antibody Therapy marks a blue Immune-Evasive cell. Its teal ring means the cell slows,
 > takes more damage, and no longer resists a Cytotoxic T Cell attack.

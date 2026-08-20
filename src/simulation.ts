@@ -260,7 +260,8 @@ function makeWaveSpawns(
   const pendingSpawns: Array<{ type: EnemyId; at: number }> = [];
   let scheduledAt = startTime;
   for (const entry of wave) {
-    const multiplier = difficulty === "challenge" ? CHALLENGE_WAVE_MULTIPLIER : 1;
+    const multiplier =
+      difficulty === "challenge" && entry.type !== "tumor_mass" ? CHALLENGE_WAVE_MULTIPLIER : 1;
     const spawnCount = Math.ceil(entry.count * multiplier);
     for (let count = 0; count < spawnCount; count += 1) {
       pendingSpawns.push({ type: entry.type, at: scheduledAt });
@@ -414,6 +415,7 @@ function spawnReadyEnemies(state: GameState, time: number): GameState {
       health: ENEMIES[spawn.type].health,
       pathDistance: 0,
       markedUntil: 0,
+      nextShedDistance: spawn.type === "tumor_mass" ? 105 : undefined,
     };
     nextEnemyId += 1;
     return enemy;
@@ -437,6 +439,32 @@ function moveEnemies(enemies: readonly Enemy[], deltaSeconds: number, time: numb
     return movedEnemy;
   });
   return movedEnemies;
+}
+
+function shedTumorMassCells(state: GameState): GameState {
+  let nextEnemyId = state.nextEnemyId;
+  const shedCells: Enemy[] = [];
+  const enemies = state.enemies.map((enemy) => {
+    if (enemy.type !== "tumor_mass" || enemy.health <= 0) return enemy;
+    const nextShedDistance = enemy.nextShedDistance ?? 105;
+    if (enemy.pathDistance < nextShedDistance) return enemy;
+    shedCells.push({
+      id: nextEnemyId,
+      type: "basic",
+      health: ENEMIES.basic.health,
+      pathDistance: Math.max(0, enemy.pathDistance - 18),
+      markedUntil: 0,
+    });
+    nextEnemyId += 1;
+    return {
+      ...enemy,
+      health: enemy.health - 42,
+      nextShedDistance: nextShedDistance + 105,
+    };
+  });
+  return shedCells.length === 0
+    ? state
+    : { ...state, enemies: [...enemies, ...shedCells], nextEnemyId };
 }
 
 function removeEscapedEnemies(state: GameState): GameState {
@@ -468,6 +496,30 @@ function resolveDestroyedEnemies(state: GameState): GameState {
           id: nextEnemyId,
           type: "basic",
           health: ENEMIES.basic.health,
+          pathDistance: enemy.pathDistance,
+          markedUntil: 0,
+        });
+        nextEnemyId += 1;
+      }
+    }
+    if (enemy.type === "tumor_mass") {
+      const fragments: readonly EnemyId[] = [
+        "basic",
+        "basic",
+        "basic",
+        "basic",
+        "basic",
+        "basic",
+        "tough",
+        "tough",
+        "tough",
+        "tough",
+      ];
+      for (const type of fragments) {
+        children.push({
+          id: nextEnemyId,
+          type,
+          health: ENEMIES[type].health,
           pathDistance: enemy.pathDistance,
           markedUntil: 0,
         });
@@ -526,6 +578,7 @@ export function tickGame(state: GameState, deltaSeconds: number): GameState {
   let nextState: GameState = { ...state, time };
   nextState = spawnReadyEnemies(nextState, time);
   nextState = { ...nextState, enemies: moveEnemies(nextState.enemies, elapsed, time) };
+  nextState = shedTumorMassCells(nextState);
   nextState = removeEscapedEnemies(nextState);
   if (nextState.status === "lost") {
     return nextState;

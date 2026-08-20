@@ -11,6 +11,10 @@
 - Tightened Challenge to 260 starting TP and 7 allowed metastases for a sharper resource constraint.
 - Added a persisted 4x simulation speed control for fast wave cleanup.
 - Increased Challenge wave groups by 40 percent while retaining their fixed enemy composition.
+- Added a beating Wave 15 Tumor Mass that sheds Basic cells as it travels and ruptures into fragments.
+- Strengthened Tumor Mass motion with rhythmic pulse, rotating vascular rings, shifting nodules, and shed cues.
+- Added the confirmed GitHub Pages play link to the README landing page.
+- Enabled sound by default for new players while retaining gesture-activated browser audio.
 - Refreshed the README landing page with a newcomer quick start, project promise, and documentation map.
 
 ### Decisions and Failures

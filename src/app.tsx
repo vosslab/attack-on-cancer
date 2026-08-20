@@ -169,7 +169,10 @@ export function App(): JSX.Element {
 
   function beginWave(): void {
     setGame((current) => startWave(current));
-    if (soundEnabled()) playUiSound("wave");
+    if (soundEnabled()) {
+      activateAudio();
+      playUiSound("wave");
+    }
   }
 
   function pauseGame(): void {
@@ -198,7 +201,10 @@ export function App(): JSX.Element {
     setGame((current) => placeTower(current, treatment, position));
     if (validPlacement) {
       setUi({ selectedTreatment: undefined });
-      if (soundEnabled()) playUiSound("place");
+      if (soundEnabled()) {
+        activateAudio();
+        playUiSound("place");
+      }
     }
   }
 
@@ -504,16 +510,23 @@ export function App(): JSX.Element {
             {(enemy) => {
               const position = enemyPosition(enemy);
               const maximum = ENEMIES[enemy.type].health;
-              const healthWidth = Math.max(0, (28 * enemy.health) / maximum);
+              const isTumorMass = enemy.type === "tumor_mass";
+              const radius = isTumorMass ? 35 : 15;
+              const healthBarWidth = isTumorMass ? 62 : 28;
+              const healthWidth = Math.max(0, (healthBarWidth * enemy.health) / maximum);
+              const sheddingSoon =
+                isTumorMass &&
+                (enemy.nextShedDistance ?? Number.POSITIVE_INFINITY) - enemy.pathDistance < 26;
               return (
                 <g
                   class={`enemy enemy-${enemy.type}`}
+                  classList={{ "tumor-mass-shedding": sheddingSoon }}
                   transform={`translate(${position.x} ${position.y})`}
                   onClick={(event) => pickEnemy(event, enemy)}
                 >
                   <circle
                     class="enemy-body"
-                    r="15"
+                    r={radius}
                     fill={ENEMIES[enemy.type].color}
                     stroke={enemy.markedUntil > game().time ? "#17a88e" : "#692d50"}
                     stroke-width="3"
@@ -527,10 +540,76 @@ export function App(): JSX.Element {
                       stroke-width="2"
                     />
                   </Show>
+                  <Show when={isTumorMass}>
+                    <circle
+                      class="tumor-mass-shell"
+                      r="31"
+                      fill="none"
+                      stroke="#f0aac6"
+                      stroke-width="3"
+                    />
+                    <circle
+                      class="tumor-mass-vein tumor-mass-vein-a"
+                      r="23"
+                      fill="none"
+                      stroke="#d98cae"
+                      stroke-width="5"
+                    />
+                    <circle
+                      class="tumor-mass-vein tumor-mass-vein-b"
+                      r="17"
+                      fill="none"
+                      stroke="#b84c7e"
+                      stroke-width="3"
+                      stroke-dasharray="7 6"
+                    />
+                    <circle
+                      class="tumor-mass-nodule tumor-mass-nodule-a"
+                      cx="-13"
+                      cy="11"
+                      r="6"
+                      fill="#a94d79"
+                    />
+                    <circle
+                      class="tumor-mass-nodule tumor-mass-nodule-b"
+                      cx="14"
+                      cy="-12"
+                      r="7"
+                      fill="#a94d79"
+                    />
+                    <circle
+                      class="tumor-mass-nodule tumor-mass-nodule-c"
+                      cx="4"
+                      cy="18"
+                      r="4"
+                      fill="#e189ae"
+                    />
+                    <path
+                      class="tumor-mass-shed-cue"
+                      d="M-44 5 C-58 13 -58 29 -43 34"
+                      fill="none"
+                      stroke="#f3b0ca"
+                      stroke-width="3"
+                    />
+                  </Show>
                   <circle cx="-5" cy="-3" r="2" fill="#fff" />
                   <circle cx="5" cy="-3" r="2" fill="#fff" />
-                  <rect x="-14" y="-24" width="28" height="5" rx="2" fill="#67314b" />
-                  <rect x="-14" y="-24" width={healthWidth} height="5" rx="2" fill="#86d35b" />
+                  <rect
+                    x={-healthBarWidth / 2}
+                    y={-radius - 13}
+                    width={healthBarWidth}
+                    height="6"
+                    rx="2"
+                    fill="#67314b"
+                  />
+                  <rect
+                    x={-healthBarWidth / 2}
+                    y={-radius - 13}
+                    width={healthWidth}
+                    height="6"
+                    rx="2"
+                    fill="#86d35b"
+                  />
                 </g>
               );
             }}
@@ -692,7 +771,7 @@ export function App(): JSX.Element {
             />{" "}
             Sound feedback
           </label>
-          <p>Sound starts off. Preferred speed and sound are remembered; runs are not.</p>
+          <p>Sound starts on. Preferred speed and sound are remembered; runs are not.</p>
         </aside>
       </Show>
       <footer>
