@@ -1,7 +1,14 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { DIFFICULTIES, ENEMIES, TOWERS, UPGRADES, WAVES } from "../src/config.ts";
+import {
+  DIFFICULTIES,
+  ENEMIES,
+  SCENE_ONE_WAVE_COUNT,
+  TOWERS,
+  UPGRADES,
+  WAVES,
+} from "../src/config.ts";
 import {
   canStartWave,
   createGameState,
@@ -9,6 +16,7 @@ import {
   getPathPosition,
   getSellValue,
   placeTower,
+  startClusterScene,
   startWave,
   tickGame,
   upgradeTower,
@@ -17,12 +25,14 @@ import {
 
 test("path endpoints and first wave scheduling are deterministic", () => {
   const pathLength = getPathLength();
+  const clusterPathLength = getPathLength(2);
   const state = createGameState("practice");
   const started = startWave(state);
   const firstWaveCells = WAVES[0].reduce((total, entry) => total + entry.count, 0);
 
   assert.equal(getPathPosition(0).x, 52);
   assert.ok(Math.abs(getPathPosition(pathLength).x - 900) < 0.000001);
+  assert.ok(clusterPathLength > pathLength);
   assert.equal(started.status, "playing");
   assert.equal(started.wave, 1);
   assert.equal(started.pendingSpawns.length, firstWaveCells);
@@ -103,7 +113,7 @@ test("antibody marks remove immune-evasion resistance for a following T Cell att
   assert.equal(enemy.health, ENEMIES.immune_evasive.health - expectedDamage);
 });
 
-test("escapes cause immediate defeat at capacity and an empty final wave is victory", () => {
+test("escapes cause immediate defeat at capacity and an empty final scene wave is victory", () => {
   const initial = createGameState("practice");
   const losingState = {
     ...initial,
@@ -124,7 +134,28 @@ test("escapes cause immediate defeat at capacity and an empty final wave is vict
   assert.equal(lost.metastases, DIFFICULTIES.practice.metastasisCapacity);
   assert.equal(lost.enemies.length, 0);
 
-  const winningState = { ...initial, status: "playing", wave: WAVES.length };
+  const winningState = { ...initial, status: "playing", scene: 2, wave: WAVES.length };
   const won = tickGame(winningState, 0.01);
   assert.equal(won.status, "won");
+});
+
+test("clearing Skin Tissue opens Cluster Corridor with a fresh build field", () => {
+  const initial = createGameState("practice");
+  const clearedSkinTissue = {
+    ...initial,
+    status: "playing",
+    wave: SCENE_ONE_WAVE_COUNT,
+    tp: 700,
+    metastases: 3,
+  };
+
+  const intermission = tickGame(clearedSkinTissue, 0.01);
+  const cluster = startClusterScene(intermission);
+  assert.equal(intermission.status, "intermission");
+  assert.equal(cluster.scene, 2);
+  assert.equal(cluster.status, "briefing");
+  assert.equal(cluster.tp, 900);
+  assert.equal(cluster.metastases, 3);
+  assert.equal(cluster.towers.length, 0);
+  assert.equal(canStartWave(cluster), true);
 });

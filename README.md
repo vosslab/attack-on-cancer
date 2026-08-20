@@ -8,12 +8,12 @@ backend, analytics, or external art assets.
 
 **Play online:** [vosslab.github.io/attack-on-cancer](https://vosslab.github.io/attack-on-cancer/)
 
-## One path, five treatments
+## Two scenes, five treatments
 
 The signature promise is a complete tower-defense loop with biology as optional flavor: cartoon
 cells leave a primary tumor, travel toward a blood vessel, and make every targeting decision visible.
 
-- Protect one 16:10 Skin Tissue map through 15 manually started waves.
+- Clear 15 Skin Tissue waves, then rebuild for six much denser waves on the winding Cluster Corridor.
 - Read each treatment at a glance: syringe shot, area burst, immune strike, radiation beam, or
   antibody chain.
 - Use pointer, touch, or keyboard controls; pause or fast-forward at 1x, 2x, or 4x.
@@ -51,7 +51,9 @@ Doctor or T Cell on open tissue and select **Start Wave 1**.
 Choose a difficulty, place treatments on open tissue, and start waves when ready. Destroyed cells
 earn Treatment Points (TP); every cell reaching the blood-vessel exit adds one metastasis point.
 
-- Clear wave 15 and all remaining cells to contain the cancer.
+- Clear the first 15 waves to unlock the Cluster Corridor. Its multi-tumor source feeds a longer,
+  winding route and grants 200 TP for a fresh build.
+- Clear all 21 waves and remaining cells to contain the cancer.
 - Reaching the selected metastasis capacity ends the run.
 - Select a placed treatment to upgrade its three linear tiers or sell it.
 - Open the optional inspect panel for concise biology flavor about a selected treatment or cell.
@@ -86,15 +88,16 @@ earn Treatment Points (TP); every cell reaching the blood-vessel exit adds one m
 
 | Difficulty | Starting TP | Metastasis capacity |
 | ---------- | ----------: | ------------------: |
-| Practice   |         650 |                  20 |
-| Standard   |         500 |                  15 |
-| Challenge  |         260 |                   7 |
+| Practice   |         500 |                  20 |
+| Standard   |         380 |                  15 |
+| Challenge  |         200 |                   7 |
 
 Each refresh starts a new run. Sound preference, preferred speed, and the best result per difficulty
 are the only saved settings.
 
 Challenge also sends 40% more cancer cells in every wave group. Practice and Standard use the
-published fixed wave counts.
+published fixed wave counts. All cell rewards and tower sale refunds are intentionally lean, so
+each new placement remains a decision instead of an automatic purchase.
 
 ## More information
 
@@ -105,7 +108,8 @@ published fixed wave counts.
 
 ## Scope and license
 
-This v1 ships one polished map, not a partial campaign. It intentionally excludes clinical
-decision-making, patient outcomes, accounts, backend services, bosses, and additional maps.
+This v1 ships two connected scenes, not a partial campaign. It intentionally excludes clinical
+decision-making, patient outcomes, accounts, backend services, and additional maps beyond the
+Cluster Corridor.
 
 The project is available under the [MIT License](LICENSE.MIT.md).

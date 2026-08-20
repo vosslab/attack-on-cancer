@@ -1,7 +1,8 @@
 export type DifficultyId = "practice" | "standard" | "challenge";
 export type TowerId = "doctor" | "chemotherapy" | "t_cell" | "radiation" | "antibody";
 export type EnemyId = "basic" | "fast" | "tough" | "dividing" | "immune_evasive" | "tumor_mass";
-export type GameStatus = "briefing" | "playing" | "paused" | "won" | "lost";
+export type GameStatus = "briefing" | "playing" | "paused" | "intermission" | "won" | "lost";
+export type SceneId = 1 | 2;
 
 export interface Point {
   x: number;
@@ -73,6 +74,7 @@ export interface Tower {
 
 export interface GameState {
   status: GameStatus;
+  scene: SceneId;
   difficulty: DifficultyId;
   tp: number;
   metastases: number;

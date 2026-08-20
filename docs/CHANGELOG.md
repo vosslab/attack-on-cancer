@@ -15,6 +15,10 @@
 - Strengthened Tumor Mass motion with rhythmic pulse, rotating vascular rings, shifting nodules, and shed cues.
 - Simplified Tumor Mass motion to one readable double heartbeat and an event-only shed cue.
 - Added the confirmed GitHub Pages play link to the README landing page.
+- Added the Cluster Corridor second scene: a multi-tumor source, longer winding route, clean
+  rebuild field, 200 TP grant, and six high-density waves after Skin Tissue wave 15.
+- Tightened the economy: lower opening TP, smaller cell rewards, 55% sale refunds, and a 200 TP
+  Cluster Corridor field grant make each treatment purchase matter.
 - Enabled sound by default for new players while retaining gesture-activated browser audio.
 - Refreshed the README landing page with a newcomer quick start, project promise, and documentation map.
 

@@ -4,9 +4,10 @@ import { createStore } from "solid-js/store";
 import {
   DIFFICULTIES,
   ENEMIES,
-  PATH,
+  getScenePath,
   PLAYFIELD_HEIGHT,
   PLAYFIELD_WIDTH,
+  SCENE_ONE_WAVE_COUNT,
   TOWERS,
   UPGRADES,
   WAVES,
@@ -24,6 +25,7 @@ import {
   getUpgradeCost,
   placeTower,
   sellTower,
+  startClusterScene,
   startWave,
   tickGame,
   togglePause,
@@ -119,8 +121,8 @@ function AttackEffect(props: { tower: Tower }): JSX.Element {
   );
 }
 
-function enemyPosition(enemy: Enemy): Point {
-  return getPathPosition(enemy.pathDistance);
+function enemyPosition(enemy: Enemy, scene: GameState["scene"]): Point {
+  return getPathPosition(enemy.pathDistance, scene);
 }
 
 export function App(): JSX.Element {
@@ -161,6 +163,12 @@ export function App(): JSX.Element {
   const pendingCount = createMemo<number>(
     () => game().pendingSpawns.length + game().enemies.length,
   );
+  const sceneWaveLimit = createMemo<number>(() =>
+    game().scene === 1 ? SCENE_ONE_WAVE_COUNT : WAVES.length,
+  );
+  const sceneTitle = createMemo<string>(() =>
+    game().scene === 1 ? "Skin Tissue" : "Cluster Corridor",
+  );
 
   function resetGame(difficulty: DifficultyId): void {
     setGame(createGameState(difficulty));
@@ -169,6 +177,15 @@ export function App(): JSX.Element {
 
   function beginWave(): void {
     setGame((current) => startWave(current));
+    if (soundEnabled()) {
+      activateAudio();
+      playUiSound("wave");
+    }
+  }
+
+  function enterClusterCorridor(): void {
+    setGame((current) => startClusterScene(current));
+    setUi({ selectedTreatment: undefined, selectedTowerId: undefined, selectedEnemyId: undefined });
     if (soundEnabled()) {
       activateAudio();
       playUiSound("wave");
@@ -358,7 +375,10 @@ export function App(): JSX.Element {
             <b>Metastases</b> {game().metastases}/{metastasisCapacity()}
           </span>
           <span>
-            <b>Wave</b> {game().wave}/{WAVES.length}
+            <b>Scene</b> {game().scene}: {sceneTitle()}
+          </span>
+          <span>
+            <b>Wave</b> {game().wave}/{sceneWaveLimit()}
           </span>
         </div>
         <button
@@ -429,7 +449,9 @@ export function App(): JSX.Element {
           </For>
           <path
             class="route-bed"
-            d={`M ${PATH.map((point) => `${point.x},${point.y}`).join(" L ")}`}
+            d={`M ${getScenePath(game().scene)
+              .map((point) => `${point.x},${point.y}`)
+              .join(" L ")}`}
             fill="none"
             stroke="#ffd5b6"
             stroke-width="52"
@@ -438,7 +460,9 @@ export function App(): JSX.Element {
           />
           <path
             class="route-flow"
-            d={`M ${PATH.map((point) => `${point.x},${point.y}`).join(" L ")}`}
+            d={`M ${getScenePath(game().scene)
+              .map((point) => `${point.x},${point.y}`)
+              .join(" L ")}`}
             fill="none"
             stroke="#ea8b6c"
             stroke-width="34"
@@ -446,14 +470,29 @@ export function App(): JSX.Element {
             stroke-linejoin="round"
             stroke-dasharray="6 8"
           />
-          <g class="tumor-source" aria-label="Primary tumor">
-            <circle cx="52" cy="324" r="40" fill="#c54267" />
-            <circle cx="45" cy="316" r="15" fill="#ef718c" />
-            <circle cx="67" cy="336" r="10" fill="#f69bb0" />
-            <text x="52" y="388" text-anchor="middle">
-              Primary tumor
-            </text>
-          </g>
+          <Show
+            when={game().scene === 1}
+            fallback={
+              <g class="cluster-source" aria-label="Multi-tumor cluster">
+                <circle class="cluster-node cluster-node-a" cx="45" cy="300" r="31" />
+                <circle class="cluster-node cluster-node-b" cx="72" cy="320" r="34" />
+                <circle class="cluster-node cluster-node-c" cx="45" cy="342" r="27" />
+                <circle cx="57" cy="320" r="17" fill="#ef718c" />
+                <text x="64" y="392" text-anchor="middle">
+                  Tumor cluster
+                </text>
+              </g>
+            }
+          >
+            <g class="tumor-source" aria-label="Primary tumor">
+              <circle cx="52" cy="324" r="40" fill="#c54267" />
+              <circle cx="45" cy="316" r="15" fill="#ef718c" />
+              <circle cx="67" cy="336" r="10" fill="#f69bb0" />
+              <text x="52" y="388" text-anchor="middle">
+                Primary tumor
+              </text>
+            </g>
+          </Show>
           <g class="blood-exit" aria-label="Blood vessel exit">
             <rect x="888" y="205" width="62" height="82" rx="28" fill="#d34c5d" />
             <path d="M900 218v55m16-55v55m16-55v55" stroke="#ffbec3" stroke-width="8" />
@@ -508,7 +547,7 @@ export function App(): JSX.Element {
           </For>
           <For each={game().enemies}>
             {(enemy) => {
-              const position = enemyPosition(enemy);
+              const position = enemyPosition(enemy, game().scene);
               const maximum = ENEMIES[enemy.type].health;
               const isTumorMass = enemy.type === "tumor_mass";
               const radius = isTumorMass ? 35 : 15;
@@ -637,17 +676,38 @@ export function App(): JSX.Element {
             )}
           </Show>
         </svg>
-        <Show when={game().status === "won" || game().status === "lost"}>
+        <Show
+          when={
+            game().status === "intermission" || game().status === "won" || game().status === "lost"
+          }
+        >
           <div class="terminal-overlay" role="alert">
-            <h2>{game().status === "won" ? "CANCER CONTAINED" : "CANCER HAS METASTASIZED"}</h2>
+            <h2>
+              {game().status === "intermission"
+                ? "SKIN TISSUE CONTAINED"
+                : game().status === "won"
+                  ? "CANCER CONTAINED"
+                  : "CANCER HAS METASTASIZED"}
+            </h2>
             <p>
-              {game().status === "won"
-                ? "All 15 waves are cleared."
-                : "The blood vessel has reached its metastasis capacity."}
+              {game().status === "intermission"
+                ? "A multi-tumor cluster is feeding a longer, winding corridor. Rebuild with a 200 TP field grant."
+                : game().status === "won"
+                  ? "All 21 waves are cleared, including the Cluster Corridor."
+                  : "The blood vessel has reached its metastasis capacity."}
             </p>
-            <button type="button" onClick={() => resetGame(game().difficulty)}>
-              New run
-            </button>
+            <Show
+              when={game().status === "intermission"}
+              fallback={
+                <button type="button" onClick={() => resetGame(game().difficulty)}>
+                  New run
+                </button>
+              }
+            >
+              <button type="button" onClick={enterClusterCorridor}>
+                Enter Cluster Corridor
+              </button>
+            </Show>
           </div>
         </Show>
       </section>

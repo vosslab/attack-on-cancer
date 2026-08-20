@@ -133,6 +133,27 @@ h1 {
   animation: tumor-breathe 2.8s ease-in-out infinite;
   transform-origin: 52px 324px;
 }
+.cluster-source {
+  filter: drop-shadow(0 0 8px #b83f7199);
+}
+.cluster-node {
+  fill: #b63867;
+  stroke: #78284d;
+  stroke-width: 3;
+  transform-origin: center;
+}
+.cluster-node-a {
+  animation: cluster-throb 1.3s ease-in-out infinite;
+  transform-origin: 45px 300px;
+}
+.cluster-node-b {
+  animation: cluster-throb 1.3s ease-in-out -0.32s infinite;
+  transform-origin: 72px 320px;
+}
+.cluster-node-c {
+  animation: cluster-throb 1.3s ease-in-out -0.68s infinite;
+  transform-origin: 45px 342px;
+}
 .blood-exit {
   animation: vessel-pulse 2.1s ease-in-out infinite;
   transform-origin: 919px 246px;
@@ -469,6 +490,19 @@ footer {
   50% {
     filter: drop-shadow(0 0 12px #d34c6a99);
     transform: scale(1.06);
+  }
+}
+@keyframes cluster-throb {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  28% {
+    fill: #e45d88;
+    transform: scale(1.13);
+  }
+  48% {
+    transform: scale(0.98);
   }
 }
 @keyframes vessel-pulse {

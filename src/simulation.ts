@@ -1,10 +1,13 @@
 import {
   CHALLENGE_WAVE_MULTIPLIER,
+  CLUSTER_SCENE_BUILD_GRANT,
   DIFFICULTIES,
   ENEMIES,
-  PATH,
+  getScenePath,
   PLAYFIELD_HEIGHT,
   PLAYFIELD_WIDTH,
+  SCENE_ONE_WAVE_COUNT,
+  SELL_REFUND_RATE,
   TOWERS,
   UPGRADES,
   WAVES,
@@ -15,6 +18,7 @@ import type {
   EnemyId,
   GameState,
   Point,
+  SceneId,
   Tower,
   TowerConfig,
   TowerId,
@@ -56,11 +60,12 @@ function pointToSegmentDistance(point: Point, start: Point, end: Point): number 
   return distance;
 }
 
-export function getPathLength(): number {
+export function getPathLength(scene: SceneId = 1): number {
+  const path = getScenePath(scene);
   let total = 0;
-  for (let index = 0; index < PATH.length - 1; index += 1) {
-    const start = PATH[index];
-    const end = PATH[index + 1];
+  for (let index = 0; index < path.length - 1; index += 1) {
+    const start = path[index];
+    const end = path[index + 1];
     if (start !== undefined && end !== undefined) {
       total += distanceBetween(start, end);
     }
@@ -68,12 +73,13 @@ export function getPathLength(): number {
   return total;
 }
 
-export function getPathPosition(pathDistance: number): Point {
-  const limitedDistance = clamp(pathDistance, 0, getPathLength());
+export function getPathPosition(pathDistance: number, scene: SceneId = 1): Point {
+  const path = getScenePath(scene);
+  const limitedDistance = clamp(pathDistance, 0, getPathLength(scene));
   let traversed = 0;
-  for (let index = 0; index < PATH.length - 1; index += 1) {
-    const start = PATH[index];
-    const end = PATH[index + 1];
+  for (let index = 0; index < path.length - 1; index += 1) {
+    const start = path[index];
+    const end = path[index + 1];
     if (start === undefined || end === undefined) {
       continue;
     }
@@ -89,17 +95,18 @@ export function getPathPosition(pathDistance: number): Point {
     traversed += segmentLength;
   }
 
-  const exit = PATH[PATH.length - 1];
+  const exit = path[path.length - 1];
   if (exit === undefined) {
     throw new Error("The path needs an exit point.");
   }
   return { x: exit.x, y: exit.y };
 }
 
-export function isPathClear(position: Point): boolean {
-  for (let index = 0; index < PATH.length - 1; index += 1) {
-    const start = PATH[index];
-    const end = PATH[index + 1];
+export function isPathClear(position: Point, scene: SceneId = 1): boolean {
+  const path = getScenePath(scene);
+  for (let index = 0; index < path.length - 1; index += 1) {
+    const start = path[index];
+    const end = path[index + 1];
     if (
       start !== undefined &&
       end !== undefined &&
@@ -117,6 +124,7 @@ export function isPathClear(position: Point): boolean {
 export function createGameState(difficulty: DifficultyId): GameState {
   const state: GameState = {
     status: "briefing",
+    scene: 1,
     difficulty,
     tp: DIFFICULTIES[difficulty].startingTp,
     metastases: 0,
@@ -141,7 +149,7 @@ function isInPlayfield(position: Point): boolean {
 }
 
 export function isValidPlacement(state: GameState, position: Point): boolean {
-  if (!isInPlayfield(position) || !isPathClear(position)) {
+  if (!isInPlayfield(position) || !isPathClear(position, state.scene)) {
     return false;
   }
   for (const tower of state.towers) {
@@ -157,6 +165,7 @@ export function canPlaceTower(state: GameState, type: TowerId, position: Point):
   const allowed =
     state.status !== "lost" &&
     state.status !== "won" &&
+    state.status !== "intermission" &&
     canAfford &&
     isValidPlacement(state, position);
   return allowed;
@@ -190,7 +199,7 @@ export function getSellValue(tower: Tower): number {
       totalSpent += upgrade.cost;
     }
   }
-  const refund = Math.floor(totalSpent * 0.7);
+  const refund = Math.floor(totalSpent * SELL_REFUND_RATE);
   return refund;
 }
 
@@ -238,12 +247,14 @@ export function upgradeTower(state: GameState, towerId: number): GameState {
 // Wave scheduling
 
 export function canStartWave(state: GameState): boolean {
+  const sceneWaveLimit = state.scene === 1 ? SCENE_ONE_WAVE_COUNT : WAVES.length;
   const noActiveCells = state.enemies.length === 0 && state.pendingSpawns.length === 0;
   const canStart =
     state.status !== "paused" &&
     state.status !== "lost" &&
     state.status !== "won" &&
-    state.wave < WAVES.length &&
+    state.status !== "intermission" &&
+    state.wave < sceneWaveLimit &&
     noActiveCells;
   return canStart;
 }
@@ -283,6 +294,22 @@ export function startWave(state: GameState): GameState {
     pendingSpawns,
   };
   return nextState;
+}
+
+export function startClusterScene(state: GameState): GameState {
+  if (state.status !== "intermission" || state.scene !== 1) {
+    return state;
+  }
+  return {
+    ...state,
+    status: "briefing",
+    scene: 2,
+    tp: state.tp + CLUSTER_SCENE_BUILD_GRANT,
+    towers: [],
+    enemies: [],
+    pendingSpawns: [],
+    nextTowerId: 1,
+  };
 }
 
 export function togglePause(state: GameState): GameState {
@@ -344,11 +371,11 @@ function isMarked(enemy: Enemy, time: number): boolean {
   return marked;
 }
 
-function getTarget(tower: Tower, enemies: readonly Enemy[]): Enemy | undefined {
+function getTarget(tower: Tower, enemies: readonly Enemy[], scene: SceneId): Enemy | undefined {
   const range = getTowerRange(tower);
   let selected: Enemy | undefined;
   for (const enemy of enemies) {
-    const position = getPathPosition(enemy.pathDistance);
+    const position = getPathPosition(enemy.pathDistance, scene);
     if (
       distanceBetween(tower.position, position) <= range &&
       (selected === undefined ||
@@ -371,8 +398,8 @@ function applyDamage(enemy: Enemy, source: TowerId, baseDamage: number, time: nu
   return damagedEnemy;
 }
 
-function fireTower(tower: Tower, enemies: readonly Enemy[], time: number): Enemy[] {
-  const target = getTarget(tower, enemies);
+function fireTower(tower: Tower, enemies: readonly Enemy[], time: number, scene: SceneId): Enemy[] {
+  const target = getTarget(tower, enemies, scene);
   if (target === undefined) {
     return [...enemies];
   }
@@ -389,12 +416,12 @@ function fireTower(tower: Tower, enemies: readonly Enemy[], time: number): Enemy
     return result;
   }
 
-  const targetPosition = getPathPosition(target.pathDistance);
+  const targetPosition = getPathPosition(target.pathDistance, scene);
   const damagedEnemies = enemies.map((enemy) => {
     if (enemy.id === target.id) {
       return firstHit;
     }
-    const enemyPosition = getPathPosition(enemy.pathDistance);
+    const enemyPosition = getPathPosition(enemy.pathDistance, scene);
     const insideSplash = distanceBetween(targetPosition, enemyPosition) <= splashRadius;
     return insideSplash ? applyDamage(enemy, tower.type, getTowerDamage(tower), time) : enemy;
   });
@@ -468,7 +495,7 @@ function shedTumorMassCells(state: GameState): GameState {
 }
 
 function removeEscapedEnemies(state: GameState): GameState {
-  const pathLength = getPathLength();
+  const pathLength = getPathLength(state.scene);
   const escaped = state.enemies.filter((enemy) => enemy.pathDistance >= pathLength);
   if (escaped.length === 0) {
     return state;
@@ -543,14 +570,14 @@ function attackWithReadyTowers(state: GameState, deltaSeconds: number): GameStat
     if (cooldownRemaining > 0) {
       return { ...tower, cooldownRemaining };
     }
-    const target = getTarget(tower, enemies);
+    const target = getTarget(tower, enemies, state.scene);
     if (target === undefined) {
       return { ...tower, cooldownRemaining: 0 };
     }
-    enemies = fireTower(tower, enemies, state.time);
+    enemies = fireTower(tower, enemies, state.time, state.scene);
     const firedTower: Tower = {
       ...tower,
-      attackPoint: getPathPosition(target.pathDistance),
+      attackPoint: getPathPosition(target.pathDistance, state.scene),
       attackFlashUntil: state.time + 0.22,
       cooldownRemaining: getTowerCooldown(tower),
     };
@@ -561,12 +588,13 @@ function attackWithReadyTowers(state: GameState, deltaSeconds: number): GameStat
 }
 
 function resolveWin(state: GameState): GameState {
+  const sceneWaveLimit = state.scene === 1 ? SCENE_ONE_WAVE_COUNT : WAVES.length;
   const clearedFinalWave =
-    state.wave === WAVES.length && state.enemies.length === 0 && state.pendingSpawns.length === 0;
+    state.wave === sceneWaveLimit && state.enemies.length === 0 && state.pendingSpawns.length === 0;
   if (!clearedFinalWave || state.status === "lost") {
     return state;
   }
-  return { ...state, status: "won" };
+  return { ...state, status: state.scene === 1 ? "intermission" : "won" };
 }
 
 export function tickGame(state: GameState, deltaSeconds: number): GameState {

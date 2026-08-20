@@ -2,22 +2,25 @@
 
 ## Purpose and tone
 
-Attack on Cancer is a single-level, cartoon microscopic tower defense game.
+Attack on Cancer is a two-scene, cartoon microscopic tower defense game.
 Biology is optional flavor and a clear visual identity, not a quiz, medical
 simulator, or statement about patient care. The v1 goal is a polished,
-replayable Skin Tissue level for 16:10 landscape desktop and tablet play.
+replayable Skin Tissue opening and Cluster Corridor finale for 16:10 landscape desktop and tablet
+play.
 
 ## Core loop
 
 1. Choose a difficulty and place treatments on open tissue.
-2. Start one of 15 manually started waves.
+2. Start the Skin Tissue waves, then enter the Cluster Corridor for its denser finale.
 3. Earn Treatment Points (TP) by destroying cells.
 4. Spend TP on more treatments or three linear upgrades.
 5. Keep cells from reaching the blood-vessel exit.
 
 Every escaping cell adds one metastasis point, including a basic cell released
 by a destroyed Dividing cell. The game ends immediately at the selected
-metastasis capacity. Clearing wave 15 and every remaining cell wins the run.
+metastasis capacity. Clearing Skin Tissue wave 15 opens an intermission. The Cluster Corridor
+preserves metastases, clears the previous build, awards a 200 TP field grant, and then asks the
+player to survive six additional waves. Clearing every remaining cell in wave 21 wins the run.
 
 ## Difficulty
 
@@ -26,9 +29,9 @@ more cells in each fixed wave group while preserving the same enemy mix and rele
 
 | Difficulty | Starting TP | Metastasis capacity |
 | ---------- | ----------: | ------------------: |
-| Practice   |         650 |                  20 |
-| Standard   |         500 |                  15 |
-| Challenge  |         260 |                   7 |
+| Practice   |         500 |                  20 |
+| Standard   |         380 |                  15 |
+| Challenge  |         200 |                   7 |
 
 ## Treatments
 
@@ -55,24 +58,29 @@ configuration tables so balance changes do not alter simulation rules.
 | Immune-Evasive | Takes half T Cell damage until antibody-marked.                          |         10 |
 | Tumor Mass     | Slow MOAB-inspired capstone that sheds cells and ruptures into ten more. |         15 |
 
-Cells stay on the fixed path from the primary tumor source to the blood-vessel
-exit. A destroyed cell awards configured TP. The Tumor Mass is the v1 capstone boss.
+Cells stay on the current fixed path from a tumor source to the blood-vessel exit. A destroyed cell
+awards configured TP. The Tumor Mass is the v1 capstone boss.
 
 ## Waves and outcomes
 
-The level has 15 fixed waves. Early waves teach Basic cells; later waves
-introduce each new type and progressively mix them. Wave 15 combines every type and ends with one
-Tumor Mass. It beats as it travels, shedding Basic cells along the route, then ruptures into six
-Basic and four Tough cells when destroyed.
+Skin Tissue has 15 fixed waves. Early waves teach Basic cells; later waves introduce each new type
+and progressively mix them. Wave 15 combines every type and ends with one Tumor Mass. It beats as
+it travels, shedding Basic cells along the route, then ruptures into six Basic and four Tough cells
+when destroyed.
 
-- `CANCER CONTAINED`: Wave 15 is clear and no cells remain.
+Cluster Corridor is the next scene: a multi-tumor source feeds a longer, winding path through six
+very dense waves (16-21). The player gets a clean build field and 200 TP, but keeps every
+metastasis already earned. Its final mixed swarm ends with another Tumor Mass.
+
+- `CANCER CONTAINED`: Wave 21 is clear and no cells remain.
 - `CANCER HAS METASTASIZED`: Escapes reach the selected capacity.
 
 ## Interaction and access
 
-- Treatments can be placed only on open tissue; invalid overlap never spends TP.
+- Treatments can be placed only on open tissue; invalid overlap never spends TP. Sales return 55%
+  of the invested TP, so repositioning has a meaningful tradeoff.
 - A range preview appears during placement and selection.
-- Players can pause, choose 1x or 2x speed, sell treatments, and inspect actors.
+- Players can pause, choose 1x, 2x, or 4x speed, sell treatments, and inspect actors.
 - Pointer, touch, and keyboard placement provide equivalent core actions.
 - The inspect panel is collapsed by default and contains optional descriptions.
 - Sound starts on by default; reduced-motion presentation remains readable.
@@ -84,10 +92,10 @@ preferred speed, and the best result per difficulty. A refresh begins a new run.
 
 ## V1 boundary
 
-V1 ships one strong level rather than a partial campaign. It does not include:
+V1 ships two connected scenes rather than a partial campaign. It does not include:
 
-- Additional maps, branching paths, campaign progression, or metastatic side maps.
-- Additional bosses, Tumor Clusters, or in-progress run saves.
+- Additional maps beyond Cluster Corridor, branching paths, campaign progression, or metastatic side maps.
+- Additional bosses beyond Tumor Mass or in-progress run saves.
 - NK Cells, Cancer Vaccine, Oncolytic Virus, Surgery, CAR-T, or Proton Therapy.
 - Mutation, biomarkers, receptor matching, clinical decision-making, or outcomes.
 - Accounts, analytics, backend services, routing, external art assets, or mandatory audio.

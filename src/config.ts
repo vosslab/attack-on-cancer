@@ -4,6 +4,7 @@ import type {
   EnemyConfig,
   EnemyId,
   Point,
+  SceneId,
   TowerConfig,
   TowerId,
   UpgradeConfig,
@@ -13,6 +14,9 @@ import type {
 export const PLAYFIELD_WIDTH = 960;
 export const PLAYFIELD_HEIGHT = 600;
 export const CHALLENGE_WAVE_MULTIPLIER = 1.4;
+export const SCENE_ONE_WAVE_COUNT = 15;
+export const CLUSTER_SCENE_BUILD_GRANT = 200;
+export const SELL_REFUND_RATE = 0.55;
 
 export const PATH: readonly Point[] = [
   { x: 52, y: 324 },
@@ -25,10 +29,29 @@ export const PATH: readonly Point[] = [
   { x: 900, y: 245 },
 ] as const;
 
+const CLUSTER_PATH: readonly Point[] = [
+  { x: 52, y: 318 },
+  { x: 150, y: 318 },
+  { x: 218, y: 148 },
+  { x: 342, y: 112 },
+  { x: 448, y: 218 },
+  { x: 380, y: 354 },
+  { x: 510, y: 480 },
+  { x: 670, y: 450 },
+  { x: 744, y: 300 },
+  { x: 648, y: 180 },
+  { x: 800, y: 116 },
+  { x: 900, y: 242 },
+] as const;
+
+export function getScenePath(scene: SceneId): readonly Point[] {
+  return scene === 1 ? PATH : CLUSTER_PATH;
+}
+
 export const DIFFICULTIES: Record<DifficultyId, DifficultyConfig> = {
-  practice: { label: "Practice", startingTp: 650, metastasisCapacity: 20 },
-  standard: { label: "Standard", startingTp: 500, metastasisCapacity: 15 },
-  challenge: { label: "Challenge", startingTp: 260, metastasisCapacity: 7 },
+  practice: { label: "Practice", startingTp: 500, metastasisCapacity: 20 },
+  standard: { label: "Standard", startingTp: 380, metastasisCapacity: 15 },
+  challenge: { label: "Challenge", startingTp: 200, metastasisCapacity: 7 },
 };
 
 export const TOWERS: Record<TowerId, TowerConfig> = {
@@ -119,7 +142,7 @@ export const ENEMIES: Record<EnemyId, EnemyConfig> = {
     name: "Basic cell",
     health: 48,
     speed: 48,
-    reward: 11,
+    reward: 8,
     color: "#f05d75",
     description: "A standard cancer cell.",
   },
@@ -127,7 +150,7 @@ export const ENEMIES: Record<EnemyId, EnemyConfig> = {
     name: "Fast cell",
     health: 34,
     speed: 79,
-    reward: 13,
+    reward: 9,
     color: "#f28b42",
     description: "Fragile, but quick to reach circulation.",
   },
@@ -135,7 +158,7 @@ export const ENEMIES: Record<EnemyId, EnemyConfig> = {
     name: "Tough cell",
     health: 190,
     speed: 30,
-    reward: 28,
+    reward: 20,
     color: "#9c4f78",
     description: "Slow, dense, and hard to remove.",
   },
@@ -143,7 +166,7 @@ export const ENEMIES: Record<EnemyId, EnemyConfig> = {
     name: "Dividing cell",
     health: 82,
     speed: 39,
-    reward: 20,
+    reward: 14,
     color: "#ca4aa3",
     description: "Splits into two basic cells when destroyed.",
   },
@@ -151,7 +174,7 @@ export const ENEMIES: Record<EnemyId, EnemyConfig> = {
     name: "Immune-evasive cell",
     health: 104,
     speed: 43,
-    reward: 25,
+    reward: 18,
     color: "#5666d9",
     description: "Resists T Cell damage until antibody-marked.",
   },
@@ -159,10 +182,10 @@ export const ENEMIES: Record<EnemyId, EnemyConfig> = {
     name: "Tumor Mass",
     health: 1050,
     speed: 20,
-    reward: 230,
+    reward: 150,
     color: "#74254f",
     description:
-      "A MOAB-inspired tumor mass. It ruptures into six Basic and four Tough cells when destroyed.",
+      "A MOAB-inspired tumor mass. It sheds cells as it pulses, then ruptures into six Basic and four Tough cells.",
   },
 };
 
@@ -220,6 +243,38 @@ export const WAVES: readonly (readonly WaveEntry[])[] = [
     { type: "tough", count: 8, gap: 0.48 },
     { type: "dividing", count: 10, gap: 0.36 },
     { type: "immune_evasive", count: 12, gap: 0.34 },
+    { type: "tumor_mass", count: 1, gap: 0.5 },
+  ],
+  [
+    { type: "basic", count: 30, gap: 0.19 },
+    { type: "fast", count: 22, gap: 0.17 },
+  ],
+  [
+    { type: "tough", count: 16, gap: 0.38 },
+    { type: "dividing", count: 20, gap: 0.25 },
+  ],
+  [
+    { type: "immune_evasive", count: 22, gap: 0.24 },
+    { type: "fast", count: 28, gap: 0.15 },
+    { type: "basic", count: 18, gap: 0.18 },
+  ],
+  [
+    { type: "dividing", count: 28, gap: 0.21 },
+    { type: "tough", count: 18, gap: 0.31 },
+    { type: "immune_evasive", count: 16, gap: 0.25 },
+  ],
+  [
+    { type: "basic", count: 35, gap: 0.14 },
+    { type: "fast", count: 35, gap: 0.13 },
+    { type: "tough", count: 20, gap: 0.29 },
+    { type: "dividing", count: 18, gap: 0.22 },
+  ],
+  [
+    { type: "basic", count: 40, gap: 0.12 },
+    { type: "fast", count: 40, gap: 0.12 },
+    { type: "dividing", count: 30, gap: 0.17 },
+    { type: "immune_evasive", count: 30, gap: 0.19 },
+    { type: "tough", count: 24, gap: 0.26 },
     { type: "tumor_mass", count: 1, gap: 0.5 },
   ],
 ] as const;
