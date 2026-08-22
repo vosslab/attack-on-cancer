@@ -19,7 +19,16 @@ cells leave a primary tumor, travel toward a blood vessel, and make every target
 - Use pointer, touch, or keyboard controls; pause or fast-forward at 1x, 2x, or 4x.
 - Choose Practice, Standard, or the intentionally dense, resource-tight Challenge mode.
 
+## Hold the Skin Tissue line
+
+The sequence moves from a paused Wave 1 overview to an Antibody Therapy targeting close-up, then
+into the winding Cluster Corridor with a multi-tumor source and a dense wave. Together the views
+show the readable route, treatment range, metastasis pressure, and scale change between scenes.
+
 <!-- screenshots:begin (managed by screenshot-docs) -->
+![Paused Skin Tissue wave with three treatments guarding cells on the route](docs/screenshots/skin_tissue_battle.png)
+![Antibody Therapy range surrounding a teal-marked cell near the blood exit](docs/screenshots/antibody_targeting.png)
+![Cluster Corridor with a multi-tumor source, winding route, and dense Wave 16](docs/screenshots/cluster_corridor.png)
 <!-- screenshots:end -->
 
 ## Quick start
@@ -43,8 +52,8 @@ Build the static artifact without starting a server:
 ```
 
 The build writes the GitHub Pages-ready site to `dist/`. The preview script selects a random local
-port and opens the game in an interactive macOS terminal. For a meaningful first result, place a
-Doctor or T Cell on open tissue and select **Start Wave 1**.
+port and opens the browser when run from an interactive macOS terminal. For a meaningful first
+result, place a Doctor or T Cell on open tissue and select **Start Wave 1**.
 
 ## How to play
 
