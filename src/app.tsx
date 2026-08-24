@@ -1,6 +1,6 @@
 import { For, Show, createEffect, createMemo, createSignal, onCleanup, onMount } from "solid-js";
 import type { JSX } from "solid-js";
-import { createStore } from "solid-js/store";
+import { createStore, reconcile } from "solid-js/store";
 import {
   DIFFICULTIES,
   ENEMIES,
@@ -14,12 +14,14 @@ import {
 } from "./config";
 import type { DifficultyId, Enemy, GameState, Point, Tower, TowerId } from "./game_types";
 import { activateAudio, playTreatmentSound, playUiSound } from "./audio";
+import { CellDeathEffect, EnemyActor } from "./enemy_cell";
+import type { CellDeathVisual } from "./enemy_visuals";
+import { createCellDeathVisual, findDestroyedEnemies } from "./enemy_visuals";
 import { loadSettings, recordBestResult, updateSettings } from "./persistence";
 import {
   canPlaceTower,
   canStartWave,
   createGameState,
-  getPathPosition,
   getSellValue,
   getTowerRange,
   getUpgradeCost,
@@ -121,15 +123,13 @@ function AttackEffect(props: { tower: Tower }): JSX.Element {
   );
 }
 
-function enemyPosition(enemy: Enemy, scene: GameState["scene"]): Point {
-  return getPathPosition(enemy.pathDistance, scene);
-}
-
 export function App(): JSX.Element {
   const saved = loadSettings();
   const [game, setGame] = createSignal<GameState>(createGameState("practice"));
   const [speed, setSpeed] = createSignal<1 | 2 | 4>(saved.preferredSpeed);
   const [soundEnabled, setSoundEnabled] = createSignal(saved.soundEnabled);
+  const [enemyViews, setEnemyViews] = createStore<Enemy[]>([]);
+  const [cellDeaths, setCellDeaths] = createSignal<CellDeathVisual[]>([]);
   const [ui, setUi] = createStore<UiState>({
     inspectOpen: false,
     settingsOpen: false,
@@ -172,6 +172,7 @@ export function App(): JSX.Element {
 
   function resetGame(difficulty: DifficultyId): void {
     setGame(createGameState(difficulty));
+    setCellDeaths([]);
     setUi({ selectedTreatment: undefined, selectedTowerId: undefined, selectedEnemyId: undefined });
   }
 
@@ -185,6 +186,7 @@ export function App(): JSX.Element {
 
   function enterClusterCorridor(): void {
     setGame((current) => startClusterScene(current));
+    setCellDeaths([]);
     setUi({ selectedTreatment: undefined, selectedTowerId: undefined, selectedEnemyId: undefined });
     if (soundEnabled()) {
       activateAudio();
@@ -317,26 +319,40 @@ export function App(): JSX.Element {
     }
   }
 
+  function updateCellDeaths(previous: GameState, next: GameState): void {
+    const currentTime = performance.now();
+    const currentDeaths = cellDeaths();
+    const activeDeaths = currentDeaths.filter((death) => death.expiresAt > currentTime);
+    const escapedCount = Math.max(0, next.metastases - previous.metastases);
+    const destroyed = findDestroyedEnemies(previous.enemies, next.enemies, escapedCount);
+    const addedDeaths = destroyed.map((enemy) =>
+      createCellDeathVisual(enemy, previous.scene, currentTime),
+    );
+    if (activeDeaths.length !== currentDeaths.length || addedDeaths.length > 0) {
+      setCellDeaths([...activeDeaths, ...addedDeaths]);
+    }
+  }
+
   function animationLoop(now: number): void {
     if (previousFrame !== 0) {
       const elapsed = (now - previousFrame) / 1000;
-      setGame((current) => {
-        const next = tickGame(current, elapsed * speed());
-        if (soundEnabled()) {
-          for (const tower of next.towers) {
-            const previous = current.towers.find((candidate) => candidate.id === tower.id);
-            if (
-              tower.attackFlashUntil !== undefined &&
-              tower.attackFlashUntil !== previous?.attackFlashUntil
-            ) {
-              playTreatmentSound(tower.type);
-            }
+      const current = game();
+      const next = tickGame(current, elapsed * speed());
+      updateCellDeaths(current, next);
+      if (soundEnabled()) {
+        for (const tower of next.towers) {
+          const previous = current.towers.find((candidate) => candidate.id === tower.id);
+          if (
+            tower.attackFlashUntil !== undefined &&
+            tower.attackFlashUntil !== previous?.attackFlashUntil
+          ) {
+            playTreatmentSound(tower.type);
           }
-          if (next.status === "won" && current.status !== "won") playUiSound("win");
-          if (next.status === "lost" && current.status !== "lost") playUiSound("loss");
         }
-        return next;
-      });
+        if (next.status === "won" && current.status !== "won") playUiSound("win");
+        if (next.status === "lost" && current.status !== "lost") playUiSound("loss");
+      }
+      setGame(next);
     }
     previousFrame = now;
     animationFrame = requestAnimationFrame(animationLoop);
@@ -349,6 +365,9 @@ export function App(): JSX.Element {
   onCleanup(() => {
     window.removeEventListener("keydown", keyboardInput);
     cancelAnimationFrame(animationFrame);
+  });
+  createEffect(() => {
+    setEnemyViews(reconcile(game().enemies, { key: "id", merge: true }));
   });
   createEffect(() => {
     const current = game();
@@ -545,114 +564,17 @@ export function App(): JSX.Element {
           >
             {(tower) => <AttackEffect tower={tower} />}
           </For>
-          <For each={game().enemies}>
-            {(enemy) => {
-              const position = enemyPosition(enemy, game().scene);
-              const maximum = ENEMIES[enemy.type].health;
-              const isTumorMass = enemy.type === "tumor_mass";
-              const radius = isTumorMass ? 35 : 15;
-              const healthBarWidth = isTumorMass ? 62 : 28;
-              const healthWidth = Math.max(0, (healthBarWidth * enemy.health) / maximum);
-              const sheddingSoon =
-                isTumorMass &&
-                (enemy.nextShedDistance ?? Number.POSITIVE_INFINITY) - enemy.pathDistance < 26;
-              return (
-                <g
-                  class={`enemy enemy-${enemy.type}`}
-                  classList={{ "tumor-mass-shedding": sheddingSoon }}
-                  transform={`translate(${position.x} ${position.y})`}
-                  onClick={(event) => pickEnemy(event, enemy)}
-                >
-                  <circle
-                    class="enemy-body"
-                    r={radius}
-                    fill={ENEMIES[enemy.type].color}
-                    stroke={enemy.markedUntil > game().time ? "#17a88e" : "#692d50"}
-                    stroke-width="3"
-                  />
-                  <Show when={enemy.markedUntil > game().time}>
-                    <circle
-                      class="marked-halo"
-                      r="21"
-                      fill="none"
-                      stroke="#17a88e"
-                      stroke-width="2"
-                    />
-                  </Show>
-                  <Show when={isTumorMass}>
-                    <circle
-                      class="tumor-mass-shell"
-                      r="31"
-                      fill="none"
-                      stroke="#f0aac6"
-                      stroke-width="3"
-                    />
-                    <circle
-                      class="tumor-mass-vein tumor-mass-vein-a"
-                      r="23"
-                      fill="none"
-                      stroke="#d98cae"
-                      stroke-width="5"
-                    />
-                    <circle
-                      class="tumor-mass-vein tumor-mass-vein-b"
-                      r="17"
-                      fill="none"
-                      stroke="#b84c7e"
-                      stroke-width="3"
-                      stroke-dasharray="7 6"
-                    />
-                    <circle
-                      class="tumor-mass-nodule tumor-mass-nodule-a"
-                      cx="-13"
-                      cy="11"
-                      r="6"
-                      fill="#a94d79"
-                    />
-                    <circle
-                      class="tumor-mass-nodule tumor-mass-nodule-b"
-                      cx="14"
-                      cy="-12"
-                      r="7"
-                      fill="#a94d79"
-                    />
-                    <circle
-                      class="tumor-mass-nodule tumor-mass-nodule-c"
-                      cx="4"
-                      cy="18"
-                      r="4"
-                      fill="#e189ae"
-                    />
-                    <path
-                      class="tumor-mass-shed-cue"
-                      d="M-44 5 C-58 13 -58 29 -43 34"
-                      fill="none"
-                      stroke="#f3b0ca"
-                      stroke-width="3"
-                    />
-                  </Show>
-                  <circle cx="-5" cy="-3" r="2" fill="#fff" />
-                  <circle cx="5" cy="-3" r="2" fill="#fff" />
-                  <rect
-                    x={-healthBarWidth / 2}
-                    y={-radius - 13}
-                    width={healthBarWidth}
-                    height="6"
-                    rx="2"
-                    fill="#67314b"
-                  />
-                  <rect
-                    x={-healthBarWidth / 2}
-                    y={-radius - 13}
-                    width={healthWidth}
-                    height="6"
-                    rx="2"
-                    fill="#86d35b"
-                  />
-                </g>
-              );
-            }}
+          <For each={enemyViews}>
+            {(enemy) => (
+              <EnemyActor
+                enemy={enemy}
+                scene={game().scene}
+                time={game().time}
+                onPick={pickEnemy}
+              />
+            )}
           </For>
+          <For each={cellDeaths()}>{(death) => <CellDeathEffect death={death} />}</For>
           <Show when={ui.selectedTreatment}>
             {(treatment) => (
               <g class="placement-ghost" pointer-events="none">

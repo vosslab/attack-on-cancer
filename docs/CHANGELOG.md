@@ -1,3 +1,49 @@
+## 2026-08-24
+
+### Additions and New Features
+
+- Added structured inline SVG cancer-cell actors with distinct Basic, Fast, Tough, Dividing, and
+  Immune-evasive silhouettes plus four deterministic membrane variations per ordinary cell type.
+- Added transient cell-death artwork: selected cells contract, bleb, condense their nuclei, and
+  separate into apoptotic bodies, while dividing cells and the Tumor Mass keep rupture behavior.
+- Added `cancer_cells.css` as the component motion layer for cell movement, internal organelle
+  drift, death choreography, and explicit reduced-motion states.
+
+### Behavior or Interface Changes
+
+- Replaced identical round, face-like enemies with irregular membranes, pseudopods, membrane
+  folds, cleavage furrows, lobed nuclei, vacuoles, granules, and immune-evasion shielding arcs.
+- Reconciled enemy view state by enemy ID so each SVG actor stays mounted while its simulation
+  position changes, allowing transitions and internal animations to continue across frames.
+- Kept the established Tumor Mass double-heartbeat and static internal structure as the readable
+  large-enemy motion signature.
+
+### Fixes and Maintenance
+
+- Replaced two stale Playwright Treatment Point literals with behavioral difficulty and spending
+  assertions so economy tuning does not break unrelated browser workflows.
+- Scaled screenshot-capture placements from the logical `960 x 600` SVG map into rendered browser
+  coordinates so the production-shaped autoplay stays stable across viewport sizing.
+- Extended the Pages build to validate and copy the component-owned cell stylesheet.
+
+### Decisions and Failures
+
+- Used stylized microscopy rather than gore: type identity now comes from both silhouette and
+  internal structure, while color remains a supporting cue.
+- The first sandboxed Chromium render failed at the macOS Mach-port boundary; the approved browser
+  run completed the same real-stack visual checks successfully.
+
+### Developer Tests and Notes
+
+- `./check_codebase.sh` passed all five checks, including 11 Node tests.
+- `source source_me.sh && python3 -m pytest tests/` passed all 639 tests.
+- `./build_github_pages.sh` produced the Pages artifact with both stylesheets.
+- `./run_playwright_tests.sh` passed all three browser tests.
+- The built-artifact screenshot workflow completed its Skin Tissue, antibody-targeting, and
+  Cluster Corridor captures after the coordinate fix.
+- Real-browser inspection covered 680, 1280, and 1600 pixel viewports, normal and reduced motion,
+  all ordinary enemy types, four Basic variants, stable SVG actor identity, and apoptosis output.
+
 ## 2026-08-21
 
 ### Additions and New Features

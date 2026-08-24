@@ -11,6 +11,7 @@ import { chromium } from "playwright";
 
 const SETTINGS_KEY = "attack-on-cancer.settings.v1";
 const VIEWPORT = { width: 1600, height: 1000 };
+const MAP_SIZE = { width: 960, height: 600 };
 
 const SCENE_ONE_PLACEMENTS = [
   { name: /4\. Radiation Bot/, cost: 240, position: { x: 560, y: 300 } },
@@ -89,7 +90,13 @@ function getPlayfield(page) {
 
 async function placeTreatment(page, playfield, name, position) {
   await page.getByRole("button", { name }).click();
-  await playfield.click({ position });
+  const box = await playfield.boundingBox();
+  assert.notEqual(box, null, "Playfield has no rendered bounds");
+  const renderedPosition = {
+    x: (position.x * box.width) / MAP_SIZE.width,
+    y: (position.y * box.height) / MAP_SIZE.height,
+  };
+  await playfield.click({ position: renderedPosition });
 }
 
 async function readTreatmentPoints(page) {
