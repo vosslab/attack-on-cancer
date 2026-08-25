@@ -2,6 +2,9 @@
 
 ### Additions and New Features
 
+- Added an active ten-level branching-campaign plan with typed shared-route geometry, distinct
+  placement lessons, autonomous subagent dispatch, independent agent review, and automated gates.
+- Added durable human guidance for positive, action-led agent prompts and task briefs.
 - Added 27 editable SVG authoring sheets under `assets/visuals/`: four variants for each ordinary
   enemy, four tiers for every treatment, five apoptosis frames, attack effects, rupture, the Tumor
   Mass, the repaired healthy-cell transition, tissue cells, tumor landmarks, and the blood exit.
