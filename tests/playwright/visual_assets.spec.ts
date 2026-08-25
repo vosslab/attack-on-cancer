@@ -159,9 +159,7 @@ async function buyAffordableUpgrades(page: Page): Promise<void> {
       .evaluateAll((towers) => towers.map((tower) => tower.getAttribute("data-tower-id")));
     for (const towerId of towerIds) {
       if (towerId === null) continue;
-      // The artwork has intentional ambient transforms, so click the visible
-      // actor without asking Playwright to wait for an animation-stable box.
-      await page.locator(`.tower[data-tower-id="${towerId}"]`).click({ force: true });
+      await page.locator(`.tower[data-tower-id="${towerId}"] .tower-hit-target`).click();
       const upgrade = page.getByRole("button", { name: /^Upgrade:/ });
       if ((await upgrade.isVisible()) && (await upgrade.isEnabled())) {
         await upgrade.click();

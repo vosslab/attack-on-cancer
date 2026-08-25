@@ -92,6 +92,14 @@
   antibody rig orbiting away from its stationary base at steep targeting angles.
 - Kept deployment environment-only: GitHub Actions pins Python 3.12, uses the lockfile through
   `npm ci`, and delegates generation to the same consumer-owned production build used locally.
+- Hardened SVG reference validation so a valid local `url(#id)` cannot hide an external URL in the
+  same attribute, with a compact regression test for the mixed-reference case.
+- Added a stable SVG tower hit target so production-shaped upgrade tests use ordinary actionable
+  clicks instead of bypassing browser hit testing.
+- Resolved the repository root with `git rev-parse --show-toplevel` from the caller's working tree
+  and sourced the required Python 3.12 environment inside the production build.
+- Clarified that production builds emit generated visual components, while screenshot capture
+  separately builds the temporary browser contact sheet.
 
 ### Decisions and Failures
 
@@ -119,9 +127,9 @@
 
 ### Developer Tests and Notes
 
-- `./run_fast_checks.sh` regenerated and built the visual catalog, passed the reset-safe five-step
-  vendored codebase gate with 19 Node tests, and passed all 787 pytest cases, including 13 visual
-  generator tests.
+- `./run_fast_checks.sh` regenerated and built the visual components, passed the reset-safe
+  five-step vendored codebase gate with 19 Node tests, and passed all 802 pytest cases, including
+  14 visual generator tests.
 - `./build_github_pages.sh` generated 27 sheets and produced the Pages artifact with all three
   source stylesheets.
 - `./run_playwright_tests.sh --build` passed all 12 browser tests.

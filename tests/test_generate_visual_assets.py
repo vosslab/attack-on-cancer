@@ -121,6 +121,25 @@ def test_external_references_are_rejected(tmp_path: pathlib.Path) -> None:
 
 
 #============================================
+def test_mixed_local_and_external_urls_are_rejected(tmp_path: pathlib.Path) -> None:
+	"""A valid local URL cannot hide an external URL in the same attribute."""
+	path = write_sheet(
+		tmp_path / "mixed_urls.svg",
+		defs=(
+			'<defs><filter id="local-filter">'
+			'<feGaussianBlur stdDeviation="1" /></filter></defs>'
+		),
+		panel_content=(
+			'<g data-aoc-part="membrane" '
+			'filter="url(#local-filter) url(https://example.com/filter.svg#x)">'
+			'<circle r="4" /></g>'
+		),
+	)
+	with pytest.raises(ValueError, match="external or malformed SVG URL"):
+		generate_visual_assets.parse_sheet(path)
+
+
+#============================================
 @pytest.mark.parametrize(
 	("defs", "content", "message"),
 	[

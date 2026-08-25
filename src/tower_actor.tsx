@@ -66,6 +66,7 @@ export function TowerActor(props: {
           </For>
         </g>
       </Show>
+      <circle class="tower-hit-target" r="31" aria-hidden="true" />
       <Show when={props.selected}>
         <circle
           class="tower-range"

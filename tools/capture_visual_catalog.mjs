@@ -1,9 +1,14 @@
 // capture_visual_catalog.mjs - inspect and capture the real visual catalog.
 
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import path from "node:path";
 
 import { chromium } from "playwright";
+
+const REPO_ROOT = execFileSync("git", ["rev-parse", "--show-toplevel"], {
+  encoding: "utf8",
+}).trim();
 
 async function main() {
   const url = process.argv[2];
@@ -44,7 +49,7 @@ async function main() {
       .evaluateAll((elements) => elements.map((element) => element.id).filter(Boolean));
     assert.equal(new Set(ids).size, ids.length, "Visual catalog contains duplicate SVG IDs");
     assert.equal(browserErrors.length, 0, browserErrors.join("\n"));
-    const outputPath = path.resolve("test-results/visual-assets/contact_sheet.png");
+    const outputPath = path.join(REPO_ROOT, "test-results/visual-assets/contact_sheet.png");
     await page.screenshot({ animations: "allow", fullPage: true, path: outputPath });
     process.stdout.write(`Captured ${outputPath}\n`);
   } finally {

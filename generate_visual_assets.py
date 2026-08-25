@@ -7,10 +7,18 @@ import sys
 import math
 import html
 import pathlib
+import subprocess
 import xml.etree.ElementTree  # nosec B405 - declarations are rejected before parsing.
 
 
-REPO_ROOT = pathlib.Path(__file__).resolve().parent
+REPO_ROOT = pathlib.Path(
+	subprocess.run(
+		["git", "rev-parse", "--show-toplevel"],
+		check=True,
+		capture_output=True,
+		text=True,
+	).stdout.strip()
+)
 SHEETS_DIR = REPO_ROOT / "assets" / "visuals"
 OUTPUT_FILE = REPO_ROOT / "generated" / "visual_assets" / "index.tsx"
 SVG_NAMESPACE = "http://www.w3.org/2000/svg"
@@ -142,6 +150,7 @@ ALLOWED_ATTRIBUTES = {
 ID_PATTERN = re.compile(r"[A-Za-z][A-Za-z0-9_.-]*\Z")
 KEY_PATTERN = re.compile(r"[a-z][a-z0-9_]*\Z")
 REFERENCE_PATTERN = re.compile(r"url\(#([A-Za-z][A-Za-z0-9_.-]*)\)")
+URL_FUNCTION_PATTERN = re.compile(r"url\(", re.IGNORECASE)
 TRANSLATE_PATTERN = re.compile(
 	r"translate\(\s*([+-]?(?:\d+(?:\.\d*)?|\.\d+))"
 	r"(?:\s*,\s*|\s+)"
@@ -228,7 +237,8 @@ def validate_references(root: xml.etree.ElementTree.Element, ids: set[str]) -> N
 			for identifier in REFERENCE_PATTERN.findall(value):
 				if identifier not in ids:
 					raise ValueError(f"unresolved SVG reference: #{identifier}")
-			if "url(" in value and REFERENCE_PATTERN.search(value) is None:
+			remaining_value = REFERENCE_PATTERN.sub("", value)
+			if URL_FUNCTION_PATTERN.search(remaining_value) is not None:
 				raise ValueError(f"external or malformed SVG URL is not allowed: {value}")
 
 

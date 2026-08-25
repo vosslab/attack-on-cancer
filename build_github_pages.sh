@@ -10,7 +10,7 @@
 #   - Type-checks via 'tsc --noEmit -p tsconfig.json'.
 #   - Resolves the entry: src/main.tsx, src/main.ts, then src/init.ts.
 #     Aborts with an actionable error if neither exists.
-#   - Generates the validated SolidJS visual catalog before TypeScript checks.
+#   - Generates the validated SolidJS visual components before TypeScript checks.
 #   - Verifies src/index.html and all three source stylesheets exist before copying;
 #     aborts with an actionable error if missing.
 #   - Verifies src/index.html references dist/main.js with a module script
@@ -25,6 +25,7 @@
 
 set -euo pipefail
 cd "$(git rev-parse --show-toplevel)"
+source source_me.sh
 
 # Resolve entry point.
 if [ -f "src/main.tsx" ]; then
@@ -40,7 +41,14 @@ else
 fi
 
 # Verify required static assets before any destructive step.
-for required in src/index.html src/style.css src/world_visuals.css src/combat_visuals.css generate_visual_assets.py; do
+REQUIRED_FILES=(
+	src/index.html
+	src/style.css
+	src/world_visuals.css
+	src/combat_visuals.css
+	generate_visual_assets.py
+)
+for required in "${REQUIRED_FILES[@]}"; do
 	if [ ! -f "$required" ]; then
 		echo "ERROR: required source file missing: $required" >&2
 		case "$required" in
@@ -68,7 +76,7 @@ rm -rf dist
 mkdir -p dist
 
 # ASVS 5.3.2: the generator reads and writes only fixed repository-owned paths.
-# CI pins Python 3.12; local full checks source source_me.sh before this build.
+# CI pins Python 3.12; source_me.sh establishes the same local runtime contract.
 python3 generate_visual_assets.py
 
 npx tsc --noEmit -p tsconfig.json

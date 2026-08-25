@@ -461,6 +461,7 @@ export function getRepairChance(tower: Tower): number {
 
 function getRepairRoll(tower: Tower, target: Enemy): number {
   const attempt = tower.attackSequence ?? 0;
+  // Mix actor identity and attempt number instead of using Math.random so replays stay stable.
   let seed = Math.imul(tower.id + 1, 0x9e3779b1);
   seed ^= Math.imul(target.id + 1, 0x85ebca77);
   seed ^= Math.imul(attempt + 1, 0xc2b2ae3d);

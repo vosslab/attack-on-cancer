@@ -217,7 +217,8 @@ export const TOWERS: Record<TowerId, TowerConfig> = {
     attackVisualDuration: 0.38,
     color: "#287f85",
     description:
-      "An experimental engineered phagocyte: slow, close-range engulfing with extra damage to antibody-marked cells.",
+      "An experimental engineered phagocyte: slow, close-range engulfing with extra damage " +
+      "to antibody-marked cells.",
   },
   crispr: {
     name: "CRISPR Repair Editor",
@@ -234,7 +235,8 @@ export const TOWERS: Record<TowerId, TowerConfig> = {
     tumorShedDelay: 82,
     color: "#5968d8",
     description:
-      "A speculative genome editor: low-chance cell repair, with sequence confidence after mismatches. Tumor Mass edits only suppress shedding and remove one segment.",
+      "A speculative genome editor: low-chance cell repair, with sequence confidence after " +
+      "mismatches. Tumor Mass edits only suppress shedding and remove one segment.",
   },
 };
 

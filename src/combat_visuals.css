@@ -47,6 +47,7 @@
 .tower-range {
   stroke-dasharray: 7 6;
 }
+.tower-hit-target { fill: transparent; pointer-events: all; }
 .tower-artwork-aim {
   transform: rotate(var(--tower-aim));
   transform-origin: 0 0;

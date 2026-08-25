@@ -51,11 +51,15 @@ Build the static artifact without starting a server:
 ./build_github_pages.sh
 ```
 
-Regenerate the ignored visual catalog and run the complete fast gate:
+Regenerate the ignored visual components and run the complete fast gate:
 
 ```bash
 ./run_fast_checks.sh
 ```
+
+This consumer-owned wrapper builds generated artwork before invoking the reset-safe vendored
+`check_codebase.sh`; use it instead of the vendored sub-gate on a clean checkout. The separate
+browser contact sheet is produced by `./capture_screenshots.sh` under `test-results/visual-assets/`.
 
 The build writes the GitHub Pages-ready site to `dist/`. The preview script selects a random local
 port and opens the browser when run from an interactive macOS terminal. For a meaningful first
