@@ -14,6 +14,9 @@ The game separates pure simulation from interface state.
   division, rewards, metastasis, waves, and terminal state.
 - Typed configuration tables own treatment, upgrade, enemy, difficulty, and
   wave balance values.
+- Typed level definitions own each route network, landmark, and obstacle's
+  required biological fact and simplified game role. Validation rejects
+  incomplete learning metadata before the UI renders it.
 - The Solid UI owns actor positions, route geometry, ranges, health bars,
   targeting endpoints, controls, pointer and keyboard placement, overlays, and
   panels.
@@ -64,8 +67,10 @@ Each rendered artwork receives a stable `instanceKey`. The generated component
 uses it to namespace gradients, masks, clip paths, filters, and references so a
 dense wave can safely render many instances of the same sheet. Runtime wrappers
 expose typed visual state and deterministic variants. TypeScript changes the
-state; `src/combat_visuals.css` owns actor transforms and opacity choreography,
-while `src/world_visuals.css` owns tissue, route, and landmark presentation.
+state; `src/combat_visuals.css` owns combat paint and applies animation to the
+actors, `src/combat_motion.css` owns the shared keyframes and reduced-motion
+policy, while `src/world_visuals.css` owns tissue, route, and landmark
+presentation.
 
 The apoptosis component overlays five generated vector panels during the
 existing death-effect lifetime. Rupture uses a separate rig. Successful CRISPR

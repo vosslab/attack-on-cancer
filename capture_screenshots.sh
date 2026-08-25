@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# capture_screenshots.sh - refresh managed gameplay images and the visual catalog.
+# capture_screenshots.sh - refresh current campaign gameplay images and the visual catalog.
 #
 # Usage: ./capture_screenshots.sh
 
@@ -49,7 +49,7 @@ node tools/capture_visual_catalog.mjs \
 	"http://127.0.0.1:${port}/test-results/visual-assets/"
 
 mkdir -p docs/screenshots
-for screenshot in skin_tissue_battle.png antibody_targeting.png cluster_corridor.png; do
+for screenshot in skin_tissue_battle.png antibody_targeting.png; do
 	cp "${capture_dir}/${screenshot}" "docs/screenshots/${screenshot}"
 	echo "Captured docs/screenshots/${screenshot}"
 done

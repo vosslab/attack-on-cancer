@@ -8,7 +8,7 @@ import {
   RuptureArtwork,
 } from "../generated/visual_assets";
 import { ENEMIES } from "./config";
-import type { Enemy, EnemyId, Point, SceneId } from "./game_types";
+import type { Enemy, EnemyId, LevelId, Point } from "./game_types";
 import { getEnemyVisualPosition } from "./simulation";
 import type { CellDeathVisual, CellRepairVisual, CellVariant } from "./enemy_visuals";
 import { actorAnimationDelay, cellVariant } from "./enemy_visuals";
@@ -41,12 +41,17 @@ function healthBarWidth(type: EnemyId): number {
 
 export function EnemyActor(props: {
   enemy: Enemy;
-  scene: SceneId;
+  level: LevelId;
   time: number;
   onPick: (event: MouseEvent, enemy: Enemy) => void;
 }): JSX.Element {
   const position = (): Point =>
-    getEnemyVisualPosition(props.enemy.id, props.enemy.pathDistance, props.scene);
+    getEnemyVisualPosition(
+      props.enemy.id,
+      props.enemy.pathDistance,
+      props.level,
+      props.enemy.routeId,
+    );
   const maximumHealth = (): number => ENEMIES[props.enemy.type].health;
   const radius = (): number => enemyRadius(props.enemy.type);
   const barWidth = (): number => healthBarWidth(props.enemy.type);

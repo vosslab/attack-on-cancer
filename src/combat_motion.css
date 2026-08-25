@@ -1,0 +1,481 @@
+/* Shared combat keyframes and reduced-motion policy; combat_visuals.css applies them. */
+@keyframes tower-scan {
+  0% {
+    opacity: 0.7;
+    transform: scale(0.8);
+  }
+  75%,
+  100% {
+    opacity: 0;
+    transform: scale(1.45);
+  }
+}
+@keyframes internal-scan {
+  to {
+    stroke-dashoffset: -20px;
+    transform: rotate(360deg);
+  }
+}
+@keyframes emitter-recoil {
+  50% {
+    transform: translateX(-5px) scaleX(0.9);
+  }
+}
+@keyframes reservoir-bubble {
+  50% {
+    transform: translateY(-3px) scale(1.08);
+  }
+}
+@keyframes infusion-pulse {
+  50% {
+    filter: drop-shadow(0 0 6px var(--tower-light));
+    transform: scale(1.12);
+  }
+}
+@keyframes t-cell-breathe {
+  50% {
+    transform: scaleX(1.05) scaleY(0.96);
+  }
+}
+@keyframes receptor-response {
+  50% {
+    transform: scale(1.18);
+  }
+}
+@keyframes granule-discharge {
+  to {
+    opacity: 0.35;
+    transform: translateX(8px);
+  }
+}
+@keyframes macrophage-engulf {
+  50% {
+    transform: translateX(6px) scaleX(0.72) scaleY(0.84);
+  }
+}
+@keyframes macrophage-cup {
+  from {
+    opacity: 0.55;
+    transform: scale(1.35);
+  }
+  62%,
+  88% {
+    opacity: 1;
+    transform: scale(0.82);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.55);
+  }
+}
+@keyframes emitter-track {
+  from {
+    transform: rotate(-5deg);
+  }
+  to {
+    transform: rotate(5deg);
+  }
+}
+@keyframes antibody-align {
+  50% {
+    transform: rotate(5deg) scale(1.04);
+  }
+}
+@keyframes molecular-release {
+  to {
+    opacity: 0.3;
+    transform: translate(8px, -4px) scale(1.35);
+  }
+}
+@keyframes crispr-sequence {
+  50% {
+    filter: drop-shadow(0 0 4px var(--tower-light));
+    transform: rotate(4deg) scale(1.04);
+  }
+}
+@keyframes crispr-edit {
+  45% {
+    transform: rotate(-9deg) scale(0.9);
+  }
+  70% {
+    transform: rotate(5deg) scale(1.08);
+  }
+}
+@keyframes repair-drift {
+  from {
+    transform: scale(0.75);
+  }
+  35% {
+    transform: translate(5px, -6px) scale(1.05);
+  }
+  to {
+    transform: translate(20px, -25px) scale(0.86);
+  }
+}
+@keyframes repair-halo {
+  from {
+    opacity: 1;
+    transform: scale(0.4) rotate(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.45) rotate(28deg);
+  }
+}
+@keyframes repair-fade {
+  0%,
+  68% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes cell-squirm {
+  0%,
+  100% {
+    transform: rotate(-2deg) scale(1);
+  }
+  38% {
+    transform: rotate(3deg) scaleX(1.08) scaleY(0.94);
+  }
+  68% {
+    transform: rotate(-4deg) scaleX(0.96) scaleY(1.07);
+  }
+}
+@keyframes cell-scuttle {
+  from {
+    transform: rotate(-5deg) scaleX(0.96) scaleY(1.04);
+  }
+  to {
+    transform: rotate(5deg) scaleX(1.09) scaleY(0.92);
+  }
+}
+@keyframes cell-heave {
+  0%,
+  100% {
+    filter: drop-shadow(0 1px 1px #3f203b66);
+    transform: scale(1);
+  }
+  45% {
+    filter: drop-shadow(0 2px 3px #3f203b99);
+    transform: scaleX(1.045) scaleY(0.965);
+  }
+}
+@keyframes cell-division-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scaleX(1.09) scaleY(0.94);
+  }
+  68% {
+    transform: scaleX(0.96) scaleY(1.05);
+  }
+}
+@keyframes cell-phase-shift {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 1px #5666d966);
+    transform: rotate(-3deg) scale(1);
+  }
+  50% {
+    filter: drop-shadow(0 0 6px #8c99ffbb);
+    transform: rotate(3deg) scale(1.055);
+  }
+}
+@keyframes nucleus-drift {
+  from {
+    transform: translate(-1px, 0) rotate(-4deg);
+  }
+  to {
+    transform: translate(1.5px, 1px) rotate(5deg);
+  }
+}
+@keyframes pseudopod-wave {
+  from {
+    transform: rotate(-4deg) scaleX(0.92);
+  }
+  to {
+    transform: rotate(5deg) scaleX(1.08);
+  }
+}
+@keyframes cleavage-tighten {
+  0%,
+  100% {
+    transform: scaleX(0.8);
+  }
+  55% {
+    transform: scaleX(1.35);
+  }
+}
+@keyframes shield-slip {
+  to {
+    stroke-dashoffset: -18px;
+    transform: rotate(360deg);
+  }
+}
+@keyframes tumor-mass-heartbeat {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 4px #74254f66);
+    transform: scale(1);
+  }
+  18% {
+    filter: drop-shadow(0 0 12px #e681a9aa);
+    transform: scale(1.09);
+  }
+  36% {
+    transform: scale(1);
+  }
+  52% {
+    filter: drop-shadow(0 0 9px #d96a99aa);
+    transform: scale(1.055);
+  }
+  68% {
+    transform: scale(1);
+  }
+}
+@keyframes tumor-mass-shed {
+  from {
+    stroke-dasharray: 3 6;
+    transform: translateX(0);
+  }
+  to {
+    stroke-dasharray: 12 4;
+    transform: translateX(-16px);
+  }
+}
+@keyframes mark-orbit {
+  to {
+    stroke-dashoffset: -20px;
+    transform: rotate(360deg);
+  }
+}
+@keyframes apoptosis-frame-0 {
+  0%,
+  19.9% {
+    opacity: 1;
+  }
+  20%,
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes apoptosis-frame-1 {
+  0%,
+  19.9%,
+  40%,
+  100% {
+    opacity: 0;
+  }
+  20%,
+  39.9% {
+    opacity: 1;
+  }
+}
+@keyframes apoptosis-frame-2 {
+  0%,
+  39.9%,
+  60%,
+  100% {
+    opacity: 0;
+  }
+  40%,
+  59.9% {
+    opacity: 1;
+  }
+}
+@keyframes apoptosis-frame-3 {
+  0%,
+  59.9%,
+  80%,
+  100% {
+    opacity: 0;
+  }
+  60%,
+  79.9% {
+    opacity: 1;
+  }
+}
+@keyframes apoptosis-frame-4 {
+  0%,
+  79.9% {
+    opacity: 0;
+  }
+  80% {
+    opacity: 0.85;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes rupture-wave {
+  from {
+    opacity: 0.85;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 0;
+    transform: scale(2.4);
+  }
+}
+@keyframes rupture-membrane {
+  from {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: rotate(18deg) scale(1.35);
+  }
+}
+@keyframes rupture-droplet {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  18% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--death-x), var(--death-y)) scale(0.7);
+  }
+}
+@keyframes placement-pulse {
+  50% {
+    opacity: 0.68;
+  }
+}
+@keyframes attack-flash {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes chemo-burst {
+  from {
+    opacity: 1;
+    transform: scale(0.45);
+  }
+  to {
+    opacity: 0;
+    transform: scale(2.8);
+  }
+}
+@keyframes radiation-lock {
+  from {
+    opacity: 1;
+    transform: rotate(25deg) scale(0.3);
+  }
+  to {
+    opacity: 0;
+    transform: rotate(45deg) scale(1.5);
+  }
+}
+@keyframes antibody-ring {
+  from {
+    opacity: 1;
+    transform: scale(0.35);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.6);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .playfield .aoc-motion--breathe,
+  .playfield .aoc-motion--compress,
+  .playfield .aoc-motion--heavy-pulse,
+  .playfield .aoc-motion--two-lobe,
+  .playfield .aoc-motion--mask,
+  .playfield .aoc-motion--heartbeat,
+  .playfield .aoc-motion--drift,
+  .playfield .aoc-motion--restrained-drift,
+  .playfield .aoc-motion--ripple,
+  .playfield .aoc-motion--fringe,
+  .playfield .aoc-motion--constrict,
+  .playfield .aoc-motion--shield,
+  .playfield .aoc-motion--scan,
+  .playfield .aoc-motion--bubble,
+  .playfield .aoc-motion--track,
+  .playfield .aoc-motion--align,
+  .playfield .aoc-motion--engulf,
+  .playfield .aoc-motion--sequence,
+  .playfield .tower-aura,
+  .playfield .marked-halo {
+    animation: none !important;
+  }
+  .cell-death-apoptosis .apoptosis-frame {
+    animation: none !important;
+    opacity: 0;
+  }
+  .cell-death-apoptosis .apoptosis-frame-3 {
+    opacity: 0.82;
+  }
+  .cell-death-rupture .rupture-wave {
+    animation: none !important;
+    opacity: 0.45;
+    transform: scale(1.6);
+  }
+  .cell-death-rupture .rupture-membrane {
+    animation: none !important;
+    opacity: 0.3;
+    transform: rotate(10deg) scale(1.2);
+  }
+  .cell-death-rupture .rupture-droplet {
+    animation: none !important;
+    opacity: 0.82;
+    transform: translate(var(--death-x), var(--death-y)) scale(0.7);
+  }
+  .cell-repair {
+    animation-duration: 0.18s !important;
+  }
+  .cell-repair .repair-cell-body {
+    animation: none !important;
+    transform: translate(10px, -12px);
+  }
+  .cell-repair .repair-halo {
+    animation: none !important;
+    opacity: 0.45;
+    transform: scale(1.2);
+  }
+  .tower-artwork-aim {
+    transition-duration: 0s !important;
+  }
+  .attack-effect,
+  .tower[data-visual-state="attacking"] .aoc-motion--recoil,
+  .tower[data-visual-state="attacking"] .aoc-motion--infuse,
+  .tower[data-visual-state="attacking"] .aoc-motion--receptor,
+  .tower[data-visual-state="attacking"] .aoc-motion--granules,
+  .tower[data-visual-state="attacking"] .aoc-motion--edit,
+  .attack-macrophage-cup,
+  .tower[data-visual-state="attacking"] .aoc-motion--release {
+    animation-duration: 0.08s !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+.reduced-motion-preview .aoc-motion--breathe,
+.reduced-motion-preview .aoc-motion--compress,
+.reduced-motion-preview .aoc-motion--heavy-pulse,
+.reduced-motion-preview .aoc-motion--two-lobe,
+.reduced-motion-preview .aoc-motion--mask,
+.reduced-motion-preview .aoc-motion--heartbeat,
+.reduced-motion-preview .aoc-motion--drift,
+.reduced-motion-preview .aoc-motion--ripple,
+.reduced-motion-preview .aoc-motion--fringe,
+.reduced-motion-preview .aoc-motion--constrict,
+.reduced-motion-preview .aoc-motion--shield,
+.reduced-motion-preview .aoc-motion--scan,
+.reduced-motion-preview .aoc-motion--bubble,
+.reduced-motion-preview .aoc-motion--track,
+.reduced-motion-preview .aoc-motion--align,
+.reduced-motion-preview .aoc-motion--engulf,
+.reduced-motion-preview .aoc-motion--sequence,
+.reduced-motion-preview .tower-aura {
+  animation: none !important;
+}

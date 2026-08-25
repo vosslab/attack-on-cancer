@@ -1,38 +1,334 @@
-/* This file owns tissue, route, and world-landmark paint and motion. */
+/* This file owns tissue, canonical route, obstacle, and landmark paint. */
+.playfield {
+  --world-field-base: #f8ece0;
+  --world-field-bloom: #f7cfc5;
+  --world-field-matrix: #b9d9c5;
+  --world-route-bed: #b65d63;
+  --world-route-membrane: #ffd9bd;
+  --world-route-flow: #dc765e;
+  --world-route-shadow: #7b4a3b99;
+  --world-obstacle: #765369;
+  --world-obstacle-ring: #f6d7d4cc;
+  background:
+    radial-gradient(circle at 16% 12%, var(--world-field-bloom) 0 3%, transparent 18%),
+    radial-gradient(circle at 87% 82%, var(--world-field-matrix) 0 2%, transparent 22%),
+    var(--world-field-base);
+}
+
+.playfield[data-level-theme="capillary-crossroads"] {
+  --world-field-base: #f8e9e1;
+  --world-field-bloom: #edc8d3;
+  --world-field-matrix: #c6ddcd;
+  --world-route-bed: #96546c;
+  --world-route-membrane: #f9d7ca;
+  --world-route-flow: #bd6679;
+  --world-route-shadow: #623d5999;
+  --world-obstacle: #5e405f;
+  --world-obstacle-ring: #f7dfcfdd;
+}
+
+/* Theme roles stay on the battlefield so routes, landmarks, and generated sheets share paint. */
+.playfield[data-level-theme="lymph_node_loop"] {
+  --world-field-base: #eef3df;
+  --world-field-bloom: #d7e6bd;
+  --world-field-matrix: #bdd7bd;
+  --world-route-bed: #557a79;
+  --world-route-membrane: #e4efd1;
+  --world-route-flow: #82b6a4;
+  --world-route-shadow: #294f5599;
+  --world-obstacle: #4d7162;
+  --world-obstacle-ring: #d6e5b9dd;
+}
+
+.playfield[data-level-theme="alveolar_switchbacks"] {
+  --world-field-base: #f9ebe0;
+  --world-field-bloom: #f3d5cf;
+  --world-field-matrix: #d6e3c7;
+  --world-route-bed: #8b6383;
+  --world-route-membrane: #ffe7d0;
+  --world-route-flow: #d98c9f;
+  --world-route-shadow: #5f3c6099;
+  --world-obstacle: #815f73;
+  --world-obstacle-ring: #f3d8d8dd;
+}
+
+.playfield[data-level-theme="ductal_delta"] {
+  --world-field-base: #f7ebd9;
+  --world-field-bloom: #ead2c3;
+  --world-field-matrix: #cedcbf;
+  --world-route-bed: #7b697e;
+  --world-route-membrane: #f9dfbf;
+  --world-route-flow: #c98267;
+  --world-route-shadow: #493c6299;
+  --world-obstacle: #66526c;
+  --world-obstacle-ring: #ead4c4dd;
+}
+
+.playfield[data-level-theme="vascular-bypass"] {
+  --world-field-base: #e8f0ed;
+  --world-field-bloom: #d3e3de;
+  --world-field-matrix: #b9d9c5;
+  --world-route-bed: #536f88;
+  --world-route-membrane: #d9edf0;
+  --world-route-flow: #6ea9bb;
+  --world-route-shadow: #294d6a99;
+  --world-obstacle: #4d6b78;
+  --world-obstacle-ring: #cce2d7dd;
+}
+
+.playfield[data-level-theme="fibrotic_sieve"] {
+  --world-field-base: #f4eadb;
+  --world-field-bloom: #ead2b8;
+  --world-field-matrix: #c8d9be;
+  --world-route-bed: #8b6555;
+  --world-route-membrane: #f6e1bd;
+  --world-route-flow: #c9915d;
+  --world-route-shadow: #5a3d3599;
+  --world-obstacle: #705144;
+  --world-obstacle-ring: #e7c7a8dd;
+}
+
+.playfield[data-level-theme="marrow-lattice"] {
+  --world-field-base: #f4e7e8;
+  --world-field-bloom: #e8cbd6;
+  --world-field-matrix: #cedbbd;
+  --world-route-bed: #76556f;
+  --world-route-membrane: #f4d9df;
+  --world-route-flow: #b96d85;
+  --world-route-shadow: #4a314d99;
+  --world-obstacle: #624760;
+  --world-obstacle-ring: #e9cfd8dd;
+}
+
+.playfield[data-level-theme="metastatic-confluence"] {
+  --world-field-base: #f6e8e1;
+  --world-field-bloom: #eccbd0;
+  --world-field-matrix: #c4d8c2;
+  --world-route-bed: #704d6d;
+  --world-route-membrane: #ffe1d0;
+  --world-route-flow: #d46d78;
+  --world-route-shadow: #42294199;
+  --world-obstacle: #604658;
+  --world-obstacle-ring: #efd1c8dd;
+}
+
 .route-bed,
 .route-membrane,
-.route-flow {
+.route-flow,
+.route-current {
   fill: none;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+
 .route-bed {
-  filter: drop-shadow(0 5px 6px #7b4a3b2b);
-  stroke: #f7bea9;
+  stroke: var(--world-route-bed);
   stroke-width: 60;
 }
+
+.campaign-route-beds {
+  filter: drop-shadow(0 5px 6px var(--world-route-shadow));
+}
+
 .route-membrane {
-  stroke: #ffd9bd;
+  stroke: var(--world-route-membrane);
   stroke-width: 51;
 }
+
 .route-flow {
-  animation: circulation 1.25s linear infinite;
-  stroke: #dc765e;
-  stroke-dasharray: 7 10;
+  stroke: var(--world-route-flow);
   stroke-width: 36;
 }
+
+.route-current {
+  animation: circulation 1.25s linear infinite;
+  opacity: 0.72;
+  stroke: var(--world-route-membrane);
+  stroke-dasharray: 4 18;
+  stroke-width: 3;
+}
+
+.campaign-route-layer {
+  isolation: isolate;
+}
+
+.campaign-routes,
+.campaign-obstacles,
+.campaign-landmarks {
+  pointer-events: none;
+}
+
+.scene-object {
+  cursor: help;
+  outline: none;
+}
+
+.scene-object-hit {
+  cursor: help;
+  fill: transparent;
+  pointer-events: all;
+}
+
+.scene-object-focus-ring {
+  fill: none;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease;
+  vector-effect: non-scaling-stroke;
+}
+
+.scene-object-focus-ring-outer {
+  stroke: #fff8d8;
+  stroke-width: 10;
+}
+
+.scene-object-focus-ring-inner {
+  stroke: #173858;
+  stroke-width: 4;
+}
+
+.scene-route-hit,
+.scene-route-focus {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.scene-route-hit {
+  cursor: help;
+  pointer-events: stroke;
+  stroke: transparent;
+  stroke-width: 64;
+}
+
+.playfield.placement-active .scene-object-hit,
+.playfield.placement-active .scene-route-hit {
+  pointer-events: none;
+}
+
+.scene-route-focus {
+  opacity: 0;
+  pointer-events: none;
+  stroke: #fff8d8;
+  stroke-width: 4;
+  transition: opacity 120ms ease;
+  vector-effect: non-scaling-stroke;
+}
+
+.scene-route-focus-outline {
+  stroke: #173858;
+  stroke-width: 10;
+}
+
+.scene-tooltip {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.scene-tooltip foreignObject {
+  overflow: visible;
+}
+
+.scene-tooltip-card {
+  background: #102f4f;
+  border: 2px solid #c4ecd9;
+  border-radius: 14px;
+  box-shadow: 0 8px 22px #17385852;
+  box-sizing: border-box;
+  color: #fffaf2;
+  display: flex;
+  flex-direction: column;
+  font-family: "Trebuchet MS", "Avenir Next", Arial, sans-serif;
+  gap: 3px;
+  height: 100%;
+  padding: 10px 13px;
+  width: 100%;
+}
+
+.scene-tooltip-category {
+  color: #aee9d0;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.scene-tooltip-card strong {
+  color: #fff;
+  font-size: 20px;
+  line-height: 1.05;
+}
+
+.scene-tooltip-card p {
+  color: #edf8f4;
+  font-size: 16px;
+  font-weight: 650;
+  line-height: 1.22;
+  margin: 1px 0 0;
+}
+
+.scene-object:not(.scene-object-dismissed):hover .scene-tooltip,
+.scene-object:focus .scene-tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+.scene-object:not(.scene-object-dismissed):hover .scene-object-focus-ring,
+.scene-object:focus-visible .scene-object-focus-ring,
+.scene-object-route:not(.scene-object-dismissed):hover .scene-route-focus,
+.scene-object-route:focus-visible .scene-route-focus {
+  opacity: 0.82;
+}
+
+.world-obstacle-halo {
+  fill: var(--world-obstacle-ring);
+  stroke: var(--world-obstacle);
+  stroke-dasharray: 5 6;
+  stroke-width: 2;
+}
+
+.world-obstacle-core {
+  fill: var(--world-obstacle);
+  fill-opacity: 0.6;
+  stroke: #fff3e8;
+  stroke-opacity: 0.76;
+  stroke-width: 3;
+}
+
+.level-world-art {
+  isolation: isolate;
+}
+
+.level-world-art [data-aoc-part$="territory"],
+.level-world-art [data-aoc-part$="ground"],
+.level-world-art [data-aoc-part$="cells"] {
+  opacity: 0.92;
+}
+
+.level-world-art [data-aoc-part*="obstacle"],
+.level-world-art [data-aoc-part*="scar"],
+.level-world-art [data-aoc-part*="air-space"] {
+  opacity: 0.9;
+}
+
 .tissue-depth,
 .tissue-matrix,
 .tissue-folds,
-.tissue-cell {
+.tissue-cell,
+.level-world-art {
   pointer-events: none;
 }
+
 .tissue-depth {
   mix-blend-mode: soft-light;
 }
+
 .tissue-matrix {
   opacity: 0.58;
 }
+
 .tissue-matrix-fiber {
   fill: none;
   opacity: 0.38;
@@ -40,15 +336,18 @@
   stroke-linecap: round;
   stroke-width: 2.4;
 }
+
 .tissue-matrix-fiber-secondary {
   opacity: 0.24;
   stroke: #73aa91;
   stroke-width: 1.6;
 }
+
 .tissue-matrix-speck {
   fill: #b78482;
   opacity: 0.3;
 }
+
 .tissue-folds {
   fill: none;
   opacity: 0.26;
@@ -56,31 +355,30 @@
   stroke-linecap: round;
   stroke-width: 12;
 }
-.tissue-region-2 .tissue-matrix-fiber {
-  opacity: 0.46;
-  stroke: #b9859b;
+
+.level-world-art[data-world-art="capillary-crossroads"] [data-aoc-part="crossing-territory"],
+.level-world-art[data-world-art="capillary-crossroads"] [data-aoc-part="capillary-membranes"],
+.level-world-art[data-world-art="capillary-crossroads"] [data-aoc-part="branch-cues"] {
+  opacity: 0;
 }
-.tissue-region-2 .tissue-matrix-fiber-secondary {
-  stroke: #7699a5;
-}
-.tissue-region-2 .tissue-folds {
-  opacity: 0.2;
-  stroke: #fff2ed;
-}
+
 .tissue-landmark-membrane {
   fill: #dcefdc;
   stroke: #b8d9bd;
   stroke-width: 4;
 }
+
 .tissue-landmark-nucleus {
   fill: #b8d9bd;
   opacity: 0.55;
 }
+
 .tissue-cell .aoc-motion--tissue-drift {
   animation: tissue-drift 7s ease-in-out infinite;
   transform-box: fill-box;
   transform-origin: center;
 }
+
 .tissue-cell-2 .aoc-motion--tissue-drift {
   animation-delay: -1.8s;
 }
@@ -90,17 +388,20 @@
 .tissue-cell-4 .aoc-motion--tissue-drift {
   animation-delay: -5.2s;
 }
+
 .world-tumor-main {
   fill: #c54267;
   stroke: #7d284a;
   stroke-width: 4;
 }
+
 .world-tumor-nodule {
   fill: #ef718c;
 }
 .world-tumor-nodule-small {
   fill: #f69bb0;
 }
+
 .world-tumor-vessel {
   fill: none;
   opacity: 0.75;
@@ -108,14 +409,17 @@
   stroke-linecap: round;
   stroke-width: 4;
 }
-.tumor-source .aoc-motion--tumor-breathe {
+
+.world-landmark-source .aoc-motion--tumor-breathe {
   animation: tumor-breathe 2.8s ease-in-out infinite;
   transform-box: fill-box;
   transform-origin: center;
 }
+
 .cluster-source {
   filter: drop-shadow(0 0 8px #b83f7199);
 }
+
 .cluster-node {
   fill: #b63867;
   stroke: #78284d;
@@ -123,6 +427,7 @@
   transform-box: fill-box;
   transform-origin: center;
 }
+
 .cluster-node-a {
   animation: cluster-throb 1.3s ease-in-out infinite;
 }
@@ -138,46 +443,95 @@
 .blood-vessel {
   fill: #d34c5d;
 }
+
 .blood-vessel-flow {
   fill: none;
   stroke: #ffbec3;
   stroke-linecap: round;
   stroke-width: 8;
 }
-.blood-exit .aoc-motion--vessel-pulse {
+
+.world-landmark-exit .aoc-motion--vessel-pulse {
   animation: vessel-pulse 2.1s ease-in-out infinite;
   transform-box: fill-box;
   transform-origin: center;
 }
 
 @keyframes circulation {
-  to { stroke-dashoffset: -28px; }
+  to {
+    stroke-dashoffset: -28px;
+  }
 }
+
 @keyframes tumor-breathe {
-  50% { filter: drop-shadow(0 0 12px #d34c6a99); transform: scale(1.06); }
+  50% {
+    filter: drop-shadow(0 0 12px #d34c6a99);
+    transform: scale(1.06);
+  }
 }
+
 @keyframes cluster-throb {
-  0%, 100% { transform: scale(1); }
-  28% { fill: #e45d88; transform: scale(1.13); }
-  48% { transform: scale(0.98); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  28% {
+    fill: #e45d88;
+    transform: scale(1.13);
+  }
+  48% {
+    transform: scale(0.98);
+  }
 }
+
 @keyframes vessel-pulse {
-  50% { filter: drop-shadow(0 0 10px #d34c5d99); transform: scale(1.035); }
+  50% {
+    filter: drop-shadow(0 0 10px #d34c5d99);
+    transform: scale(1.035);
+  }
 }
+
 @keyframes tissue-drift {
-  50% { transform: translateY(-7px) scale(1.04); }
+  50% {
+    transform: translateY(-7px) scale(1.04);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .playfield .aoc-motion--tissue-drift,
   .playfield .aoc-motion--tumor-breathe,
   .playfield .aoc-motion--vessel-pulse,
-  .playfield .route-flow,
+  .playfield .route-current,
   .playfield .cluster-node {
     animation: none !important;
   }
+
+  .scene-object-focus-ring,
+  .scene-route-focus {
+    transition: none;
+  }
 }
-.reduced-motion-preview .route-flow,
+
+@media (forced-colors: active) {
+  .scene-object-focus-ring-inner,
+  .scene-route-focus:not(.scene-route-focus-outline) {
+    stroke: Highlight;
+  }
+
+  .scene-object-focus-ring-outer,
+  .scene-route-focus-outline {
+    stroke: CanvasText;
+  }
+
+  .scene-tooltip-card {
+    background: Canvas;
+    border-color: Highlight;
+    color: CanvasText;
+    forced-color-adjust: auto;
+  }
+}
+
+.reduced-motion-preview .route-current,
 .reduced-motion-preview .cluster-node {
   animation: none !important;
 }

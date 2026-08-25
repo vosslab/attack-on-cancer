@@ -2,30 +2,70 @@
 
 ## Purpose and tone
 
-Attack on Cancer is a two-scene, cartoon microscopic tower defense game.
-Biology is optional flavor and a clear visual identity, not a quiz, medical
-simulator, or statement about patient care. The v1 goal is a polished,
-replayable Skin Tissue opening and Cluster Corridor finale for 16:10 landscape desktop and tablet
-play.
+Attack on Cancer is a ten-level, cartoon microscopic tower-defense campaign.
+It uses stylized tissue, vessels, lymph structures, air spaces, ducts, scar
+tissue, and marrow as an original game world. Biology supports visual
+orientation and placement puzzles; it is not a quiz, medical simulator, or
+statement about patient care.
 
-## Core loop
+The desktop game is composed as one 16:10 browser view. Its 16:10 playfield is
+the primary full-width surface; the status and map-context band stays compact
+above it, and the treatment and wave actions stay in a compact full-width
+strip below it. Small screens reflow the same controls without hiding them.
 
-1. Choose a difficulty and place treatments on open tissue.
-2. Start the Skin Tissue waves, then enter the Cluster Corridor for its denser finale.
-3. Earn Treatment Points (TP) by destroying cells or completing a CRISPR repair.
-4. Spend TP on more treatments or three linear upgrades.
-5. Keep cells from reaching the blood-vessel exit.
+## Campaign loop
 
-Every escaping cell adds one metastasis point, including a basic cell released
-by a destroyed Dividing cell. The game ends immediately at the selected
-metastasis capacity. Clearing Skin Tissue wave 15 opens an intermission. The Cluster Corridor
-preserves metastases, clears the previous build, awards a 200 TP field grant, and then asks the
-player to survive six additional waves. Clearing every remaining cell in wave 21 wins the run.
+1. Read the level title, briefing, route count, and optional map-microenvironment
+   context.
+2. Choose a treatment and place it on open tissue beside one or more routes.
+3. Start the current wave and manage pause or speed when useful.
+4. Select a placed treatment to inspect, upgrade, or sell it.
+5. Clear the map, then continue to the next level with a fresh build field.
+
+The campaign is linear: Level 1 through Level 10. It deliberately has no
+player-facing level select or replay screen. Each level ends in an
+intermission; continuing clears all placed treatments and active cells, keeps
+metastases, and sets TP to the next level's configured capped carryover plus
+reinforcement. Clearing Level 10 wins the campaign.
+
+Every escaping cell adds one metastasis point, including a Basic cell released
+by a destroyed Dividing cell. The run ends immediately at the difficulty's
+metastasis capacity.
+
+## Campaign maps
+
+The typed campaign catalog is the source of truth for routes, waves, landmarks,
+placement obstacles and probes, economy, player-facing copy, accessible map
+descriptions, and scene-learning content. Every exposed route network,
+landmark, and obstacle owns a required biological fact and simplified game
+role. A route is assembled from shared named segments. Therefore a trunk,
+split, or merge is one geometry source for rendering, movement, placement
+clearance, range, and splash effects.
+
+| Level | Map                   | Routes | Placement lesson                       |
+| ----: | --------------------- | -----: | -------------------------------------- |
+|     1 | Skin Tissue           |      1 | Open-tissue baseline                   |
+|     2 | Cluster Corridor      |      1 | Rebuild and staged coverage            |
+|     3 | Capillary Crossroads  |      2 | Shared crossings                       |
+|     4 | Lymph Node Loop       |      2 | Central repeated exposure              |
+|     5 | Alveolar Switchbacks  |      2 | Parallel coverage and late bends       |
+|     6 | Ductal Delta          |      3 | Independent early sources              |
+|     7 | Vascular Bypass       |      2 | Short fast bypass versus armored route |
+|     8 | Fibrotic Sieve        |      4 | Constrained legal pockets              |
+|     9 | Marrow Lattice        |      3 | Recurring exposure zones               |
+|    10 | Metastatic Confluence |      4 | Timed convergence from four sources    |
+
+Each wave has an authored route cycle, so branch distribution is deterministic
+and inspectable. "Front-most" targeting means least remaining route distance
+to an exit, with stable IDs breaking ties. Route identity controls an enemy's
+movement and inherited descendants; attacks remain physical: range and splash
+can affect cells on different routes when they are close together on the map.
 
 ## Difficulty
 
-Practice and Standard change only starting TP and metastasis capacity. Challenge also sends 40%
-more cells in each fixed wave group while preserving the same enemy mix and release order.
+Practice and Standard change only starting TP and metastasis capacity.
+Challenge sends 40% more cells in each fixed wave group while retaining the
+same enemy mix and route order.
 
 | Difficulty | Starting TP | Metastasis capacity |
 | ---------- | ----------: | ------------------: |
@@ -36,86 +76,90 @@ more cells in each fixed wave group while preserving the same enemy mix and rele
 ## Treatments
 
 Every treatment has three named, linear upgrades: Calibrated, Focused, and
-Breakthrough. Costs, range, damage, cooldowns, explicit CRISPR repair chances,
-and special values live in typed configuration tables so balance changes do
-not alter simulation rules.
+Breakthrough. Typed configuration tables own costs, range, damage, cooldowns,
+repair chances, and special values, so balance changes do not alter simulation
+rules.
 
-| Treatment        | Core role               | Special behavior                                      | Attack cue                         |
-| ---------------- | ----------------------- | ----------------------------------------------------- | ---------------------------------- |
-| Doctor           | Low-cost nearby target  | Fires a reliable syringe strike.                      | Dashed syringe shot.               |
-| Chemotherapy     | Group control           | Damages the target and nearby cells.                  | Purple area burst.                 |
-| Cytotoxic T Cell | Fast single target      | Immune-evasive cells resist it unless marked.         | Red rapid immune strike.           |
-| Radiation Bot    | Long-range heavy damage | Trades high cost and slow attacks for strong hits.    | Heavy gold beam and target lock.   |
-| Antibody Therapy | Support and control     | Marks, slows, sensitizes, and removes immune evasion. | Teal antibody chain and mark ring. |
-| CAR Macrophage   | Close-range heavy hit   | Engulfs slowly; antibody marks amplify its damage.    | Closing teal phagocytic cup.       |
-| CRISPR Repair Editor | High-variance support | Repairs ordinary cells or gains sequence confidence. | Indigo guide-RNA target.           |
+| Treatment            | Core role               | Special behavior                                      |
+| -------------------- | ----------------------- | ----------------------------------------------------- |
+| Doctor               | Low-cost nearby target  | Reliable syringe strike.                              |
+| Chemotherapy         | Group control           | Damages a target and nearby cells.                    |
+| Cytotoxic T Cell     | Fast single target      | Immune-evasive cells resist it unless marked.         |
+| Radiation Bot        | Long-range heavy damage | Slow, high-energy precision damage.                   |
+| Antibody Therapy     | Support and control     | Marks, slows, sensitizes, and removes immune evasion. |
+| CAR Macrophage       | Close-range heavy hit   | Engulfs slowly; antibody marks amplify its damage.    |
+| CRISPR Repair Editor | High-variance support   | Repairs ordinary cells or gains sequence confidence.  |
 
 The CAR Macrophage is explicitly experimental. Its game role is inspired by
 [antigen-specific phagocytosis by engineered human macrophages](https://www.nature.com/articles/s41587-020-0462-y)
 and macrophage [antibody-dependent cellular phagocytosis](https://pubmed.ncbi.nlm.nih.gov/35302839/),
 not a claim about an approved treatment or patient outcome.
 
-The CRISPR Repair Editor is also explicitly speculative. Its tier chances are 12%, 16%, 22%, and
-30%; each mismatch adds a small confidence bonus, and seven consecutive mismatches guarantee the
-next repair. A repaired ordinary cell becomes a mint smiling cell, leaves the route, and awards its
-normal TP without triggering destruction or division. The editor prioritizes ordinary cells. A
-successful Tumor Mass attempt can only edit one segment: it removes a bounded health chunk and
-delays the next shedding point, never converts the boss. This game role is inspired by laboratory
-work on [mutation correction in colorectal cancer cells](https://pubmed.ncbi.nlm.nih.gov/32021251/)
-and [selective mutant EGFR disruption](https://pubmed.ncbi.nlm.nih.gov/28575452/), not a claim that
-genome editing is an approved cancer treatment or can safely normalize tumors in patients.
+The CRISPR Repair Editor is explicitly speculative game fiction. Its tier
+chances are 12%, 16%, 22%, and 30%; each mismatch adds a small confidence
+bonus, and seven consecutive mismatches guarantee the next repair. A repaired
+ordinary cell becomes a mint smiling cell, leaves the route, and awards normal
+TP without destruction or division. The editor prioritizes ordinary cells. A
+successful Tumor Mass attempt removes only a bounded health segment and delays
+the next shedding point; it never converts the boss. The role is inspired by
+laboratory work on [mutation correction in colorectal cancer cells](https://pubmed.ncbi.nlm.nih.gov/32021251/)
+and [selective mutant EGFR disruption](https://pubmed.ncbi.nlm.nih.gov/28575452/),
+not a claim that genome editing is approved or safe cancer care.
 
 ## Cancer cells
 
-| Cell type      | Identity                                                                 | First wave |
-| -------------- | ------------------------------------------------------------------------ | ---------: |
-| Basic          | Standard low-health cell.                                                |          1 |
-| Fast           | Low-health, high-speed cell.                                             |          4 |
-| Tough          | Slow, high-health cell.                                                  |          5 |
-| Dividing       | Releases two Basic cells at its destruction point.                       |          7 |
-| Immune-Evasive | Takes half T Cell damage until antibody-marked.                          |         10 |
-| Tumor Mass     | Slow MOAB-inspired capstone that sheds cells and ruptures into ten more. |         15 |
+| Cell type      | Identity                                                                         |
+| -------------- | -------------------------------------------------------------------------------- |
+| Basic          | Standard low-health cell.                                                        |
+| Fast           | Low-health, high-speed cell.                                                     |
+| Tough          | Slow, high-health cell.                                                          |
+| Dividing       | Releases two Basic cells at its destruction point.                               |
+| Immune-Evasive | Takes half T Cell damage until antibody-marked.                                  |
+| Tumor Mass     | Slow capstone that sheds cells and ruptures into six Basic and four Tough cells. |
 
-Cells stay on the current fixed path from a tumor source to the blood-vessel exit. A destroyed or
-repaired ordinary cell awards configured TP. The Tumor Mass is the v1 capstone boss.
-
-## Waves and outcomes
-
-Skin Tissue has 15 fixed waves. Early waves teach Basic cells; later waves introduce each new type
-and progressively mix them. Wave 15 combines every type and ends with one Tumor Mass. It beats as
-it travels, shedding Basic cells along the route, then ruptures into six Basic and four Tough cells
-when destroyed.
-
-Cluster Corridor is the next scene: a multi-tumor source feeds a longer, winding path through six
-very dense waves (16-21). The player gets a clean build field and 200 TP, but keeps every
-metastasis already earned. Its final mixed swarm ends with another Tumor Mass.
-
-- `CANCER CONTAINED`: Wave 21 is clear and no cells remain.
-- `CANCER HAS METASTASIZED`: Escapes reach the selected capacity.
+Cells travel a catalog-authored source-to-exit route. A destroyed or repaired
+ordinary cell awards configured TP. Tumor Mass is a game-model capstone, not a
+medical representation of a patient tumor.
 
 ## Interaction and access
 
-- Treatments can be placed only on open tissue; invalid overlap never spends TP. Sales return 55%
-  of the invested TP, so repositioning has a meaningful tradeoff.
-- A range preview appears during placement and selection.
-- Players can pause, choose 1x, 2x, or 4x speed, sell treatments, and inspect actors.
-- Pointer, touch, and keyboard placement provide equivalent core actions.
-- The inspect panel is collapsed by default and contains optional descriptions.
-- Sound starts on by default; reduced-motion presentation remains readable.
+- Treatments can be placed only on open tissue. Invalid route or obstacle
+  overlap never spends TP. Sales return 55% of invested TP.
+- The treatment tray uses a stable left-to-right order, with shortcuts 1-7.
+  A selected treatment shows a placement preview and range.
+- The action strip places `Start Wave` before Pause/Resume, speed controls,
+  and cells-in-play status. The selected-treatment inspector follows it and
+  keeps Upgrade next to Sell.
+- A placed treatment is pointer-selectable and keyboard-selectable with Enter
+  or Space. Its visible focus ring and named inspector preserve the selected
+  object's context.
+- Map placement supports pointer, touch, and keyboard cursor actions. Arrow
+  keys move the cursor, Enter places, Esc cancels, Space pauses, and N starts
+  the next ready wave.
+- The route network and canonical named landmarks and obstacles expose optional
+  learning tooltips. Pointer hover, tap, click, and Tab focus show the same
+  nearby biological context without turning repeated cells or route segments
+  into additional focus stops.
+- Scene-object focus is separate from treatment selection. Escape or an
+  open-tissue interaction dismisses the tooltip, preserves the selected
+  treatment, and prevents exploration keys from activating global shortcuts.
+- When a treatment is selected, the playfield owns pointer input so generous
+  learning hotspots cannot cover legal placement tissue. Scene objects remain
+  available to keyboard focus during placement.
+- Reduced motion retains readable branches, landmarks, selection, and combat
+  states while removing continuous ambient motion.
 
 ## Persistence
 
 The browser stores only validated, versioned preferences: sound preference,
-preferred speed, and the best result per difficulty. A refresh begins a new run.
+preferred speed, and the best result per difficulty. A refresh begins a new
+run; in-progress campaign state is not persisted.
 
-## V1 boundary
+## Scope boundary
 
-V1 ships two connected scenes rather than a partial campaign. It does not include:
-
-- Additional maps beyond Cluster Corridor, branching paths, campaign progression, or metastatic side maps.
-- Additional bosses beyond Tumor Mass or in-progress run saves.
-- NK Cells, Cancer Vaccine, Oncolytic Virus, Surgery, CAR-T, or Proton Therapy.
-- Patient-specific mutation matching, biomarkers, clinical decision-making, or outcomes.
-- Accounts, analytics, backend services, routing, external art assets, or mandatory audio.
-
-Future content begins with a separate plan after this vertical slice is stable and fun.
+This release includes the linear ten-level campaign, its seven game-model
+treatments, and original editable microscopic-world art. It does not include
+clinical decision-making, patient-specific mutation matching, biomarkers,
+clinical outcomes, accounts, analytics, backend services, in-progress saves,
+or external art assets. The map-microenvironment descriptions are teaching and
+game-orientation context, not clinical guidance.

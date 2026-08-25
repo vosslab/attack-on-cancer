@@ -120,18 +120,18 @@ successful player inside that envelope rather than as unrelated controls.
 
 ### Level roster and placement lessons
 
-| Level | Map | Routes and sources | Primary placement lesson |
-| --- | --- | --- | --- |
-| 1 | Skin Tissue | Existing curve, one source | Open-tissue baseline |
-| 2 | Cluster Corridor | Existing long curve, one source | Rebuild and staged coverage |
-| 3 | Capillary Crossroads | 2 split/merge routes, one source | Shared crossings |
-| 4 | Lymph Node Loop | 2 counter-loops, one source | Central hub repetition |
-| 5 | Alveolar Switchbacks | 2 hairpins, one source | Parallel coverage |
-| 6 | Ductal Delta | 3 routes, two sources | Independent early threats |
-| 7 | Vascular Bypass | 2 unequal routes, one source | Asymmetric escape risk |
-| 8 | Fibrotic Sieve | 4 lanes, one source | Constrained placement |
-| 9 | Marrow Lattice | 3 feeders, one source | Repeated exposure zones |
-| 10 | Metastatic Confluence | 4 routes, four sources | Timed convergence |
+| Level | Map                   | Routes and sources               | Primary placement lesson    |
+| ----- | --------------------- | -------------------------------- | --------------------------- |
+| 1     | Skin Tissue           | Existing curve, one source       | Open-tissue baseline        |
+| 2     | Cluster Corridor      | Existing long curve, one source  | Rebuild and staged coverage |
+| 3     | Capillary Crossroads  | 2 split/merge routes, one source | Shared crossings            |
+| 4     | Lymph Node Loop       | 2 counter-loops, one source      | Central hub repetition      |
+| 5     | Alveolar Switchbacks  | 2 hairpins, one source           | Parallel coverage           |
+| 6     | Ductal Delta          | 3 routes, two sources            | Independent early threats   |
+| 7     | Vascular Bypass       | 2 unequal routes, one source     | Asymmetric escape risk      |
+| 8     | Fibrotic Sieve        | 4 lanes, one source              | Constrained placement       |
+| 9     | Marrow Lattice        | 3 feeders, one source            | Repeated exposure zones     |
+| 10    | Metastatic Confluence | 4 routes, four sources           | Timed convergence           |
 
 - Level 1 preserves the existing introductory open-tissue baseline. Level 2 preserves its
   existing long-route geometry but uses fresh-field redeployment, staggered fast/armored waves,
@@ -172,42 +172,82 @@ an original microscopic-tissue composition with original biology art and route g
 
 ### Mapping (milestones / workstreams -> components / patches)
 
-| Milestone / Workstream | Component | Review boundary |
-| --- | --- | --- |
-| M1-M3 / WS-Campaign | Types, catalog, simulation | Deterministic topology and combat tests |
-| M4-M6 / WS-World | Art, generator, world CSS | Generated SVG and browser render fixtures |
-| M7-M8 / WS-Play | UI, campaign economy, copy | Synthetic transitions and balance probes |
-| M9-M10 / WS-Proof | Tests, captures, docs | Built-artifact E2E and documented gates |
+| Milestone / Workstream | Component                  | Review boundary                           |
+| ---------------------- | -------------------------- | ----------------------------------------- |
+| M1-M3 / WS-Campaign    | Types, catalog, simulation | Deterministic topology and combat tests   |
+| M4-M6 / WS-World       | Art, generator, world CSS  | Generated SVG and browser render fixtures |
+| M7-M8 / WS-Play        | UI, campaign economy, copy | Synthetic transitions and balance probes  |
+| M9-M10 / WS-Proof      | Tests, captures, docs      | Built-artifact E2E and documented gates   |
 
 ## Milestone plan
 
-| M | Title | Summary | Goal |
-| --- | --- | --- | --- |
-| M1 | Contract types | Define map data contract | Safe authoring |
-| M2 | Catalog migration | Move existing maps to data | Preserve behavior |
-| M3 | Route simulation | Generalize combat and transition | Correct branches |
-| M4 | Level 3 slice | Prove one complete branch map | Reusable world pipeline |
-| M5 | Mid-campaign worlds | Build Levels 4-6 | Distinct spatial lessons |
-| M6 | Late-campaign worlds | Build Levels 7-10 | Distinct final challenges |
-| M7 | Campaign UI | Generalize visible flow | Reachable level sequence |
-| M8 | Economy and waves | Tune campaign power | Viable varied strategies |
-| M9 | Integrated proof | Run real built campaign | Automated release evidence |
-| M10 | Close-out | Publish and integrate | Complete material tree |
+| M   | Title                | Summary                          | Goal                       |
+| --- | -------------------- | -------------------------------- | -------------------------- |
+| M1  | Contract types       | Define map data contract         | Safe authoring             |
+| M2  | Catalog migration    | Move existing maps to data       | Preserve behavior          |
+| M3  | Route simulation     | Generalize combat and transition | Correct branches           |
+| M4  | Level 3 slice        | Prove one complete branch map    | Reusable world pipeline    |
+| M5  | Mid-campaign worlds  | Build Levels 4-6                 | Distinct spatial lessons   |
+| M6  | Late-campaign worlds | Build Levels 7-10                | Distinct final challenges  |
+| M7  | Campaign UI          | Generalize visible flow          | Reachable level sequence   |
+| M8  | Economy and waves    | Tune campaign power              | Viable varied strategies   |
+| M9  | Integrated proof     | Run real built campaign          | Automated release evidence |
+| M10 | Close-out            | Publish and integrate            | Complete material tree     |
 
 ### Status tracker
 
-| Milestone | Status | Completion record |
-| --- | --- | --- |
-| M1 | planned | CP1 contract |
-| M2 | planned | Catalog compatibility |
-| M3 | planned | CP2 topology and R1 |
-| M4 | planned | CP3 Level 3 slice |
-| M5 | planned | Level 4-6 worlds |
-| M6 | planned | Level 7-10 worlds |
-| M7 | planned | UI and transition fixtures |
-| M8 | planned | CP5 economy and R2 |
-| M9 | planned | Browser, visual, and R3 proof |
-| M10 | planned | Final integration gate |
+| Milestone | Status   | Completion record                                                                   |
+| --------- | -------- | ----------------------------------------------------------------------------------- |
+| M1        | complete | C1 contract and malformed-data fixtures in `tests/test_level_catalog.mjs`.          |
+| M2        | complete | C2-C12 catalog with complete Level 1/2 carry-forward fixtures.                      |
+| M3        | complete | C13-C14 route simulation and accepted final R1 contract review.                     |
+| M4        | complete | Level 3 SVG/generator/rendering, placement, map-copy, and visual fixture slice.     |
+| M5        | complete | Original Level 4-6 definitions, editable world sheets, themes, and topology tests.  |
+| M6        | complete | Original Level 7-10 definitions, editable world sheets, themes, and topology tests. |
+| M7        | complete | Catalog HUD, briefing, generic transitions, and visible-control fixtures.           |
+| M8        | complete | P3 deterministic balance fixtures and accepted R2 addendum.                         |
+| M9        | complete | T1/T2/B1 built-browser proof, 24 captures, and visual-matrix assertions pass.       |
+| M10       | complete | D1 published evidence; V1/R3 passed; I1 final gates passed and archived this plan.  |
+
+### Current close-out record
+
+M1-M8 have implementation and deterministic evidence. The accepted campaign
+contract report is
+[`aoc_campaign_r1_final_contract_review.md`](../active_plans/reports/aoc_campaign_r1_final_contract_review.md).
+The earlier
+[`aoc_campaign_r1_review.md`](../active_plans/reports/aoc_campaign_r1_review.md) and
+[`aoc_campaign_r1_rereview.md`](../active_plans/reports/aoc_campaign_r1_rereview.md)
+are historical failed reviews superseded by that final R1 result; they are not
+current blockers. The accepted balance report and its mixed-layout addendum are
+in [`aoc_campaign_r2_balance_review.md`](../active_plans/reports/aoc_campaign_r2_balance_review.md).
+
+The completed static integration command is `npm run check:all`: generated
+visual assets, production build, TypeScript, ESLint, Prettier, 45 Node tests,
+and 893 Python tests passed. Focused R1 evidence additionally records 43
+campaign tests and 17 generator tests. Current implementation-level visual and
+interaction evidence is in
+`docs/active_plans/reports/aoc_campaign_hci_button_placement.md` and
+`tests/playwright/visual_assets.spec.ts`.
+
+M9 is complete. T1 traversed the built UI from Level 1 through Level 10 using
+visible treatment, map, inspector, wave, and continuation controls. T2 passed
+normal and reduced motion and produced 24 captures of Levels 3, 6, 8, and 10
+at 680, 1280, and 1600 pixels. B1 independently records that result in
+`docs/active_plans/reports/aoc_campaign_b1_browser_report.md`; the capture
+matrix is in `docs/active_plans/reports/aoc_campaign_t2_visual_matrix.md`.
+After the display-only compact Level 3/10 status adjustment, the final full
+browser gate passed exactly 20 tests in 8.4 minutes. Its settled normal-motion
+1600-pixel Level 3 and Level 10 matrix frames are promoted in
+`docs/screenshots/capillary_crossroads.png` and
+`docs/screenshots/metastatic_confluence.png`.
+
+M10 is complete. V1 accepts the repaired continuous-vessel presentation,
+widened 16:10 battlefield, control order, reflow, and medical context in all
+24 T2 matrix captures. R3 accepts the integrated material with no unresolved
+release blocker. I1 then passed the final material-tree gates: fast checks,
+GitHub Pages build, 895-test Python suite, and both staged and unstaged
+whitespace gates. This plan is archived after that final record; see
+[`aoc_ten_level_branching_campaign_closure.md`](../active_plans/reports/aoc_ten_level_branching_campaign_closure.md).
 
 ### Define the campaign contract
 
@@ -664,26 +704,27 @@ and reduced motion.
 
 ## Risk register
 
-| Risk | Impact | Trigger | Owner | Mitigation |
-| --- | --- | --- | --- | --- |
-| Unequal route order | High | Short route nears exit | C13 | Test remaining arc length first. |
-| Geometry drift | High | Actor and path disagree | C13/W3 | Reuse exact segments directly. |
-| TP snowball | High | Early win trivializes late maps | P3 | Enforce entry power envelopes. |
-| Constrained map | Medium | Legal pocket rejected | C9/W12 | Test named probes. |
-| Late-map blur | Medium | One layout dominates | C9-C11/P3 | Test topology contracts. |
-| SVG catalog failure | Medium | Bad sheet or duplicate ID | W1/W2/W5-W11 | Validate captures. |
-| E2E instability | Medium | Walkthrough over budget | T1/B1 | Use real simulation harness. |
-| Scope creep | Medium | Unrelated system enters work | Manager | Apply stated non-goals. |
+| Risk                | Impact | Trigger                         | Owner        | Mitigation                       |
+| ------------------- | ------ | ------------------------------- | ------------ | -------------------------------- |
+| Unequal route order | High   | Short route nears exit          | C13          | Test remaining arc length first. |
+| Geometry drift      | High   | Actor and path disagree         | C13/W3       | Reuse exact segments directly.   |
+| TP snowball         | High   | Early win trivializes late maps | P3           | Enforce entry power envelopes.   |
+| Constrained map     | Medium | Legal pocket rejected           | C9/W12       | Test named probes.               |
+| Late-map blur       | Medium | One layout dominates            | C9-C11/P3    | Test topology contracts.         |
+| SVG catalog failure | Medium | Bad sheet or duplicate ID       | W1/W2/W5-W11 | Validate captures.               |
+| E2E instability     | Medium | Walkthrough over budget         | T1/B1        | Use real simulation harness.     |
+| Scope creep         | Medium | Unrelated system enters work    | Manager      | Apply stated non-goals.          |
 
 ## Rollout and release checklist
 
-- [ ] Land the campaign catalog and simulation migration before rendering new world content.
-- [ ] Complete the Level 3 vertical slice before dispatching Levels 4-10 world-sheet tasks.
-- [ ] Land original world sheets and their generated consumer after XML and automated render checks.
-- [ ] Run deterministic strategy probes for every level before final balance sign-off.
-- [ ] Refresh README screenshots from the real built artifact after the final balance pass.
-- [ ] Run all named gates and `git diff --check` on the final material tree.
-- [ ] Archive the captured topology, visual, and browser fixture evidence with the closure report.
+- [x] Land the campaign catalog and route-aware simulation migration before rendering new worlds.
+- [x] Complete the Level 3 vertical slice before dispatching Levels 4-10 world-sheet tasks.
+- [x] Land original world sheets and their generated consumer after XML and automated render checks.
+- [x] Run deterministic strategy probes for every level and accept the R2 balance addendum.
+- [x] Refresh representative branch-map README screenshots from the real built artifact.
+- [x] Run all named browser, visual, independent-review, and final-tree gates, including final
+      `git diff --check`.
+- [x] Archive topology, visual, and browser fixture evidence with the closure report after M10.
 
 ## Documentation close-out requirements
 

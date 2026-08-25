@@ -1,3 +1,195 @@
+## 2026-08-25
+
+### Additions and New Features
+
+- Replaced the two-scene game model with a validated, typed Level 1-10 campaign
+  catalog. Definitions own routes, shared segments, waves and route cycles,
+  landmarks, obstacles, placement probes, economy envelopes, and player-facing
+  map copy.
+- Made simulation route-aware. Enemies, descendants, repair effects, and
+  escapes retain route identity; targeting uses least remaining route distance;
+  range and splash remain coordinate-based across nearby routes.
+- Added eight editable SVG world sheets for Levels 3-10: Capillary Crossroads,
+  Lymph Node Loop, Alveolar Switchbacks, Ductal Delta, Vascular Bypass,
+  Fibrotic Sieve, Marrow Lattice, and Metastatic Confluence. The validated
+  generator publishes their type-safe Solid consumers during the production
+  build.
+- Added catalog-led HUD, briefings, accessible map descriptions, and an
+  optional map-microenvironment card. This is original game-orientation
+  context, not clinical advice or a patient model.
+- Added pointer and keyboard tower selection. A focused treatment receives a
+  visible static focus ring; Enter and Space open its named inspector without
+  also activating global map or wave shortcuts.
+- Expanded the generated visual catalog to exercise all ten authored worlds,
+  including their route layers, landmarks, themes, and reduced-motion states.
+- Added in-scene learning tooltips for the canonical route network, biological
+  landmarks, tumor sources, circulation exits, and placement-blocking tissue.
+  Concise copy connects each named object to both its biological context and
+  its role in the simplified game model.
+- Made the learning contract canonical in typed level definitions. Every
+  exposed route network, landmark, and obstacle now owns a required biological
+  fact and simplified game role; catalog validation rejects either field when
+  it is missing.
+
+### Behavior or Interface Changes
+
+- Replaced scene-specific intermission logic with generic Level 1-10
+  progression. Advancing deliberately clears the build field and active cells,
+  preserves metastases, and applies each next level's carryover cap plus
+  reinforcement. Level 10 ends in the campaign win state.
+- Restored the browser-sized 16:10 layout as a battlefield-first composition.
+  On desktop, the 9:5 battlefield uses the remaining viewport budget inside
+  that whole-shell 16:10 view. A compact status/map-context band sits above
+  it, and treatment, wave, pause, speed, and cells-in-play controls sit
+  together below it. The selected-treatment inspector is a compact conditional
+  row rather than a permanent desktop rail.
+- Compressed the Level 3 and Level 10 desktop status presentation after visual
+  review so the dense route context does not reclaim battlefield width.
+- Kept the stable treatment order and placed the primary Start Wave action next
+  to Pause/Resume and speed controls. The mobile layout reflows controls while
+  retaining the playfield and core actions; it also keeps the treatment tray
+  before the wave controls so planning precedes the commit action at every
+  width.
+- Split continuous combat motion into `src/combat_motion.css` while retaining
+  world presentation in `src/world_visuals.css` and general layout in
+  `src/style.css`; production publishing includes all three authored CSS
+  surfaces.
+- Added pointer, touch-focus, Tab-focus, and Escape behavior for scene objects.
+  The deduplicated hotspot layer does not alter vessel geometry, does not turn
+  repeated cells or segments into excessive Tab stops, and stops exploration
+  events from placing treatments or activating global game shortcuts.
+- During treatment placement, the battlefield now owns pointer input while
+  learning objects remain keyboard-focusable. This lets generous learning
+  targets coexist with legal open-tissue placement.
+
+### Fixes and Maintenance
+
+- Closed the low-risk findings from the six-pass scene-tooltip audit: public
+  player controls and the design interaction contract now document how to
+  discover and dismiss learning tooltips, and scene-learning copy now follows
+  the repository's TypeScript line-length limit.
+- Closed the audit's two design findings prospectively. The authorized
+  remediation plan records the forward work without inventing retrospective
+  approval, and label-substring inference plus generic fallback copy were
+  replaced by validated, per-object learning metadata for all ten levels.
+- Repaired two interaction defects found by the expanded campaign proof. A
+  pericyte learning hotspot no longer steals a legal Level 3 placement click,
+  and Escape keeps a focused tooltip dismissed while the pointer remains over
+  that object.
+- Narrowed the tooltip-category selector so biological facts and game roles
+  retain readable normal-case body typography instead of inheriting the
+  uppercase green category style.
+- Repainted campaign routes in four global layers (all vessel beds, then all
+  membranes, solid lumens, and circulation traces) and moved the drop shadow
+  to the unified bed layer.
+  Segment joins, branch splits, and merges now read as one continuous vessel
+  network without overlapping endpoint borders or per-segment shadow seams.
+- Replaced the thick dashed route interior with a solid lumen and a separate
+  thin circulation trace. Motion still indicates travel direction, including a
+  reduced-motion fallback, without exposing round dash caps as target-like
+  patches at vessel junctions.
+- Removed redundant circular split, merge, and combat-zone overlays from the
+  top of vessel lumens. The typed landmark model and authored world art remain;
+  the canonical branch geometry now communicates topology without target-like
+  rings interrupting the vessel wall.
+- Removed two-scene gameplay and documentation assumptions. Shared route
+  geometry now drives rendering, movement, placement clearance, and spatial
+  combat rather than decorative duplicate curves.
+- Refreshed documentation-capture tooling for the campaign and removed the
+  retired Cluster Corridor screenshot. It refreshes Level 1 documentation
+  views and builds the all-world catalog; the real-UI matrix supplies the
+  promoted Level 3 and Level 10 branch-map views.
+- Added deterministic catalog, topology, transition, balance, asset-generation,
+  visual-layout, and tower-interaction tests. The focused test suites include
+  exact Level 1/2 carry-forward fixtures, multi-route topology contracts, and
+  mixed L8/L10 defenses. Browser interaction proof now clicks both Upgrade and
+  Sell and verifies the visible tier, TP, tower-removal, and inspector feedback.
+- Repaired the visible Level 1-to-2 browser fixture to use a player-visible,
+  affordable opening defense, inspector upgrades between waves, and a
+  terminal-outcome wait rather than a wall-clock settling assumption.
+- Updated the original smoke interactions to scale canonical map coordinates
+  into the rendered full-width battlefield, select difficulty by its visible
+  label, and inspect the named selected-treatment panel. This removes stale
+  CSS-pixel and retired generic-inspector assumptions from the full browser
+  gate.
+- Repaired test oracles exposed by the integrated browser run: campaign helpers
+  now live with their E2E consumers, the treatment tray precedes the wave
+  controls in source as it does visually, and assertions measure the wide
+  battlefield rather than assuming its former fixed pixels.
+- Replaced one non-ISO-8859-1 reporter glyph in the earlier B1 browser report
+  with its ASCII equivalent so the material-tree compliance gate remains clean.
+
+### Decisions and Failures
+
+- The independent scene-tooltip audit found no test, dead-code, dependency,
+  ownership, naming, control-flow, or ASCII defect. Its two design-level
+  concerns are resolved by the explicit forward remediation plan and the
+  canonical typed learning-content contract.
+- Kept the linear campaign, no level-select or replay screen, fresh-field
+  transitions, editable SVG workflow, and non-clinical medical boundary.
+- R1's earlier failed review artifacts remain historical records:
+  `docs/active_plans/reports/aoc_campaign_r1_review.md` and
+  `docs/active_plans/reports/aoc_campaign_r1_rereview.md`. The accepted final
+  contract result is
+  `docs/active_plans/reports/aoc_campaign_r1_final_contract_review.md`.
+- T1, T2, B1, V1, and R3 are complete. The final built UI traverses Level 1 through
+  Level 10 through visible controls; the visual matrix covers Levels 3, 6, 8,
+  and 10 at 680, 1280, and 1600 pixels in normal and reduced-motion modes.
+  V1 accepts the widened 16:10 battlefield, continuous vessels, sensible
+  control order, responsive reflow, and medical context. R3 accepts the
+  integrated material with no release blocker; I1 records the final gates and
+  archival move below.
+
+### Developer Tests and Notes
+
+- `npm run check:all` -- PASS: regenerated the visual catalog, built the app,
+  passed TypeScript, ESLint, Prettier, 45 Node tests, and 893 Python tests.
+- T1/B1 production-browser proof -- PASS: a fresh built real-UI run used only
+  visible treatment, map, inspector, wave, and continuation controls to reach
+  `CANCER CONTAINED` after Level 10. The focused B1 run completed its four
+  browser tests in about 8 minutes; its report records the clean runner result.
+- T2 visual matrix -- PASS: normal and reduced-motion real-UI traversals
+  produced 24 Level 3, 6, 8, and 10 captures across 680, 1280, and 1600 pixel
+  viewports. Desktop frames remain inside the viewport without vertical or
+  horizontal overflow; narrow frames intentionally retain truthful full-page
+  responsive capture.
+- The final complete browser gate -- PASS: after the display-only compact
+  Level 3/10 status adjustment, `./run_playwright_tests.sh --build` completed
+  exactly 20 tests in 8.4 minutes. Its settled matrix artifacts supplied the
+  promoted 1600-pixel Capillary Crossroads and Metastatic Confluence captures.
+- I1 final material-tree integration -- PASS: `./run_fast_checks.sh`,
+  `./build_github_pages.sh`, and `source source_me.sh && python3 -m pytest tests/`
+  passed (895 Python tests); both staged and unstaged `git diff --check` gates
+  passed before and after close-out documentation. The accepted closure record
+  is `docs/active_plans/reports/aoc_ten_level_branching_campaign_closure.md`.
+- Focused R1 contract gates passed 43 Node tests, 17 generator pytest tests,
+  TypeScript, and `git diff --check`; its Level 1/2 carry-forward addendum
+  passes 13 catalog tests.
+- Focused R2 balance gates passed. Its addendum records durable mixed-defense
+  fixtures for Fibrotic Sieve and Metastatic Confluence.
+- Scene-learning validation -- PASS: all ten levels produce non-empty educational
+  copy; the focused built-browser interaction proves hover, pointer focus, Tab
+  order, Escape dismissal, and immediate return to placement. Tooltip text
+  contrast ranges from 9.97:1 to 13.11:1, the exploration hint is 6.89:1, and
+  the two-tone focus pair is 11.29:1.
+- Final tooltip integration gates -- PASS: `./run_fast_checks.sh` completed the
+  production build, TypeScript, ESLint, Prettier, 46 Node tests, and 920 Python
+  tests; the affected built-browser set completed all 16 game and visual tests
+  in 1.5 minutes.
+- Post-audit tooltip cleanup -- PASS: `./run_fast_checks.sh` rebuilt the
+  production app and passed TypeScript, ESLint, Prettier, 46 Node tests, and
+  946 Python tests. The focused built-browser tooltip interaction passed again,
+  and both staged and unstaged diff checks remained clean.
+- Scene-learning remediation focused gates -- PASS: both TypeScript projects,
+  focused ESLint, and all 15 level-catalog tests passed. The focused built UI
+  passed its pointer/keyboard tooltip interaction, and the complete visible
+  campaign verified every route, landmark, and obstacle tooltip at all ten
+  level entries before reaching the Level 10 win in 8.6 minutes.
+- Scene-learning remediation final gates -- PASS: `./run_fast_checks.sh`
+  rebuilt the app and passed both TypeScript projects, ESLint, Prettier,
+  47 Node tests, and 951 Python tests. The affected visual suite passed all
+  10 tests in 1.5 minutes.
+
 ## 2026-08-24
 
 ### Additions and New Features
@@ -114,8 +306,7 @@
 - Kept route rendering, movement, placement clearance, HUD, collision, and save-format behavior
   stable. The sixth treatment uses the existing cooldown, targeting, upgrade, and visual-state
   systems rather than introducing a separate gameplay timer or decorative frame loop.
-- An initial accelerated Wave 21 browser strategy used a `0.1 s` simulation step and lost in Wave
-  17. Matching the production simulation test's `0.025 s` step preserved combat behavior and then
+- An initial accelerated Wave 21 browser strategy used a `0.1 s` simulation step and lost in Wave 17. Matching the production simulation test's `0.025 s` step preserved combat behavior and then
   reached the Tumor Mass with no fixture or direct state mutation.
 - The first contact-sheet screenshot fast-forwarded animated apoptosis to its transparent end.
   The capture now seeks and pauses all catalog animations at a deterministic mid-sequence frame.

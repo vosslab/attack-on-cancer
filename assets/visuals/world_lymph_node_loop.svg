@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" data-aoc-kind="world" data-aoc-key="lymph_node_loop"
+  data-aoc-frame-width="960" data-aoc-frame-height="600" viewBox="0 0 960 600" aria-hidden="true">
+  <defs>
+    <linearGradient id="lymph-node-loop-tissue-wash" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e7f1df" />
+      <stop offset="0.48" stop-color="#f5ead7" />
+      <stop offset="1" stop-color="#d7e8df" />
+    </linearGradient>
+    <radialGradient id="lymph-node-loop-follicle-fill" cx="42%" cy="36%" r="68%">
+      <stop offset="0" stop-color="#fff6dc" />
+      <stop offset="0.56" stop-color="#e8c77d" />
+      <stop offset="1" stop-color="#bd8753" />
+    </radialGradient>
+    <linearGradient id="lymph-node-loop-vessel-fill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#cf6d78" />
+      <stop offset="0.48" stop-color="#f6c6b4" />
+      <stop offset="1" stop-color="#b95770" />
+    </linearGradient>
+    <radialGradient id="lymph-node-loop-hub-halo" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#fff5bf" stop-opacity="0.94" />
+      <stop offset="0.46" stop-color="#fff5bf" stop-opacity="0.42" />
+      <stop offset="1" stop-color="#fff5bf" stop-opacity="0" />
+    </radialGradient>
+    <g id="lymph-node-loop-stromal-cell">
+      <path d="M-18-7C-14-22 1-27 14-19C28-11 27 7 18 17C7 29-10 22-18 12C-23 6-23-1-18-7Z"
+        fill="#d5b7b0" fill-opacity="0.5" stroke="#ae7d88" stroke-opacity="0.35" stroke-width="1.8" />
+      <ellipse cx="1" cy="0" rx="5.5" ry="4.2" fill="#895b76" fill-opacity="0.52" />
+    </g>
+    <g id="lymph-node-loop-sinus-pore">
+      <ellipse rx="8" ry="3.6" fill="#a35b71" fill-opacity="0.42" />
+      <ellipse rx="3.4" ry="1.4" fill="#fff4dc" fill-opacity="0.8" />
+    </g>
+  </defs>
+  <g data-aoc-panel="state-0" transform="translate(480 300)">
+    <g data-aoc-part="tissue-ground">
+      <rect x="-480" y="-300" width="960" height="600" rx="24" fill="url(#lymph-node-loop-tissue-wash)" />
+      <path d="M-498-190C-407-232-333-226-256-177S-92-123-3-166S190-227 292-184S413-157 498-199"
+        fill="none" stroke="#a7cdb9" stroke-opacity="0.36" stroke-width="18" stroke-linecap="round" />
+      <path d="M-498 189C-411 143-328 147-246 195S-77 248 12 202S190 136 286 174S417 212 498 168"
+        fill="none" stroke="#d6b8bd" stroke-opacity="0.32" stroke-width="19" stroke-linecap="round" />
+      <path d="M-437-83C-364-114-305-93-240-44M-402 100C-326 71-254 86-192 129M187-100C271-126 352-109 425-49M229 105C310 74 385 85 453 136"
+        fill="none" stroke="#fffdf3" stroke-opacity="0.43" stroke-width="5" stroke-linecap="round" />
+    </g>
+    <g data-aoc-part="open-cortex-cells" opacity="0.92">
+      <use href="#lymph-node-loop-stromal-cell" transform="translate(-391 -219) rotate(-18) scale(0.9)" />
+      <use href="#lymph-node-loop-stromal-cell" transform="translate(-283 -206) rotate(35) scale(0.76)" />
+      <use href="#lymph-node-loop-stromal-cell" transform="translate(-123 -225) rotate(8) scale(0.9)" />
+      <use href="#lymph-node-loop-stromal-cell" transform="translate(108 -220) rotate(-28) scale(0.79)" />
+      <use href="#lymph-node-loop-stromal-cell" transform="translate(302 -206) rotate(20) scale(0.93)" />
+      <use href="#lymph-node-loop-stromal-cell" transform="translate(-393 201) rotate(20) scale(0.82)" />
+      <use href="#lymph-node-loop-stromal-cell" transform="translate(-252 221) rotate(-31) scale(0.94)" />
+      <use href="#lymph-node-loop-stromal-cell" transform="translate(-94 226) rotate(26) scale(0.8)" />
+      <use href="#lymph-node-loop-stromal-cell" transform="translate(129 218) rotate(-19) scale(0.92)" />
+      <use href="#lymph-node-loop-stromal-cell" transform="translate(324 204) rotate(36) scale(0.78)" />
+    </g>
+    <g data-aoc-part="lymphatic-entry" fill="none" stroke-linecap="round">
+      <path d="M-428 0H-262" stroke="#915266" stroke-opacity="0.58" stroke-width="44" />
+      <path d="M-428 0H-262" stroke="url(#lymph-node-loop-vessel-fill)" stroke-width="31" />
+      <path d="M-428 0H-262" stroke="#fff2dc" stroke-opacity="0.58" stroke-width="2.5" />
+      <path d="M-406 0H-376M-390-13L-376 0L-390 13" stroke="#8b4d64" stroke-width="5" />
+    </g>
+    <g data-aoc-part="counter-loop-vessels" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M-262 0C-210-95-104-168 30-178C142-178 225-130 262-50C273-29 278-11 278 0"
+        stroke="#915266" stroke-opacity="0.58" stroke-width="44" />
+      <path d="M-262 0C-210-95-104-168 30-178C142-178 225-130 262-50C273-29 278-11 278 0"
+        stroke="url(#lymph-node-loop-vessel-fill)" stroke-width="31" />
+      <path d="M-262 0C-210-95-104-168 30-178C142-178 225-130 262-50C273-29 278-11 278 0"
+        stroke="#fff2dc" stroke-opacity="0.58" stroke-width="2.5" />
+      <path d="M-262 0C-210 95-104 168 30 178C142 178 225 130 262 50C273 29 278 11 278 0"
+        stroke="#915266" stroke-opacity="0.58" stroke-width="44" />
+      <path d="M-262 0C-210 95-104 168 30 178C142 178 225 130 262 50C273 29 278 11 278 0"
+        stroke="url(#lymph-node-loop-vessel-fill)" stroke-width="31" />
+      <path d="M-262 0C-210 95-104 168 30 178C142 178 225 130 262 50C273 29 278 11 278 0"
+        stroke="#fff2dc" stroke-opacity="0.58" stroke-width="2.5" />
+    </g>
+    <g data-aoc-part="follicle-obstacle">
+      <circle r="129" fill="#8c604d" fill-opacity="0.2" />
+      <circle r="117" fill="url(#lymph-node-loop-follicle-fill)" stroke="#9d6a52" stroke-width="4" />
+      <circle r="91" fill="none" stroke="#fff5d4" stroke-opacity="0.7" stroke-width="3" stroke-dasharray="3 10" />
+      <circle cx="-30" cy="-23" r="39" fill="#f8e4ad" fill-opacity="0.76" />
+      <circle cx="37" cy="19" r="47" fill="#d7a56d" fill-opacity="0.38" />
+      <circle cx="-6" cy="5" r="27" fill="#c98961" fill-opacity="0.37" />
+      <path d="M-74-46C-42-71-8-72 25-55M-86 54C-44 79 2 81 46 57M51-65C78-39 84-8 72 23"
+        fill="none" stroke="#a16c53" stroke-opacity="0.45" stroke-width="4" stroke-linecap="round" />
+    </g>
+    <g data-aoc-part="sinus-details">
+      <use href="#lymph-node-loop-sinus-pore" transform="translate(-183 -107) rotate(-24)" />
+      <use href="#lymph-node-loop-sinus-pore" transform="translate(-122 -150) rotate(-7)" />
+      <use href="#lymph-node-loop-sinus-pore" transform="translate(-41 -176) rotate(2)" />
+      <use href="#lymph-node-loop-sinus-pore" transform="translate(52 -169) rotate(14)" />
+      <use href="#lymph-node-loop-sinus-pore" transform="translate(142 -125) rotate(37)" />
+      <use href="#lymph-node-loop-sinus-pore" transform="translate(-183 107) rotate(24)" />
+      <use href="#lymph-node-loop-sinus-pore" transform="translate(-122 150) rotate(7)" />
+      <use href="#lymph-node-loop-sinus-pore" transform="translate(-41 176) rotate(-2)" />
+      <use href="#lymph-node-loop-sinus-pore" transform="translate(52 169) rotate(-14)" />
+      <use href="#lymph-node-loop-sinus-pore" transform="translate(142 125) rotate(-37)" />
+    </g>
+    <g data-aoc-part="cortical-hub" fill="none" stroke-linecap="round">
+      <circle cx="224" cy="0" r="112" fill="url(#lymph-node-loop-hub-halo)" stroke="none" />
+      <circle cx="224" cy="0" r="38" fill="#f8dbb7" fill-opacity="0.88" stroke="#925168" stroke-width="4" />
+      <circle cx="224" cy="0" r="24" fill="#f8efcf" stroke="#b66b73" stroke-width="2.5" />
+      <path d="M182-22C197-31 209-35 224-38M182 22C197 31 209 35 224 38M250-18C264-13 275-6 287 0M250 18C264 13 275 6 287 0"
+        stroke="#8e5066" stroke-opacity="0.7" stroke-width="3.5" />
+    </g>
+    <g data-aoc-part="venous-exit" fill="none" stroke-linecap="round">
+      <path d="M224 0H428" stroke="#915266" stroke-opacity="0.58" stroke-width="44" />
+      <path d="M224 0H428" stroke="url(#lymph-node-loop-vessel-fill)" stroke-width="31" />
+      <path d="M224 0H428" stroke="#fff2dc" stroke-opacity="0.58" stroke-width="2.5" />
+      <path d="M372 0H402M388-13L402 0L388 13" stroke="#8b4d64" stroke-width="5" />
+      <ellipse cx="431" cy="0" rx="16" ry="31" fill="#9b5c6e" stroke="#683c55" stroke-width="3" />
+      <ellipse cx="431" cy="0" rx="7" ry="18" fill="#f4c6b8" fill-opacity="0.75" stroke="none" />
+    </g>
+    <g data-aoc-part="foreground-matrix" fill="none" stroke-linecap="round">
+      <path d="M-459 126C-389 90-338 111-285 153M-13-268C42-241 85-244 145-273M286 244C354 219 408 221 474 257"
+        stroke="#8fbdac" stroke-opacity="0.58" stroke-width="6" />
+      <path d="M-448-151C-399-121-366-107-319-105M-32 265C22 237 70 241 120 268M337-158C382-133 425-137 470-167"
+        stroke="#fffdf3" stroke-opacity="0.48" stroke-width="4" />
+    </g>
+  </g>
+</svg>

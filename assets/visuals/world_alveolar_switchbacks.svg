@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" data-aoc-kind="world" data-aoc-key="alveolar_switchbacks"
+  data-aoc-frame-width="960" data-aoc-frame-height="600" viewBox="0 0 960 600">
+  <defs>
+    <linearGradient id="alveolar-switchbacks-tissue-wash" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e8e4d3" />
+      <stop offset="0.48" stop-color="#d7ebdb" />
+      <stop offset="1" stop-color="#b9d9d1" />
+    </linearGradient>
+    <radialGradient id="alveolar-switchbacks-air-wash" cx="42%" cy="34%" r="70%">
+      <stop offset="0" stop-color="#f8ffff" />
+      <stop offset="0.58" stop-color="#d7f0f0" />
+      <stop offset="1" stop-color="#9fcbd0" />
+    </radialGradient>
+    <linearGradient id="alveolar-switchbacks-membrane-wash" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#c88394" />
+      <stop offset="0.5" stop-color="#f1c9bf" />
+      <stop offset="1" stop-color="#ae6881" />
+    </linearGradient>
+    <radialGradient id="alveolar-switchbacks-septum-wash" cx="38%" cy="30%" r="72%">
+      <stop offset="0" stop-color="#fff3df" />
+      <stop offset="1" stop-color="#d6a6a9" />
+    </radialGradient>
+    <g id="alveolar-switchbacks-matrix-cell">
+      <path d="M-18-9C-13-25 7-31 20-19C34-5 27 16 13 24C-2 33-22 22-24 5C-25 0-22-5-18-9Z"
+        fill="#e4b8bf" fill-opacity="0.46" stroke="#a86e83" stroke-opacity="0.36" stroke-width="2" />
+      <ellipse cx="2" cy="1" rx="6" ry="5" fill="#875b79" fill-opacity="0.5" />
+    </g>
+    <g id="alveolar-switchbacks-capillary-dot">
+      <circle r="7" fill="#ba7185" fill-opacity="0.7" />
+      <circle r="3" fill="#fff0df" fill-opacity="0.74" />
+    </g>
+    <g id="alveolar-switchbacks-branch-fiber" fill="none" stroke-linecap="round">
+      <path d="M-32 0C-17-14-4-13 10-2S28 11 40-3" stroke="#78aa9e" stroke-opacity="0.6" stroke-width="5" />
+      <path d="M-24 9C-8-1 4 4 16 14S31 20 42 10" stroke="#fff6e4" stroke-opacity="0.56" stroke-width="2.5" />
+    </g>
+  </defs>
+  <g data-aoc-panel="state-0" transform="translate(480 300)">
+    <g data-aoc-part="alveolar-tissue-ground">
+      <rect x="-480" y="-300" width="960" height="600" rx="24" fill="url(#alveolar-switchbacks-tissue-wash)" />
+      <path d="M-476-195C-354-244-242-213-154-164S38-103 144-158S352-229 482-180"
+        fill="none" stroke="#f9eedb" stroke-opacity="0.5" stroke-width="20" stroke-linecap="round" />
+      <path d="M-470 194C-355 141-254 164-139 213S53 246 157 190S363 133 476 183"
+        fill="none" stroke="#85b9ae" stroke-opacity="0.35" stroke-width="22" stroke-linecap="round" />
+      <path d="M-444-78C-356-118-280-96-223-49M-447 89C-365 49-284 75-224 122M238-90C323-127 397-99 454-47M240 98C321 55 394 76 458 124"
+        fill="none" stroke="#fff9e8" stroke-opacity="0.46" stroke-width="5" stroke-linecap="round" />
+    </g>
+    <g data-aoc-part="peripheral-matrix-cells" opacity="0.86">
+      <use href="#alveolar-switchbacks-matrix-cell" transform="translate(-374 -205) rotate(-15)" />
+      <use href="#alveolar-switchbacks-matrix-cell" transform="translate(-268 -226) rotate(35) scale(0.82)" />
+      <use href="#alveolar-switchbacks-matrix-cell" transform="translate(-101 -221) rotate(-28) scale(0.96)" />
+      <use href="#alveolar-switchbacks-matrix-cell" transform="translate(118 -230) rotate(20) scale(0.82)" />
+      <use href="#alveolar-switchbacks-matrix-cell" transform="translate(310 -212) rotate(-12)" />
+      <use href="#alveolar-switchbacks-matrix-cell" transform="translate(-360 202) rotate(23) scale(0.86)" />
+      <use href="#alveolar-switchbacks-matrix-cell" transform="translate(-184 223) rotate(-35)" />
+      <use href="#alveolar-switchbacks-matrix-cell" transform="translate(112 221) rotate(24) scale(0.84)" />
+      <use href="#alveolar-switchbacks-matrix-cell" transform="translate(310 208) rotate(-20) scale(0.94)" />
+      <use href="#alveolar-switchbacks-matrix-cell" transform="translate(422 162) rotate(36) scale(0.78)" />
+    </g>
+    <g data-aoc-part="upper-alveolar-air-space">
+      <ellipse cx="20" cy="-93" rx="163" ry="90" fill="#8e6c7d" fill-opacity="0.35" />
+      <ellipse cx="20" cy="-98" rx="154" ry="84" fill="url(#alveolar-switchbacks-membrane-wash)" stroke="#7b5067" stroke-opacity="0.72" stroke-width="4" />
+      <ellipse cx="20" cy="-98" rx="133" ry="66" fill="url(#alveolar-switchbacks-air-wash)" stroke="#fff6e9" stroke-opacity="0.75" stroke-width="4" />
+      <path d="M-107-115C-74-146-23-158 18-150C63-144 102-125 137-92M-111-80C-72-50-27-41 19-47C65-52 104-69 137-101"
+        fill="none" stroke="#9d5d75" stroke-opacity="0.48" stroke-width="5" stroke-linecap="round" />
+      <path d="M-99-127C-61-158-9-166 35-153M-94-68C-54-40-7-33 42-45M66-147C99-133 122-115 140-92M69-48C101-60 122-78 141-104"
+        fill="none" stroke="#ffe9d5" stroke-opacity="0.68" stroke-width="3" stroke-linecap="round" />
+    </g>
+    <g data-aoc-part="lower-alveolar-air-space">
+      <ellipse cx="20" cy="93" rx="163" ry="90" fill="#8e6c7d" fill-opacity="0.35" />
+      <ellipse cx="20" cy="98" rx="154" ry="84" fill="url(#alveolar-switchbacks-membrane-wash)" stroke="#7b5067" stroke-opacity="0.72" stroke-width="4" />
+      <ellipse cx="20" cy="98" rx="133" ry="66" fill="url(#alveolar-switchbacks-air-wash)" stroke="#fff6e9" stroke-opacity="0.75" stroke-width="4" />
+      <path d="M-107 81C-74 50-23 38 18 46C63 52 102 71 137 104M-111 116C-72 146-27 155 19 149C65 144 104 127 137 95"
+        fill="none" stroke="#9d5d75" stroke-opacity="0.48" stroke-width="5" stroke-linecap="round" />
+      <path d="M-99 69C-61 38-9 30 35 43M-94 128C-54 156-7 163 42 151M66 49C99 63 122 81 140 104M69 148C101 136 122 118 141 92"
+        fill="none" stroke="#ffe9d5" stroke-opacity="0.68" stroke-width="3" stroke-linecap="round" />
+    </g>
+    <g data-aoc-part="central-parallel-coverage-territory">
+      <path d="M-105-34C-40-19 39-19 115-34M-105 34C-40 19 39 19 115 34"
+        fill="none" stroke="#fff9df" stroke-opacity="0.45" stroke-width="10" stroke-linecap="round" />
+      <path d="M-119 0C-68-12-21-11 20 0S105 12 153 0"
+        fill="none" stroke="#a65e77" stroke-opacity="0.55" stroke-width="8" stroke-linecap="round" stroke-dasharray="3 13" />
+      <ellipse cx="25" cy="0" rx="88" ry="27" fill="none" stroke="#fdf5df" stroke-opacity="0.62" stroke-width="3" stroke-dasharray="7 9" />
+      <use href="#alveolar-switchbacks-capillary-dot" transform="translate(-93 -26)" />
+      <use href="#alveolar-switchbacks-capillary-dot" transform="translate(-46 -20) scale(0.82)" />
+      <use href="#alveolar-switchbacks-capillary-dot" transform="translate(4 -18) scale(0.9)" />
+      <use href="#alveolar-switchbacks-capillary-dot" transform="translate(53 -22) scale(0.78)" />
+      <use href="#alveolar-switchbacks-capillary-dot" transform="translate(103 -28) scale(0.88)" />
+      <use href="#alveolar-switchbacks-capillary-dot" transform="translate(-92 26) scale(0.82)" />
+      <use href="#alveolar-switchbacks-capillary-dot" transform="translate(-43 20) scale(0.92)" />
+      <use href="#alveolar-switchbacks-capillary-dot" transform="translate(7 19) scale(0.78)" />
+      <use href="#alveolar-switchbacks-capillary-dot" transform="translate(56 22) scale(0.88)" />
+      <use href="#alveolar-switchbacks-capillary-dot" transform="translate(106 27) scale(0.78)" />
+    </g>
+    <g data-aoc-part="late-bend-septa">
+      <path d="M172-166C205-135 213-92 198-51C187-20 164 4 137 28M173 166C206 135 214 92 199 51C187 20 164-4 137-28"
+        fill="none" stroke="url(#alveolar-switchbacks-septum-wash)" stroke-width="28" stroke-linecap="round" />
+      <path d="M173-166C205-135 213-92 198-51C187-20 164 4 137 28M173 166C206 135 214 92 199 51C187 20 164-4 137-28"
+        fill="none" stroke="#87566f" stroke-opacity="0.65" stroke-width="4" stroke-linecap="round" />
+      <path d="M170-145C188-121 192-94 184-70M170 145C188 121 192 94 184 70"
+        fill="none" stroke="#fff0de" stroke-opacity="0.72" stroke-width="3" stroke-linecap="round" />
+      <use href="#alveolar-switchbacks-capillary-dot" transform="translate(191 -118)" />
+      <use href="#alveolar-switchbacks-capillary-dot" transform="translate(199 -75) scale(0.82)" />
+      <use href="#alveolar-switchbacks-capillary-dot" transform="translate(180 -33) scale(0.9)" />
+      <use href="#alveolar-switchbacks-capillary-dot" transform="translate(191 118)" />
+      <use href="#alveolar-switchbacks-capillary-dot" transform="translate(199 75) scale(0.82)" />
+      <use href="#alveolar-switchbacks-capillary-dot" transform="translate(180 33) scale(0.9)" />
+    </g>
+    <g data-aoc-part="peripheral-connective-fibers">
+      <use href="#alveolar-switchbacks-branch-fiber" transform="translate(-393 -148) rotate(9)" />
+      <use href="#alveolar-switchbacks-branch-fiber" transform="translate(-371 149) rotate(-8)" />
+      <use href="#alveolar-switchbacks-branch-fiber" transform="translate(325 -188) rotate(-11)" />
+      <use href="#alveolar-switchbacks-branch-fiber" transform="translate(330 188) rotate(10)" />
+      <path d="M247-244C303-220 356-224 422-255M246 242C308 215 362 222 430 254"
+        fill="none" stroke="#7baca1" stroke-opacity="0.56" stroke-width="6" stroke-linecap="round" />
+      <path d="M-470 5C-425-8-383-6-336 10M333 6C385-8 428-8 474 6"
+        fill="none" stroke="#fdf3dc" stroke-opacity="0.62" stroke-width="5" stroke-linecap="round" />
+    </g>
+  </g>
+</svg>

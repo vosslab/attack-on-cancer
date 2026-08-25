@@ -1,4 +1,4 @@
-import type { CellRepairEvent, Enemy, EnemyId, Point, SceneId } from "./game_types";
+import type { CellRepairEvent, Enemy, EnemyId, LevelId, Point } from "./game_types";
 import { getEnemyVisualPosition } from "./simulation";
 import type { VisualVariant } from "../generated/visual_assets";
 
@@ -71,27 +71,27 @@ export function findDestroyedEnemies(
 
 export function createCellRepairVisual(
   event: CellRepairEvent,
-  scene: SceneId,
+  level: LevelId,
   startedAt: number,
 ): CellRepairVisual {
   return {
     eventKey: `${event.towerId}-${event.attempt}`,
     enemyId: event.enemyId,
     type: event.type,
-    position: getEnemyVisualPosition(event.enemyId, event.pathDistance, scene),
+    position: getEnemyVisualPosition(event.enemyId, event.pathDistance, level, event.routeId),
     expiresAt: startedAt + CELL_REPAIR_DURATION_MS,
   };
 }
 
 export function createCellDeathVisual(
   enemy: Enemy,
-  scene: SceneId,
+  level: LevelId,
   startedAt: number,
 ): CellDeathVisual {
   const visual: CellDeathVisual = {
     enemyId: enemy.id,
     type: enemy.type,
-    position: getEnemyVisualPosition(enemy.id, enemy.pathDistance, scene),
+    position: getEnemyVisualPosition(enemy.id, enemy.pathDistance, level, enemy.routeId),
     variant: cellVariant(enemy.id),
     kind: cellDeathKind(enemy),
     expiresAt: startedAt + CELL_DEATH_DURATION_MS,

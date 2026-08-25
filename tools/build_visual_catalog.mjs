@@ -43,6 +43,10 @@ async function main() {
     path.join(REPO_ROOT, "src/combat_visuals.css"),
     path.join(OUTPUT_DIRECTORY, "combat_visuals.css"),
   );
+  await copyFile(
+    path.join(REPO_ROOT, "src/combat_motion.css"),
+    path.join(OUTPUT_DIRECTORY, "combat_motion.css"),
+  );
   process.stdout.write(`Built temporary visual catalog: ${OUTPUT_DIRECTORY}\n`);
 }
 

@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" data-aoc-kind="world" data-aoc-key="vascular_bypass"
+  data-aoc-frame-width="960" data-aoc-frame-height="600" viewBox="0 0 960 600">
+  <title>Vascular Bypass tissue terrain</title>
+  <desc>A tumor-fed arteriole splits into a short upper bypass and a longer lower vascular loop before returning to the blood exit.</desc>
+  <defs>
+    <linearGradient id="vascular-bypass-tissue-wash" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f7e7e1" />
+      <stop offset="0.52" stop-color="#f5e9d8" />
+      <stop offset="1" stop-color="#dfebdf" />
+    </linearGradient>
+    <linearGradient id="vascular-bypass-vessel-fill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#d97883" />
+      <stop offset="0.46" stop-color="#f4c1b9" />
+      <stop offset="1" stop-color="#b84f68" />
+    </linearGradient>
+    <linearGradient id="vascular-bypass-vein-fill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#a46e99" />
+      <stop offset="0.48" stop-color="#d9b8d5" />
+      <stop offset="1" stop-color="#704b7f" />
+    </linearGradient>
+    <radialGradient id="vascular-bypass-window-halo" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#fff8d8" stop-opacity="0.82" />
+      <stop offset="0.58" stop-color="#fff8d8" stop-opacity="0.22" />
+      <stop offset="1" stop-color="#fff8d8" stop-opacity="0" />
+    </radialGradient>
+    <g id="vascular-bypass-tissue-cell">
+      <path d="M-24-9C-21-27-2-33 15-26C31-18 32 2 22 18C11 34-12 30-23 17C-30 9-30-1-24-9Z"
+        fill="#e3c7d0" fill-opacity="0.58" stroke="#bd8ca2" stroke-opacity="0.42" stroke-width="2" />
+      <ellipse cx="1" cy="0" rx="7" ry="5.5" fill="#955a82" fill-opacity="0.62" />
+    </g>
+    <g id="vascular-bypass-endothelial-cell">
+      <ellipse rx="13" ry="6" fill="#f8d9cf" stroke="#9e5870" stroke-opacity="0.64" stroke-width="1.6" />
+      <ellipse rx="4" ry="2" fill="#9d5c78" fill-opacity="0.72" />
+    </g>
+    <g id="vascular-bypass-flow-chevron" fill="none" stroke="#fff4ec" stroke-opacity="0.76" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M-10-8L0 0L-10 8" stroke-width="4" />
+    </g>
+  </defs>
+  <g data-aoc-panel="state-0" transform="translate(480 300)">
+    <g data-aoc-part="tissue-ground">
+      <rect x="-480" y="-300" width="960" height="600" rx="24" fill="url(#vascular-bypass-tissue-wash)" />
+      <path d="M-487-191C-400-222-331-208-252-160S-75-101 28-150S214-208 322-169S428-139 493-184"
+        fill="none" stroke="#b6d8c8" stroke-opacity="0.5" stroke-width="17" stroke-linecap="round" />
+      <path d="M-480 212C-398 173-304 175-222 221S-61 261 38 213S221 151 322 190S433 221 492 176"
+        fill="none" stroke="#d6b8c5" stroke-opacity="0.42" stroke-width="20" stroke-linecap="round" />
+      <path d="M-444-64C-361-112-288-94-226-47M-366 97C-298 67-224 75-156 110M180-48C259-90 349-80 440-30"
+        fill="none" stroke="#ffffff" stroke-opacity="0.38" stroke-width="5" stroke-linecap="round" />
+    </g>
+    <g data-aoc-part="open-tissue-cells" opacity="0.9">
+      <use href="#vascular-bypass-tissue-cell" transform="translate(-367 -211) rotate(-18)" />
+      <use href="#vascular-bypass-tissue-cell" transform="translate(-242 -194) rotate(28) scale(0.84)" />
+      <use href="#vascular-bypass-tissue-cell" transform="translate(-102 -224) rotate(8) scale(0.94)" />
+      <use href="#vascular-bypass-tissue-cell" transform="translate(74 -206) rotate(-24) scale(0.82)" />
+      <use href="#vascular-bypass-tissue-cell" transform="translate(296 -203) rotate(18)" />
+      <use href="#vascular-bypass-tissue-cell" transform="translate(-365 205) rotate(30) scale(0.85)" />
+      <use href="#vascular-bypass-tissue-cell" transform="translate(-215 226) rotate(-18)" />
+      <use href="#vascular-bypass-tissue-cell" transform="translate(77 224) rotate(36) scale(0.88)" />
+      <use href="#vascular-bypass-tissue-cell" transform="translate(286 202) rotate(-12) scale(0.96)" />
+      <use href="#vascular-bypass-tissue-cell" transform="translate(404 152) rotate(42) scale(0.78)" />
+    </g>
+    <g data-aoc-part="bypass-coverage-zone">
+      <ellipse cx="-60" cy="-38" rx="151" ry="91" fill="url(#vascular-bypass-window-halo)" />
+      <circle cx="-60" cy="-38" r="66" fill="none" stroke="#d99a78" stroke-opacity="0.42" stroke-width="3" stroke-dasharray="6 8" />
+      <path d="M-220 20C-169 4-113-32-60-38S44 4 90 30" fill="none" stroke="#943e5d" stroke-opacity="0.46" stroke-width="46" stroke-linecap="round" />
+      <path d="M-220 20C-169 4-113-32-60-38S44 4 90 30" fill="none" stroke="url(#vascular-bypass-vessel-fill)" stroke-width="32" stroke-linecap="round" />
+      <path d="M-220 20C-169 4-113-32-60-38S44 4 90 30" fill="none" stroke="#fff2ea" stroke-opacity="0.61" stroke-width="3" stroke-linecap="round" />
+      <use href="#vascular-bypass-flow-chevron" transform="translate(-126 -9) rotate(-18)" />
+      <use href="#vascular-bypass-flow-chevron" transform="translate(-5 -22) rotate(24)" />
+    </g>
+    <g data-aoc-part="armored-vascular-loop">
+      <ellipse cx="50" cy="205" rx="202" ry="87" fill="#d9c7df" fill-opacity="0.2" />
+      <path d="M-220 20C-206 65-188 111-178 140C-153 170-122 192-92 200C-46 207 4 220 50 214C109 207 165 182 206 152C197 126 188 105 180 86C151 65 119 48 90 30"
+        fill="none" stroke="#593c70" stroke-opacity="0.48" stroke-width="52" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M-220 20C-206 65-188 111-178 140C-153 170-122 192-92 200C-46 207 4 220 50 214C109 207 165 182 206 152C197 126 188 105 180 86C151 65 119 48 90 30"
+        fill="none" stroke="url(#vascular-bypass-vein-fill)" stroke-width="36" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M-220 20C-206 65-188 111-178 140C-153 170-122 192-92 200C-46 207 4 220 50 214C109 207 165 182 206 152C197 126 188 105 180 86C151 65 119 48 90 30"
+        fill="none" stroke="#f6e9f4" stroke-opacity="0.53" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <circle cx="50" cy="214" r="68" fill="none" stroke="#72517f" stroke-opacity="0.55" stroke-width="3" stroke-dasharray="7 8" />
+      <use href="#vascular-bypass-flow-chevron" transform="translate(-184 99) rotate(66)" />
+      <use href="#vascular-bypass-flow-chevron" transform="translate(-38 209) rotate(5)" />
+      <use href="#vascular-bypass-flow-chevron" transform="translate(150 176) rotate(-27)" />
+    </g>
+    <g data-aoc-part="shared-inlet-and-exit">
+      <path d="M-428 20H-220" fill="none" stroke="#943e5d" stroke-opacity="0.48" stroke-width="48" stroke-linecap="round" />
+      <path d="M-428 20H-220" fill="none" stroke="url(#vascular-bypass-vessel-fill)" stroke-width="34" stroke-linecap="round" />
+      <path d="M-428 20H-220" fill="none" stroke="#fff2ea" stroke-opacity="0.62" stroke-width="3" stroke-linecap="round" />
+      <path d="M90 30H428" fill="none" stroke="#593c70" stroke-opacity="0.5" stroke-width="52" stroke-linecap="round" />
+      <path d="M90 30H428" fill="none" stroke="url(#vascular-bypass-vein-fill)" stroke-width="36" stroke-linecap="round" />
+      <path d="M90 30H428" fill="none" stroke="#f6e9f4" stroke-opacity="0.58" stroke-width="3" stroke-linecap="round" />
+      <use href="#vascular-bypass-flow-chevron" transform="translate(-336 20)" />
+      <use href="#vascular-bypass-flow-chevron" transform="translate(280 30)" />
+    </g>
+    <g data-aoc-part="vessel-wall-details">
+      <use href="#vascular-bypass-endothelial-cell" transform="translate(-369 4) rotate(-4)" />
+      <use href="#vascular-bypass-endothelial-cell" transform="translate(-283 36) rotate(4)" />
+      <use href="#vascular-bypass-endothelial-cell" transform="translate(-146 -5) rotate(-17)" />
+      <use href="#vascular-bypass-endothelial-cell" transform="translate(-59 -18) rotate(-2)" />
+      <use href="#vascular-bypass-endothelial-cell" transform="translate(-177 124) rotate(53)" />
+      <use href="#vascular-bypass-endothelial-cell" transform="translate(-86 183) rotate(6)" />
+      <use href="#vascular-bypass-endothelial-cell" transform="translate(55 199) rotate(-10)" />
+      <use href="#vascular-bypass-endothelial-cell" transform="translate(192 138) rotate(-70)" />
+      <use href="#vascular-bypass-endothelial-cell" transform="translate(187 44) rotate(0)" />
+      <use href="#vascular-bypass-endothelial-cell" transform="translate(353 13) rotate(0)" />
+    </g>
+    <g data-aoc-part="blocked-biological-structures">
+      <circle cx="-42" cy="85" r="52" fill="#ead7d2" fill-opacity="0.9" stroke="#a45b75" stroke-opacity="0.72" stroke-width="4" />
+      <ellipse cx="-42" cy="85" rx="30" ry="34" fill="#8d557c" stroke="#653a60" stroke-width="3" />
+      <ellipse cx="-51" cy="75" rx="10" ry="14" fill="#c99bbe" fill-opacity="0.74" />
+      <path d="M-84 72C-104 54-112 39-123 22M-85 96C-107 108-120 123-134 139M1 71C21 57 37 47 52 31M1 100C24 117 39 132 57 148"
+        fill="none" stroke="#8f5277" stroke-opacity="0.72" stroke-width="7" stroke-linecap="round" />
+      <circle cx="195" cy="-95" r="57" fill="#d8d7be" fill-opacity="0.92" stroke="#8c8460" stroke-opacity="0.82" stroke-width="4" />
+      <path d="M157-100C165-124 190-139 214-128C235-119 242-94 229-75C215-55 187-53 169-68C158-77 154-89 157-100Z"
+        fill="#aaa677" stroke="#716c4f" stroke-width="3" />
+      <path d="M145-118C124-135 108-145 91-150M146-78C123-70 104-60 85-46M239-113C260-126 279-134 299-136M236-76C258-62 277-48 297-31"
+        fill="none" stroke="#8e8a62" stroke-opacity="0.76" stroke-width="7" stroke-linecap="round" />
+      <circle cx="195" cy="-95" r="67" fill="none" stroke="#918963" stroke-opacity="0.58" stroke-width="3" stroke-dasharray="5 8" />
+    </g>
+    <g data-aoc-part="route-landmark-cues" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="-220" cy="20" r="17" fill="#fff0e7" stroke="#93405d" stroke-width="4" />
+      <path d="M-244 20H-224M-237 6L-224 20L-237 34M-205 9L-191-3M-205 31L-191 43" stroke="#93405d" stroke-width="4" />
+      <circle cx="90" cy="30" r="17" fill="#f6e7f2" stroke="#69436f" stroke-width="4" />
+      <path d="M73 15L90 30L73 45M90 30H112" stroke="#69436f" stroke-width="4" />
+      <circle cx="428" cy="30" r="20" fill="#f3ebfa" stroke="#69436f" stroke-width="4" />
+      <path d="M418 18L434 30L418 42" stroke="#69436f" stroke-width="4" />
+    </g>
+    <g data-aoc-part="foreground-matrix" fill="none" stroke-linecap="round">
+      <path d="M-462 123C-392 85-336 107-279 151M-11-270C44-244 89-250 143-277M305 248C360 220 410 221 470 258"
+        stroke="#a7cdbb" stroke-opacity="0.64" stroke-width="6" />
+      <path d="M-445-148C-401-118-371-105-330-99M-29 265C25 238 72 243 121 269M323-157C376-130 422-137 468-169"
+        stroke="#ffffff" stroke-opacity="0.48" stroke-width="4" />
+    </g>
+  </g>
+</svg>

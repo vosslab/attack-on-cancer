@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" data-aoc-kind="world" data-aoc-key="metastatic_confluence"
+  data-aoc-frame-width="960" data-aoc-frame-height="600" viewBox="0 0 960 600">
+  <defs>
+    <linearGradient id="metastatic-confluence-tissue-wash" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f7e7e1" />
+      <stop offset="0.46" stop-color="#eee9d7" />
+      <stop offset="1" stop-color="#d9e8df" />
+    </linearGradient>
+    <radialGradient id="metastatic-confluence-source-fill" cx="35%" cy="28%" r="72%">
+      <stop offset="0" stop-color="#f7b4b3" />
+      <stop offset="0.52" stop-color="#cf6675" />
+      <stop offset="1" stop-color="#843d62" />
+    </radialGradient>
+    <radialGradient id="metastatic-confluence-merge-halo" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#fff6d2" stop-opacity="0.9" />
+      <stop offset="0.48" stop-color="#f7d89d" stop-opacity="0.42" />
+      <stop offset="1" stop-color="#f7d89d" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="metastatic-confluence-vessel-fill" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#b95c72" />
+      <stop offset="0.48" stop-color="#f4bab3" />
+      <stop offset="1" stop-color="#9c4f68" />
+    </linearGradient>
+    <g id="metastatic-confluence-tissue-cell">
+      <path d="M-24-9C-20-26-3-32 13-26C29-20 32-1 22 15C13 30-7 32-21 20C-31 11-30 1-24-9Z"
+        fill="#e6c5cf" fill-opacity="0.5" stroke="#bf879a" stroke-opacity="0.38" stroke-width="2" />
+      <ellipse cx="1" cy="1" rx="7" ry="5" fill="#9a6685" fill-opacity="0.48" />
+    </g>
+    <g id="metastatic-confluence-source-nodule">
+      <circle r="29" fill="url(#metastatic-confluence-source-fill)" stroke="#6c3459" stroke-width="3" />
+      <circle cx="-10" cy="-8" r="7" fill="#f5b3b6" fill-opacity="0.62" />
+      <circle cx="10" cy="5" r="9" fill="#a84c6c" fill-opacity="0.72" />
+      <circle cx="-2" cy="13" r="5" fill="#ed91a0" fill-opacity="0.66" />
+      <path d="M-33-2C-48-11-58-24-64-40M30-6C45-12 55-25 60-40M-21 26C-31 40-42 48-58 53M22 24C35 38 49 42 64 47"
+        fill="none" stroke="#8c4567" stroke-opacity="0.7" stroke-width="5" stroke-linecap="round" />
+    </g>
+    <g id="metastatic-confluence-merge-rosette">
+      <circle r="46" fill="url(#metastatic-confluence-merge-halo)" />
+      <circle r="16" fill="#fff0c7" fill-opacity="0.9" stroke="#9c5b67" stroke-width="2.5" />
+      <circle cx="-23" cy="-10" r="8" fill="#ce7780" fill-opacity="0.72" />
+      <circle cx="23" cy="10" r="8" fill="#ce7780" fill-opacity="0.72" />
+      <path d="M-33-18C-22-26-14-25-7-16M33 18C22 26 14 25 7 16M-26 28C-19 17-13 13-2 12M26-28C19-17 13-13 2-12"
+        fill="none" stroke="#a96270" stroke-width="3" stroke-linecap="round" />
+    </g>
+    <g id="metastatic-confluence-matrix-fiber">
+      <path d="M-34 0C-17-13 2-13 18-3C27 3 35 2 45-5" fill="none" stroke="#a67982" stroke-opacity="0.5" stroke-width="5" stroke-linecap="round" />
+      <path d="M-30 10C-11 1 7 4 29 15" fill="none" stroke="#fff8e9" stroke-opacity="0.45" stroke-width="2" stroke-linecap="round" />
+    </g>
+  </defs>
+  <g data-aoc-panel="state-0" transform="translate(480 300)">
+    <g data-aoc-part="tissue-ground">
+      <rect x="-480" y="-300" width="960" height="600" rx="24" fill="url(#metastatic-confluence-tissue-wash)" />
+      <path d="M-490-182C-402-218-328-200-254-157S-106-99-22-145S154-215 253-176S403-132 491-176"
+        fill="none" stroke="#c4d9c9" stroke-opacity="0.48" stroke-width="20" stroke-linecap="round" />
+      <path d="M-484 184C-385 134-299 153-223 204S-68 254 32 205S201 137 290 178S404 218 490 163"
+        fill="none" stroke="#d8b9c1" stroke-opacity="0.34" stroke-width="18" stroke-linecap="round" />
+      <path d="M-420-50C-346-88-279-78-222-34M-91 254C-25 223 30 231 92 260M260-36C328-78 396-70 453-28"
+        fill="none" stroke="#fffdf1" stroke-opacity="0.46" stroke-width="5" stroke-linecap="round" />
+    </g>
+    <g data-aoc-part="open-tissue-cells" opacity="0.88">
+      <use href="#metastatic-confluence-tissue-cell" transform="translate(-324 -208) rotate(-18)" />
+      <use href="#metastatic-confluence-tissue-cell" transform="translate(-190 -224) rotate(23) scale(0.82)" />
+      <use href="#metastatic-confluence-tissue-cell" transform="translate(2 -216) rotate(-10) scale(0.92)" />
+      <use href="#metastatic-confluence-tissue-cell" transform="translate(175 -204) rotate(32) scale(0.76)" />
+      <use href="#metastatic-confluence-tissue-cell" transform="translate(328 -218) rotate(-17)" />
+      <use href="#metastatic-confluence-tissue-cell" transform="translate(-382 175) rotate(31) scale(0.84)" />
+      <use href="#metastatic-confluence-tissue-cell" transform="translate(-112 211) rotate(-24) scale(0.78)" />
+      <use href="#metastatic-confluence-tissue-cell" transform="translate(169 220) rotate(18) scale(0.92)" />
+      <use href="#metastatic-confluence-tissue-cell" transform="translate(385 172) rotate(-28) scale(0.8)" />
+    </g>
+    <g data-aoc-part="independent-source-territories">
+      <circle cx="-388" cy="-228" r="72" fill="#f5b7bc" fill-opacity="0.16" />
+      <use href="#metastatic-confluence-source-nodule" transform="translate(-388 -228) scale(0.92)" />
+      <path d="M-456-166C-426-150-395-149-366-160M-430-288C-410-273-383-267-355-277" fill="none" stroke="#b96577" stroke-opacity="0.4" stroke-width="4" stroke-linecap="round" />
+      <circle cx="-414" cy="-50" r="76" fill="#eeb3bf" fill-opacity="0.15" />
+      <use href="#metastatic-confluence-source-nodule" transform="translate(-414 -50) scale(0.96)" />
+      <path d="M-467 6C-439 16-409 13-385 0M-470-98C-444-109-416-111-385-101" fill="none" stroke="#b96577" stroke-opacity="0.4" stroke-width="4" stroke-linecap="round" />
+      <circle cx="412" cy="-132" r="72" fill="#f5b7bc" fill-opacity="0.16" />
+      <use href="#metastatic-confluence-source-nodule" transform="translate(412 -132) scale(0.9)" />
+      <path d="M354-190C380-203 408-204 436-194M356-77C382-64 412-64 440-78" fill="none" stroke="#b96577" stroke-opacity="0.4" stroke-width="4" stroke-linecap="round" />
+      <circle cx="326" cy="228" r="76" fill="#eeb3bf" fill-opacity="0.15" />
+      <use href="#metastatic-confluence-source-nodule" transform="translate(326 228) scale(0.96)" />
+      <path d="M260 173C282 157 310 153 340 162M278 286C303 298 333 300 361 290" fill="none" stroke="#b96577" stroke-opacity="0.4" stroke-width="4" stroke-linecap="round" />
+    </g>
+    <g data-aoc-part="staged-confluence-landmarks">
+      <ellipse cx="-170" cy="-128" rx="82" ry="68" fill="url(#metastatic-confluence-merge-halo)" />
+      <use href="#metastatic-confluence-merge-rosette" transform="translate(-170 -128)" />
+      <ellipse cx="170" cy="-70" rx="82" ry="68" fill="url(#metastatic-confluence-merge-halo)" />
+      <use href="#metastatic-confluence-merge-rosette" transform="translate(170 -70)" />
+      <ellipse cx="-40" cy="-50" rx="112" ry="88" fill="url(#metastatic-confluence-merge-halo)" />
+      <use href="#metastatic-confluence-merge-rosette" transform="translate(-40 -50) scale(1.32)" />
+      <path d="M-230-116C-214-134-196-142-178-142M-110-108C-91-95-75-72-63-55M107-73C125-91 147-99 167-98M105-48C81-40 56-43 33-50"
+        fill="none" stroke="#ac6a70" stroke-opacity="0.52" stroke-width="5" stroke-linecap="round" />
+    </g>
+    <g data-aoc-part="biological-obstacles">
+      <g transform="translate(-254 34)">
+        <circle r="65" fill="#7b5269" fill-opacity="0.2" />
+        <path d="M-49-10C-25-51 16-59 48-30M-53 18C-21-7 21-9 56 18M-39 43C-10 18 26 20 45 47" fill="none" stroke="#765066" stroke-opacity="0.56" stroke-width="7" stroke-linecap="round" />
+      </g>
+      <g transform="translate(264 108)">
+        <circle r="72" fill="#7b5269" fill-opacity="0.2" />
+        <path d="M-55-15C-29-55 12-62 51-31M-59 17C-24-11 19-7 61 23M-42 48C-6 19 30 24 51 52" fill="none" stroke="#765066" stroke-opacity="0.56" stroke-width="8" stroke-linecap="round" />
+      </g>
+      <g transform="translate(12 142)">
+        <circle r="58" fill="#76506a" fill-opacity="0.17" />
+        <circle r="29" fill="#a9809b" fill-opacity="0.46" stroke="#76506a" stroke-opacity="0.58" stroke-width="3" />
+        <circle cx="-10" cy="-5" r="7" fill="#dbc1d2" fill-opacity="0.8" />
+        <circle cx="12" cy="8" r="8" fill="#d2a9c2" fill-opacity="0.8" />
+      </g>
+    </g>
+    <g data-aoc-part="circulation-exit-territory">
+      <ellipse cx="426" cy="8" rx="84" ry="66" fill="#cbe3dc" fill-opacity="0.42" />
+      <path d="M356-20C389-38 430-29 465-3C478 7 486 15 496 20" fill="none" stroke="#9a506a" stroke-opacity="0.56" stroke-width="36" stroke-linecap="round" />
+      <path d="M356-20C389-38 430-29 465-3C478 7 486 15 496 20" fill="none" stroke="url(#metastatic-confluence-vessel-fill)" stroke-width="25" stroke-linecap="round" />
+      <path d="M369-25C402-39 435-28 465-5" fill="none" stroke="#fff0e4" stroke-opacity="0.63" stroke-width="3" stroke-linecap="round" />
+      <ellipse cx="426" cy="8" rx="24" ry="18" fill="#f7d4c9" fill-opacity="0.76" stroke="#9a506a" stroke-width="3" />
+      <path d="M445-6L463 7L445 20" fill="none" stroke="#87475f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+    <g data-aoc-part="foreground-matrix">
+      <use href="#metastatic-confluence-matrix-fiber" transform="translate(-440 108) rotate(12)" />
+      <use href="#metastatic-confluence-matrix-fiber" transform="translate(-74 -274) rotate(-8)" />
+      <use href="#metastatic-confluence-matrix-fiber" transform="translate(224 248) rotate(-14)" />
+      <use href="#metastatic-confluence-matrix-fiber" transform="translate(300 -244) rotate(18)" />
+    </g>
+  </g>
+</svg>

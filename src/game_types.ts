@@ -3,7 +3,8 @@ export type TowerId =
   "doctor" | "chemotherapy" | "t_cell" | "radiation" | "antibody" | "macrophage" | "crispr";
 export type EnemyId = "basic" | "fast" | "tough" | "dividing" | "immune_evasive" | "tumor_mass";
 export type GameStatus = "briefing" | "playing" | "paused" | "intermission" | "won" | "lost";
-export type SceneId = 1 | 2;
+export type LevelId = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+export type RouteId = string;
 export type RepairOutcome = "repair" | "mismatch" | "tumor_suppressed";
 
 export interface Point {
@@ -65,6 +66,7 @@ export interface WaveEntry {
 export interface Enemy {
   id: number;
   type: EnemyId;
+  routeId: RouteId;
   health: number;
   pathDistance: number;
   markedUntil: number;
@@ -89,12 +91,19 @@ export interface CellRepairEvent {
   attempt: number;
   enemyId: number;
   type: EnemyId;
+  routeId: RouteId;
   pathDistance: number;
+}
+
+export interface PendingSpawn {
+  type: EnemyId;
+  routeId: RouteId;
+  at: number;
 }
 
 export interface GameState {
   status: GameStatus;
-  scene: SceneId;
+  level: LevelId;
   difficulty: DifficultyId;
   tp: number;
   metastases: number;
@@ -103,7 +112,7 @@ export interface GameState {
   towers: Tower[];
   nextEnemyId: number;
   nextTowerId: number;
-  pendingSpawns: Array<{ type: EnemyId; at: number }>;
+  pendingSpawns: PendingSpawn[];
   repairEvents: CellRepairEvent[];
   time: number;
 }

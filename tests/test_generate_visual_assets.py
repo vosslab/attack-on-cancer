@@ -1,5 +1,6 @@
 # Standard Library
 import pathlib
+import xml.etree.ElementTree
 
 # PIP3 modules
 import pytest
@@ -186,3 +187,70 @@ def test_catalog_has_compile_time_enemy_and_tower_coverage() -> None:
 	assert 'crispr: TowerCrisprArtwork' in output
 	assert 'crispr: EffectAttackCrisprState0' in output
 	assert 'export function RepairArtwork' in output
+
+
+#============================================
+def test_world_artwork_type_and_component_follow_validated_sheets(
+	tmp_path: pathlib.Path,
+) -> None:
+	"""A new approved world sheet becomes a typed public generated renderer."""
+	sheets = generate_visual_assets.load_sheets(generate_visual_assets.SHEETS_DIR)
+	path = write_sheet(
+		tmp_path / "capillary_crossroads.svg",
+		kind="world",
+		key="capillary_crossroads",
+		panels=("state-0",),
+	)
+	campaign_sheet = generate_visual_assets.parse_sheet(path)
+	output = generate_visual_assets.render_typescript(sheets + (campaign_sheet,))
+	assert '"capillary_crossroads"' in generate_visual_assets.world_artwork_id_type(
+		sheets + (campaign_sheet,)
+	)
+	assert "capillary_crossroads: WorldCapillaryCrossroadsState0" in output
+
+
+#============================================
+def catalog_sheet(kind: str, key: str) -> generate_visual_assets.VisualSheet:
+	"""Construct a validated-sheet identity for catalog boundary tests."""
+	return generate_visual_assets.VisualSheet(
+		pathlib.Path(f"{kind}_{key}.svg"),
+		kind,
+		key,
+		1,
+		1,
+		xml.etree.ElementTree.Element("svg"),
+		(),
+	)
+
+
+#============================================
+def test_catalog_requires_core_sheets_and_allows_only_approved_world_sheets() -> None:
+	"""Core assets are mandatory; planned world art is optional but closed."""
+	core_sheets = tuple(
+		catalog_sheet(kind, key)
+		for kind, catalog in generate_visual_assets.EXPECTED_CATALOG.items()
+		for key in catalog
+	)
+	optional_world_sheet = catalog_sheet("world", "capillary_crossroads")
+
+	generate_visual_assets.validate_catalog(core_sheets + (optional_world_sheet,))
+
+	with pytest.raises(ValueError, match="missing visual sheets: enemy/basic"):
+		generate_visual_assets.validate_catalog(core_sheets[1:])
+	with pytest.raises(ValueError, match="unexpected visual sheets: world/unapproved_route"):
+		generate_visual_assets.validate_catalog(
+			core_sheets + (catalog_sheet("world", "unapproved_route"),)
+		)
+
+
+#============================================
+def test_generated_catalog_replaces_output_without_temporary_artifacts(
+	tmp_path: pathlib.Path,
+	monkeypatch: pytest.MonkeyPatch,
+) -> None:
+	"""Generated output is replaced atomically instead of exposing a partial file."""
+	output_path = tmp_path / "visual_assets" / "index.tsx"
+	monkeypatch.setattr(generate_visual_assets, "OUTPUT_FILE", output_path)
+	generate_visual_assets.write_catalog_atomically("fresh catalog\n")
+	assert output_path.read_text(encoding="ascii") == "fresh catalog\n"
+	assert not tuple(output_path.parent.glob("*.tmp"))

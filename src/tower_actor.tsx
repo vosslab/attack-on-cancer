@@ -20,11 +20,15 @@ function towerAimDegrees(tower: Tower): number {
   return (Math.atan2(vertical, horizontal) * 180) / Math.PI;
 }
 
+function towerAccessibleName(tower: Tower): string {
+  return `${TOWERS[tower.type].name} treatment, tier ${tower.tier + 1}, id ${tower.id}`;
+}
+
 export function TowerActor(props: {
   tower: Tower;
   time: number;
   selected: boolean;
-  onPick: (event: MouseEvent, tower: Tower) => void;
+  onPick: (tower: Tower) => void;
 }): JSX.Element {
   const attacking = (): boolean =>
     props.tower.attackFlashUntil !== undefined && props.tower.attackFlashUntil > props.time;
@@ -42,7 +46,21 @@ export function TowerActor(props: {
       data-repair-misses={props.tower.repairMisses}
       style={{ "--actor-phase": actorAnimationDelay(props.tower.id) }}
       transform={`translate(${props.tower.position.x} ${props.tower.position.y})`}
-      on:click={(event) => props.onPick(event, props.tower)}
+      role="button"
+      tabIndex={0}
+      aria-label={towerAccessibleName(props.tower)}
+      onPointerDown={(event) => event.stopPropagation()}
+      onClick={(event) => {
+        event.stopPropagation();
+        props.onPick(props.tower);
+      }}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          event.stopPropagation();
+          props.onPick(props.tower);
+        }
+      }}
     >
       <circle class="tower-aura" r="29" />
       <g class="tower-artwork-aim" style={{ "--tower-aim": aim() }}>

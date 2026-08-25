@@ -1,0 +1,137 @@
+<svg xmlns="http://www.w3.org/2000/svg" data-aoc-kind="world" data-aoc-key="ductal_delta"
+  data-aoc-frame-width="960" data-aoc-frame-height="600" viewBox="0 0 960 600">
+  <defs>
+    <linearGradient id="ductal-delta-tissue-wash" x1="0" y1="0.08" x2="1" y2="0.92">
+      <stop offset="0" stop-color="#f9ecdf" />
+      <stop offset="0.46" stop-color="#f4eee2" />
+      <stop offset="1" stop-color="#e4f0e7" />
+    </linearGradient>
+    <radialGradient id="ductal-delta-upper-territory" cx="44%" cy="44%" r="61%">
+      <stop offset="0" stop-color="#f5b9ba" stop-opacity="0.82" />
+      <stop offset="0.62" stop-color="#e9a4ac" stop-opacity="0.36" />
+      <stop offset="1" stop-color="#e9a4ac" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="ductal-delta-lower-territory" cx="42%" cy="56%" r="61%">
+      <stop offset="0" stop-color="#d9b8dc" stop-opacity="0.82" />
+      <stop offset="0.62" stop-color="#c69bca" stop-opacity="0.34" />
+      <stop offset="1" stop-color="#c69bca" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="ductal-delta-neck-halo" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#fff4cf" stop-opacity="0.86" />
+      <stop offset="0.54" stop-color="#f7d999" stop-opacity="0.3" />
+      <stop offset="1" stop-color="#f7d999" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="ductal-delta-lobule-fill" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e7a6ae" />
+      <stop offset="0.56" stop-color="#ca768c" />
+      <stop offset="1" stop-color="#9f5574" />
+    </linearGradient>
+    <linearGradient id="ductal-delta-fibrous-fill" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#bbd3b4" />
+      <stop offset="1" stop-color="#709581" />
+    </linearGradient>
+    <g id="ductal-delta-tissue-cell">
+      <path d="M-24-8C-21-25-3-31 13-25C28-18 32 0 23 15C14 28-7 31-20 20C-30 12-30 1-24-8Z"
+        fill="#e6ced1" fill-opacity="0.5" stroke="#bf8b9b" stroke-opacity="0.35" stroke-width="2" />
+      <ellipse cx="1" cy="1" rx="7" ry="5.2" fill="#9f6683" fill-opacity="0.5" />
+    </g>
+    <g id="ductal-delta-acinar-bud">
+      <circle r="17" fill="#f8d4c9" stroke="#b96f82" stroke-width="2.5" />
+      <circle r="7" fill="#97526f" fill-opacity="0.76" />
+      <path d="M-11-3C-5-11 5-11 11-3M-11 4C-4 11 5 11 11 4" fill="none"
+        stroke="#fff1e7" stroke-opacity="0.72" stroke-width="2" stroke-linecap="round" />
+    </g>
+    <g id="ductal-delta-matrix-fiber" fill="none" stroke-linecap="round">
+      <path d="M-28 0C-15-10 14-10 28 0" stroke="#699b89" stroke-opacity="0.48" stroke-width="5" />
+      <path d="M-23 10C-9 2 12 2 24 10" stroke="#ffffff" stroke-opacity="0.45" stroke-width="2.5" />
+    </g>
+  </defs>
+  <g data-aoc-panel="state-0" transform="translate(480 300)">
+    <g data-aoc-part="tissue-ground">
+      <rect x="-480" y="-300" width="960" height="600" rx="24" fill="url(#ductal-delta-tissue-wash)" />
+      <path d="M-485-182C-388-218-303-191-225-142C-149-95-84-100-20-137M112-245C202-206 288-213 364-253C409-276 449-270 490-247"
+        fill="none" stroke="#b8d7c4" stroke-opacity="0.36" stroke-width="18" stroke-linecap="round" />
+      <path d="M-480 185C-394 150-314 158-234 207C-142 263-70 248-8 206M138 183C214 144 291 154 365 201C420 237 457 226 490 200"
+        fill="none" stroke="#d7b7c1" stroke-opacity="0.3" stroke-width="18" stroke-linecap="round" />
+      <path d="M-438-54C-388-81-334-72-292-35M-224 255C-167 224-106 229-60 260M226-90C292-123 366-107 430-61"
+        fill="none" stroke="#ffffff" stroke-opacity="0.42" stroke-width="5" stroke-linecap="round" />
+    </g>
+    <g data-aoc-part="open-placement-tissue" opacity="0.9">
+      <use href="#ductal-delta-tissue-cell" transform="translate(-390 -218) rotate(-14)" />
+      <use href="#ductal-delta-tissue-cell" transform="translate(-224 -226) rotate(31) scale(0.8)" />
+      <use href="#ductal-delta-tissue-cell" transform="translate(-84 -221) rotate(8) scale(0.9)" />
+      <use href="#ductal-delta-tissue-cell" transform="translate(120 -215) rotate(-26) scale(0.82)" />
+      <use href="#ductal-delta-tissue-cell" transform="translate(314 -214) rotate(22)" />
+      <use href="#ductal-delta-tissue-cell" transform="translate(-402 205) rotate(20) scale(0.82)" />
+      <use href="#ductal-delta-tissue-cell" transform="translate(-219 224) rotate(-20)" />
+      <use href="#ductal-delta-tissue-cell" transform="translate(22 226) rotate(26) scale(0.84)" />
+      <use href="#ductal-delta-tissue-cell" transform="translate(213 211) rotate(-10) scale(0.92)" />
+      <use href="#ductal-delta-tissue-cell" transform="translate(413 173) rotate(38) scale(0.77)" />
+    </g>
+    <g data-aoc-part="upper-source-territory">
+      <ellipse cx="-357" cy="-168" rx="163" ry="129" fill="url(#ductal-delta-upper-territory)" />
+      <path d="M-445-174C-422-224-352-242-309-218C-273-198-259-151-283-113C-311-69-380-70-420-104C-446-126-455-151-445-174Z"
+        fill="#edbec0" fill-opacity="0.7" stroke="#bd7184" stroke-opacity="0.55" stroke-width="3" />
+      <path d="M-423-182C-400-208-361-211-331-191C-302-172-302-130-330-111C-359-91-403-104-421-133C-431-149-435-168-423-182Z"
+        fill="url(#ductal-delta-lobule-fill)" stroke="#8f4f6b" stroke-width="3" />
+      <circle cx="-377" cy="-153" r="31" fill="#f5c3bf" fill-opacity="0.9" stroke="#804662" stroke-width="3" />
+      <circle cx="-377" cy="-153" r="15" fill="#9a5270" />
+      <path d="M-410-178C-395-193-366-195-346-180M-417-125C-397-107-365-105-342-122"
+        fill="none" stroke="#fff0e9" stroke-opacity="0.72" stroke-width="4" stroke-linecap="round" />
+      <use href="#ductal-delta-acinar-bud" transform="translate(-448 -232) rotate(-14) scale(0.8)" />
+      <use href="#ductal-delta-acinar-bud" transform="translate(-286 -231) rotate(18) scale(0.75)" />
+      <use href="#ductal-delta-acinar-bud" transform="translate(-271 -91) rotate(30) scale(0.74)" />
+      <path d="M-300-182C-262-164-243-130-224-98M-299-119C-266-104-246-77-231-45"
+        fill="none" stroke="#a45e78" stroke-opacity="0.6" stroke-width="8" stroke-linecap="round" />
+    </g>
+    <g data-aoc-part="lower-source-territory">
+      <ellipse cx="-351" cy="166" rx="167" ry="132" fill="url(#ductal-delta-lower-territory)" />
+      <path d="M-441 147C-422 103-359 82-314 105C-270 127-264 181-293 217C-324 254-385 249-424 215C-448 194-453 170-441 147Z"
+        fill="#dbbfdd" fill-opacity="0.72" stroke="#9d6d9d" stroke-opacity="0.57" stroke-width="3" />
+      <path d="M-420 143C-396 115-359 112-328 130C-296 149-294 189-322 212C-350 236-398 224-418 195C-431 176-433 157-420 143Z"
+        fill="#a86b9d" stroke="#754e7d" stroke-width="3" />
+      <circle cx="-373" cy="170" r="31" fill="#d9b6d7" stroke="#68476e" stroke-width="3" />
+      <circle cx="-373" cy="170" r="15" fill="#7d557f" />
+      <path d="M-409 145C-390 125-358 126-336 142M-414 195C-394 217-359 220-337 201"
+        fill="none" stroke="#f7e9f5" stroke-opacity="0.76" stroke-width="4" stroke-linecap="round" />
+      <use href="#ductal-delta-acinar-bud" transform="translate(-449 91) rotate(18) scale(0.77)" />
+      <use href="#ductal-delta-acinar-bud" transform="translate(-279 100) rotate(-26) scale(0.72)" />
+      <use href="#ductal-delta-acinar-bud" transform="translate(-274 236) rotate(14) scale(0.77)" />
+      <path d="M-298 136C-264 150-242 179-221 204M-303 196C-267 205-244 226-221 251"
+        fill="none" stroke="#80577f" stroke-opacity="0.64" stroke-width="8" stroke-linecap="round" />
+    </g>
+    <g data-aoc-part="delta-neck-territory">
+      <ellipse cx="-14" cy="20" rx="152" ry="126" fill="url(#ductal-delta-neck-halo)" />
+      <path d="M-159-8C-125-48-82-64-38-49C-4-37 15-7 36 16C59 41 92 51 125 40"
+        fill="none" stroke="#e8b8a4" stroke-opacity="0.45" stroke-width="22" stroke-linecap="round" />
+      <path d="M-152 46C-109 76-62 84-22 67C14 52 29 27 54 10C76-5 105-9 131 4"
+        fill="none" stroke="#cba9bd" stroke-opacity="0.43" stroke-width="22" stroke-linecap="round" />
+      <circle cx="-124" cy="0" r="58" fill="#edc7bc" fill-opacity="0.88" stroke="#a86679" stroke-width="4" />
+      <path d="M-165-11C-157-49-108-64-79-35C-55-11-70 34-107 50C-145 66-177 29-165-11Z"
+        fill="url(#ductal-delta-lobule-fill)" stroke="#874b67" stroke-width="3" />
+      <ellipse cx="-122" cy="0" rx="19" ry="15" fill="#f3c0ba" />
+      <path d="M-157-17C-143-30-114-35-93-20M-157 21C-140 37-111 38-91 23"
+        fill="none" stroke="#fff0e6" stroke-opacity="0.72" stroke-width="3.5" stroke-linecap="round" />
+      <circle cx="-8" cy="21" r="30" fill="#f7dfae" fill-opacity="0.72" stroke="#bd8c67" stroke-opacity="0.7" stroke-width="3" />
+      <circle cx="-8" cy="21" r="16" fill="#f9efcb" fill-opacity="0.88" />
+      <path d="M-48 22C-35 5-20-2-4-2C17-2 28 12 48 18M-48 30C-27 43-7 48 16 41C28 38 38 32 48 25"
+        fill="none" stroke="#a76d6c" stroke-opacity="0.7" stroke-width="4" stroke-linecap="round" />
+    </g>
+    <g data-aoc-part="fibrous-septum-obstacle">
+      <ellipse cx="254" cy="112" rx="77" ry="66" fill="#dce8d5" fill-opacity="0.66" stroke="#82a18d" stroke-opacity="0.68" stroke-width="3" />
+      <path d="M201 119C210 80 237 57 270 61C303 65 324 95 316 127C307 160 272 174 240 160C215 150 197 138 201 119Z"
+        fill="url(#ductal-delta-fibrous-fill)" stroke="#5f7d70" stroke-width="3" />
+      <use href="#ductal-delta-matrix-fiber" transform="translate(258 84) rotate(-18)" />
+      <use href="#ductal-delta-matrix-fiber" transform="translate(257 107) rotate(12)" />
+      <use href="#ductal-delta-matrix-fiber" transform="translate(258 130) rotate(-9)" />
+      <path d="M216 83C232 71 250 68 267 70M243 154C260 161 280 158 299 146"
+        fill="none" stroke="#eff7e9" stroke-opacity="0.72" stroke-width="3" stroke-linecap="round" />
+    </g>
+    <g data-aoc-part="peripheral-matrix" fill="none" stroke-linecap="round">
+      <path d="M-459 83C-410 61-367 71-327 97M65-273C111-248 160-250 209-274M294 252C351 225 410 231 464 258"
+        stroke="#7eaa94" stroke-opacity="0.52" stroke-width="6" />
+      <path d="M-439-143C-397-114-368-105-329-99M-47 262C2 235 53 238 104 266M328-157C372-132 422-138 465-167"
+        stroke="#ffffff" stroke-opacity="0.46" stroke-width="4" />
+    </g>
+  </g>
+</svg>

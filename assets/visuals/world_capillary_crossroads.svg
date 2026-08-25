@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" data-aoc-kind="world" data-aoc-key="capillary_crossroads"
+  data-aoc-frame-width="960" data-aoc-frame-height="600" viewBox="0 0 960 600">
+  <defs>
+    <linearGradient id="capillary-crossroads-tissue-wash" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8ece5" />
+      <stop offset="0.52" stop-color="#f3f0dd" />
+      <stop offset="1" stop-color="#dcefe6" />
+    </linearGradient>
+    <radialGradient id="capillary-crossroads-crossing-halo" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#fff9df" stop-opacity="0.9" />
+      <stop offset="0.56" stop-color="#fff9df" stop-opacity="0.32" />
+      <stop offset="1" stop-color="#fff9df" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="capillary-crossroads-vessel-fill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#dc8b94" />
+      <stop offset="0.48" stop-color="#f6c8bf" />
+      <stop offset="1" stop-color="#c97685" />
+    </linearGradient>
+    <linearGradient id="capillary-crossroads-pericyte-fill" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#9e6782" />
+      <stop offset="1" stop-color="#603f62" />
+    </linearGradient>
+    <g id="capillary-crossroads-tissue-cell">
+      <path d="M-27-8C-23-27-4-35 13-27C32-19 34 2 24 17C14 34-9 32-23 19C-31 12-32 1-27-8Z"
+        fill="#e5cbd2" fill-opacity="0.58" stroke="#c690a4" stroke-opacity="0.42" stroke-width="2" />
+      <ellipse cx="1" cy="1" rx="8" ry="6" fill="#a66a88" fill-opacity="0.55" />
+    </g>
+    <g id="capillary-crossroads-pore">
+      <ellipse rx="7" ry="3.6" fill="#9f5d72" fill-opacity="0.58" />
+      <ellipse rx="3.2" ry="1.3" fill="#fff0df" fill-opacity="0.78" />
+    </g>
+  </defs>
+  <g data-aoc-panel="state-0" transform="translate(480 300)">
+    <g data-aoc-part="tissue-ground">
+      <rect x="-480" y="-300" width="960" height="600" rx="24" fill="url(#capillary-crossroads-tissue-wash)" />
+      <path d="M-492-194C-390-236-320-216-236-170S-80-116 12-164S198-228 308-186S430-150 498-194"
+        fill="none" stroke="#b9d5c5" stroke-opacity="0.45" stroke-width="16" stroke-linecap="round" />
+      <path d="M-492 182C-402 136-316 150-224 204S-54 248 48 196S220 128 316 176S424 214 498 166"
+        fill="none" stroke="#d7b7c0" stroke-opacity="0.34" stroke-width="18" stroke-linecap="round" />
+      <path d="M-418-68C-330-114-250-82-194-30M-286 104C-200 68-130 78-62 118M218-80C300-120 376-104 440-52"
+        fill="none" stroke="#ffffff" stroke-opacity="0.34" stroke-width="5" stroke-linecap="round" />
+    </g>
+    <g data-aoc-part="open-tissue-cells" opacity="0.9">
+      <use href="#capillary-crossroads-tissue-cell" transform="translate(-362 -210) rotate(-14)" />
+      <use href="#capillary-crossroads-tissue-cell" transform="translate(-234 -204) rotate(36) scale(0.82)" />
+      <use href="#capillary-crossroads-tissue-cell" transform="translate(-84 -225) rotate(12) scale(0.95)" />
+      <use href="#capillary-crossroads-tissue-cell" transform="translate(92 -212) rotate(-30) scale(0.8)" />
+      <use href="#capillary-crossroads-tissue-cell" transform="translate(302 -208) rotate(18)" />
+      <use href="#capillary-crossroads-tissue-cell" transform="translate(-332 194) rotate(22) scale(0.85)" />
+      <use href="#capillary-crossroads-tissue-cell" transform="translate(-160 216) rotate(-24)" />
+      <use href="#capillary-crossroads-tissue-cell" transform="translate(58 207) rotate(34) scale(0.86)" />
+      <use href="#capillary-crossroads-tissue-cell" transform="translate(258 204) rotate(-12) scale(0.96)" />
+      <use href="#capillary-crossroads-tissue-cell" transform="translate(396 162) rotate(42) scale(0.76)" />
+    </g>
+    <g data-aoc-part="crossing-territory">
+      <ellipse cx="12" cy="0" rx="150" ry="121" fill="url(#capillary-crossroads-crossing-halo)" />
+      <path d="M-314-6C-248-91-167-121-96-96C-48-79-25-40 4-4C31 29 62 50 112 54C185 60 246 25 298-38"
+        fill="none" stroke="#a35970" stroke-opacity="0.56" stroke-width="42" stroke-linecap="round" />
+      <path d="M-314-6C-248-91-167-121-96-96C-48-79-25-40 4-4C31 29 62 50 112 54C185 60 246 25 298-38"
+        fill="none" stroke="url(#capillary-crossroads-vessel-fill)" stroke-width="30" stroke-linecap="round" />
+      <path d="M-314-6C-248-91-167-121-96-96C-48-79-25-40 4-4C31 29 62 50 112 54C185 60 246 25 298-38"
+        fill="none" stroke="#fff1e8" stroke-opacity="0.56" stroke-width="2.5" stroke-linecap="round" />
+      <path d="M-310 9C-245 99-160 126-89 97C-39 77-13 36 16 4C45-27 82-53 127-53C203-53 254-15 318 61"
+        fill="none" stroke="#a35970" stroke-opacity="0.56" stroke-width="42" stroke-linecap="round" />
+      <path d="M-310 9C-245 99-160 126-89 97C-39 77-13 36 16 4C45-27 82-53 127-53C203-53 254-15 318 61"
+        fill="none" stroke="url(#capillary-crossroads-vessel-fill)" stroke-width="30" stroke-linecap="round" />
+      <path d="M-310 9C-245 99-160 126-89 97C-39 77-13 36 16 4C45-27 82-53 127-53C203-53 254-15 318 61"
+        fill="none" stroke="#fff1e8" stroke-opacity="0.56" stroke-width="2.5" stroke-linecap="round" />
+      <circle cx="9" cy="0" r="27" fill="#f9d9cb" fill-opacity="0.84" stroke="#9e5871" stroke-width="3" />
+      <path d="M-184-93C-158-75-143-58-124-43M-181 95C-157 78-141 59-119 42M194-47C217-35 235-20 251-2M203 41C230 51 253 66 276 83"
+        fill="none" stroke="#8d4f68" stroke-opacity="0.65" stroke-width="3" stroke-linecap="round" />
+    </g>
+    <g data-aoc-part="capillary-membranes">
+      <use href="#capillary-crossroads-pore" transform="translate(-239 -57) rotate(31)" />
+      <use href="#capillary-crossroads-pore" transform="translate(-196 -83) rotate(16)" />
+      <use href="#capillary-crossroads-pore" transform="translate(-139 -97) rotate(4)" />
+      <use href="#capillary-crossroads-pore" transform="translate(-223 64) rotate(-26)" />
+      <use href="#capillary-crossroads-pore" transform="translate(-161 96) rotate(-8)" />
+      <use href="#capillary-crossroads-pore" transform="translate(-94 92) rotate(14)" />
+      <use href="#capillary-crossroads-pore" transform="translate(89 51) rotate(4)" />
+      <use href="#capillary-crossroads-pore" transform="translate(147 47) rotate(-12)" />
+      <use href="#capillary-crossroads-pore" transform="translate(214 22) rotate(-28)" />
+      <use href="#capillary-crossroads-pore" transform="translate(98 -53) rotate(-2)" />
+      <use href="#capillary-crossroads-pore" transform="translate(161 -43) rotate(18)" />
+      <use href="#capillary-crossroads-pore" transform="translate(229 -15) rotate(34)" />
+    </g>
+    <g data-aoc-part="pericyte-island">
+      <ellipse cx="180" cy="0" rx="56" ry="46" fill="#f7dfcf" fill-opacity="0.92" stroke="#bd7381" stroke-opacity="0.62" stroke-width="3" />
+      <path d="M144-10C139-33 159-47 180-38C194-32 204-18 209-3C218 19 201 41 179 39C158 38 140 20 144-10Z"
+        fill="url(#capillary-crossroads-pericyte-fill)" stroke="#57364f" stroke-width="3" />
+      <ellipse cx="178" cy="0" rx="16" ry="12" fill="#e5b7c4" fill-opacity="0.9" />
+      <path d="M146-12C128-26 119-39 103-49M151 20C133 35 122 50 102 60M205-14C222-28 238-34 257-37M202 18C219 34 238 45 261 52"
+        fill="none" stroke="#67435e" stroke-width="8" stroke-linecap="round" />
+      <circle cx="180" cy="0" r="60" fill="none" stroke="#9e5671" stroke-opacity="0.64" stroke-width="3" stroke-dasharray="5 7" />
+    </g>
+    <g data-aoc-part="branch-cues" fill="none" stroke="#8c5167" stroke-linecap="round">
+      <path d="M-355 0H-321M-335-14L-321 0L-335 14" stroke-width="5" />
+      <path d="M-278-16C-262-32-245-44-226-52M-278 16C-261 32-245 44-226 52" stroke-width="4" />
+      <path d="M273-26C294-22 313-12 332 0M273 26C294 22 313 12 332 0" stroke-width="4" />
+      <path d="M330 0H362M348-14L362 0L348 14" stroke-width="5" />
+    </g>
+    <g data-aoc-part="foreground-matrix" fill="none" stroke-linecap="round">
+      <path d="M-462 112C-382 78-340 104-286 144M-35-274C26-244 72-250 135-280M305 249C362 217 407 219 471 259"
+        stroke="#a4cabb" stroke-opacity="0.62" stroke-width="6" />
+      <path d="M-442-149C-398-119-372-107-332-101M-45 262C10 233 55 238 108 266M329-156C379-129 420-134 468-167"
+        stroke="#ffffff" stroke-opacity="0.47" stroke-width="4" />
+    </g>
+  </g>
+</svg>

@@ -41,6 +41,10 @@ async function main() {
     assert.equal((await page.locator("[data-aoc-asset]").count()) > 40, true);
     assert.equal(await page.locator('[data-aoc-asset="tower-crispr"]').count(), 4);
     assert.equal(await page.locator('[data-aoc-asset="transition-repair"]').count(), 1);
+    const campaignWorlds = page.locator(".catalog-world-grid [data-catalog-level]");
+    assert.equal(await campaignWorlds.count(), 10);
+    assert.match(await campaignWorlds.first().innerText(), /Level 1: Skin Tissue/);
+    assert.match(await campaignWorlds.last().innerText(), /Level 10: Metastatic Confluence/);
     for (const outcome of ["mismatch", "repair", "tumor_suppressed"]) {
       assert.equal(await page.locator(`[data-attack-outcome="${outcome}"]`).count(), 1);
     }

@@ -1,8 +1,10 @@
 import { expect, test } from "@playwright/test";
 import type { Locator, Page } from "@playwright/test";
 
-// Selector contract: player-visible controls and map labels live in src/app.tsx:350;
-// semantic actor state hooks live in src/enemy_actor.tsx:69 and src/tower_actor.tsx:26.
+// Selector contract: player-visible controls and map labels are rendered by
+// src/app.tsx; semantic actor state hooks are rendered by src/enemy_actor.tsx
+// src/tower_actor.tsx, and src/world_landmarks.tsx. Keep this proof on those
+// public DOM contracts.
 
 const MAP_SIZE = { width: 960, height: 600 };
 
@@ -22,47 +24,28 @@ const TOWER_CASES = [
   { name: /7\. CRISPR Repair Editor/, type: "crispr", cost: 180 },
 ] as const;
 
-const SCENE_ONE_PLACEMENTS: Placement[] = [
+const SKIN_TISSUE_CAMPAIGN_PLACEMENTS: Placement[] = [
+  { name: /3\. Cytotoxic T Cell/, cost: 125, position: { x: 330, y: 100 } },
+  { name: /3\. Cytotoxic T Cell/, cost: 125, position: { x: 500, y: 255 } },
+  { name: /3\. Cytotoxic T Cell/, cost: 125, position: { x: 590, y: 490 } },
+  { name: /3\. Cytotoxic T Cell/, cost: 125, position: { x: 800, y: 400 } },
+];
+
+// After the foundational coverage has been upgraded, this queue gives the
+// player-visible walkthrough a mixed, deliberately redundant final defense.
+const SKIN_TISSUE_REINFORCEMENTS: Placement[] = [
   { name: /4\. Radiation Bot/, cost: 240, position: { x: 560, y: 300 } },
-  { name: /3\. Cytotoxic T Cell/, cost: 125, position: { x: 350, y: 300 } },
-  { name: /3\. Cytotoxic T Cell/, cost: 125, position: { x: 680, y: 430 } },
-  { name: /1\. Doctor/, cost: 90, position: { x: 170, y: 210 } },
-  { name: /2\. Chemotherapy/, cost: 150, position: { x: 450, y: 500 } },
   { name: /5\. Antibody Therapy/, cost: 145, position: { x: 780, y: 160 } },
   { name: /4\. Radiation Bot/, cost: 240, position: { x: 850, y: 290 } },
-  { name: /3\. Cytotoxic T Cell/, cost: 125, position: { x: 530, y: 260 } },
-  { name: /2\. Chemotherapy/, cost: 150, position: { x: 720, y: 330 } },
-  { name: /1\. Doctor/, cost: 90, position: { x: 100, y: 240 } },
+  { name: /2\. Chemotherapy/, cost: 150, position: { x: 450, y: 500 } },
+  { name: /3\. Cytotoxic T Cell/, cost: 125, position: { x: 350, y: 300 } },
   { name: /4\. Radiation Bot/, cost: 240, position: { x: 290, y: 483 } },
-  { name: /4\. Radiation Bot/, cost: 240, position: { x: 145, y: 435 } },
+  { name: /2\. Chemotherapy/, cost: 150, position: { x: 720, y: 330 } },
   { name: /4\. Radiation Bot/, cost: 240, position: { x: 435, y: 97 } },
-  { name: /4\. Radiation Bot/, cost: 240, position: { x: 628, y: 532 } },
-  { name: /4\. Radiation Bot/, cost: 240, position: { x: 870, y: 483 } },
-  { name: /2\. Chemotherapy/, cost: 150, position: { x: 628, y: 242 } },
-  { name: /3\. Cytotoxic T Cell/, cost: 125, position: { x: 242, y: 97 } },
-  { name: /3\. Cytotoxic T Cell/, cost: 125, position: { x: 387, y: 435 } },
 ];
-
-const CLUSTER_PLACEMENTS: Placement[] = [
-  { name: /1\. Doctor/, cost: 90, position: { x: 270, y: 250 } },
-  { name: /2\. Chemotherapy/, cost: 150, position: { x: 560, y: 300 } },
-  { name: /3\. Cytotoxic T Cell/, cost: 125, position: { x: 720, y: 520 } },
-  { name: /5\. Antibody Therapy/, cost: 145, position: { x: 560, y: 80 } },
-  { name: /4\. Radiation Bot/, cost: 240, position: { x: 880, y: 90 } },
-];
-
-const GRID_TOWERS = [
-  { name: /4\. Radiation Bot/, cost: 240 },
-  { name: /2\. Chemotherapy/, cost: 150 },
-  { name: /3\. Cytotoxic T Cell/, cost: 125 },
-  { name: /5\. Antibody Therapy/, cost: 145 },
-  { name: /1\. Doctor/, cost: 90 },
-] as const;
 
 function getPlayfield(page: Page): Locator {
-  return page.getByRole("img", {
-    name: "Skin tissue route from the primary tumor to a blood vessel exit",
-  });
+  return page.locator("svg.playfield");
 }
 
 async function readTreatmentPoints(page: Page): Promise<number> {
@@ -95,7 +78,16 @@ async function placeTreatment(
   if (pointsBefore < placement.cost) return false;
   await page.getByRole("button", { name: placement.name }).click();
   await clickMapPosition(playfield, placement.position);
-  return (await readTreatmentPoints(page)) === pointsBefore - placement.cost;
+  const pointsAfter = await readTreatmentPoints(page);
+  const expected = pointsBefore - placement.cost;
+  if (pointsAfter !== expected) {
+    throw new Error(
+      `Rejected treatment placement at (${placement.position.x}, ${placement.position.y}): ` +
+        `TP changed from ${pointsBefore} to ${pointsAfter}; expected ${expected} after ` +
+        `selecting ${placement.name}.`,
+    );
+  }
+  return true;
 }
 
 async function placeAffordableTreatments(
@@ -111,68 +103,32 @@ async function placeAffordableTreatments(
   }
 }
 
-function makeClusterGrid(): Placement[] {
-  const placements: Placement[] = [];
-  let candidateIndex = 0;
-  for (let y = 65; y <= 545; y += 80) {
-    for (let x = 90; x <= 890; x += 80) {
-      const tower = GRID_TOWERS[candidateIndex % GRID_TOWERS.length];
-      if (tower === undefined) throw new Error("Tower placement cycle is empty.");
-      placements.push({ ...tower, position: { x, y } });
-      candidateIndex += 1;
-    }
+async function waitForWaveControl(page: Page, wave: number): Promise<void> {
+  const startWave = page.getByRole("button", { name: `Start Wave ${wave}`, exact: true });
+  const levelContained = page.getByRole("button", { name: "Continue to Level 2", exact: true });
+  await expect
+    .poll(async () => (await startWave.isEnabled()) || (await levelContained.isVisible()), {
+      timeout: 30_000,
+    })
+    .toBe(true);
+  if (await levelContained.isVisible()) {
+    throw new Error(`Level 1 ended before wave ${wave} became ready.`);
   }
-  return placements;
 }
 
-async function waitForEnabledButton(page: Page, name: string): Promise<Locator> {
-  await page.waitForFunction(
-    (buttonName) => {
-      const enabled = [...document.querySelectorAll("button")].some(
-        (button) => button.textContent?.trim() === buttonName && !button.disabled,
-      );
-      return enabled || document.querySelector(".terminal-overlay") !== null;
-    },
-    name,
-    { timeout: 30_000 },
-  );
-  const terminal = page.locator(".terminal-overlay");
-  if (await terminal.isVisible()) {
-    const result = await terminal.textContent();
-    if (!result?.includes("SKIN TISSUE CONTAINED")) {
-      throw new Error(`Game ended while waiting for ${name}: ${result}`);
-    }
+async function upgradeVisibleTreatmentCoverage(page: Page, playfield: Locator): Promise<void> {
+  const towers = playfield.locator("[data-tower-id]");
+  const inspector = page.getByRole("complementary", { name: "Selected treatment inspector" });
+  const towerCount = await towers.count();
+
+  for (let index = 0; index < towerCount; index += 1) {
+    const tower = towers.nth(index);
+    await tower.focus();
+    await page.keyboard.press("Enter");
+    await expect(inspector).toBeVisible();
+    const upgrade = inspector.getByRole("button", { name: /^Upgrade:/ });
+    if ((await upgrade.count()) > 0 && (await upgrade.isEnabled())) await upgrade.click();
   }
-  return page.getByRole("button", { name, exact: true });
-}
-
-async function buyAffordableUpgrades(page: Page): Promise<void> {
-  const pause = page.getByRole("button", { name: "Pause", exact: true });
-  const resumeAfterUpgrades = (await pause.isVisible()) && (await pause.isEnabled());
-  if (resumeAfterUpgrades) await pause.click();
-
-  let upgraded = true;
-  while (upgraded) {
-    upgraded = false;
-    const towerIds = await page
-      .locator(".tower[data-tower-id]")
-      .evaluateAll((towers) => towers.map((tower) => tower.getAttribute("data-tower-id")));
-    for (const towerId of towerIds) {
-      if (towerId === null) continue;
-      await page.locator(`.tower[data-tower-id="${towerId}"] .tower-hit-target`).click();
-      const upgrade = page.getByRole("button", { name: /^Upgrade:/ });
-      if ((await upgrade.isVisible()) && (await upgrade.isEnabled())) {
-        await upgrade.click();
-        upgraded = true;
-      }
-    }
-  }
-  if (resumeAfterUpgrades) await page.getByRole("button", { name: "Resume" }).click();
-}
-
-async function advanceThroughWave(page: Page, wave: number): Promise<void> {
-  await (await waitForEnabledButton(page, `Start Wave ${wave}`)).click();
-  await waitForEnabledButton(page, `Start Wave ${wave + 1}`);
 }
 
 test.beforeEach(async ({ page }) => {
@@ -272,18 +228,220 @@ test("reduced motion removes ambient cell motion without hiding the cell", async
 test("the generated combat scene remains usable at narrow, standard, and wide layouts", async ({
   page,
 }) => {
+  for (const viewport of [
+    { width: 680, height: 900 },
+    { width: 1280, height: 800 },
+    { width: 1600, height: 1000 },
+  ]) {
+    await page.setViewportSize(viewport);
+    await page.goto("/");
+    const playfield = getPlayfield(page);
+    await expect(playfield).toBeVisible();
+    if (viewport.width >= 900) {
+      await page
+        .locator(".hud span")
+        .nth(2)
+        .evaluate((status) => {
+          status.textContent = "Level 10 of 10: Metastatic Confluence";
+          status.setAttribute("data-level", "10");
+        });
+    }
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
+    ).toBe(true);
+
+    const layout = await page.evaluate(() => {
+      const rect = (selector: string): DOMRect => {
+        const element = document.querySelector(selector);
+        if (element === null) throw new Error(`Missing ${selector}.`);
+        return element.getBoundingClientRect();
+      };
+      const battle = rect(".battle-area");
+      const shell = rect(".game-shell");
+      const controls = rect(".controls-panel");
+      const treatmentTray = document.querySelector(".treatment-tray");
+      const waveControls = document.querySelector(".wave-controls");
+      if (treatmentTray === null || waveControls === null) {
+        throw new Error("Missing treatment or wave controls.");
+      }
+      return {
+        battleHeight: battle.height,
+        battleWidth: battle.width,
+        controlsTop: controls.top,
+        battleBottom: battle.bottom,
+        treatmentTop: rect(".treatment-tray").top,
+        waveTop: rect(".wave-controls").top,
+        pageHeight: document.documentElement.scrollHeight,
+        shellHeight: shell.height,
+        shellWidth: shell.width,
+        treatmentComesFirst:
+          (treatmentTray.compareDocumentPosition(waveControls) &
+            Node.DOCUMENT_POSITION_FOLLOWING) !==
+          0,
+      };
+    });
+    expect(layout.treatmentComesFirst).toBe(true);
+    expect(layout.treatmentTop).toBeLessThanOrEqual(layout.waveTop);
+    if (viewport.width >= 900) {
+      expect(layout.battleWidth / layout.battleHeight).toBeCloseTo(9 / 5, 2);
+      expect(layout.shellWidth / layout.shellHeight).toBeCloseTo(16 / 10, 2);
+      expect(layout.pageHeight).toBeLessThanOrEqual(viewport.height);
+      expect(layout.controlsTop).toBeGreaterThanOrEqual(layout.battleBottom);
+      const minimumBattlefieldShare = viewport.width >= 1500 ? 0.82 : 0.73;
+      expect(layout.battleWidth).toBeGreaterThan(layout.shellWidth * minimumBattlefieldShare);
+      for (const control of await page.locator(".controls-panel button").all()) {
+        await expect(control).toBeVisible();
+        expect((await control.boundingBox())?.width ?? 0).toBeLessThan(layout.battleWidth);
+      }
+    }
+  }
+});
+
+test("scene learning supports pointer and keyboard exploration without blocking play", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const playfield = getPlayfield(page);
+  await expect(page.getByText("Point, tap, or Tab to explore objects")).toBeVisible();
+
+  const route = page.getByRole("img", { name: /^Cancer-cell route\./ });
+  const routeTooltip = page.locator('[data-scene-tooltip="Cancer-cell route"]');
+  await route.locator(".scene-route-hit").first().hover();
+  await expect(routeTooltip).toBeVisible();
+  await expect(routeTooltip).toContainText("Cancer-cell pathway");
+  await expect(routeTooltip.locator(".scene-tooltip-biological-fact")).toContainText(
+    "Skin contains blood-vessel networks",
+  );
+  await expect(routeTooltip.locator(".scene-tooltip-game-role")).toContainText(
+    "single curved route",
+  );
+  await expect(routeTooltip.locator(".scene-tooltip-biological-fact")).toHaveCSS(
+    "text-transform",
+    "none",
+  );
+
+  const source = page.locator('[data-scene-object="landmark:primary_tumor"]');
+  const sourceTooltip = page.locator('[data-scene-tooltip="Primary tumor"]');
+  await source.locator(".scene-object-hit").click();
+  await expect(source).toBeFocused();
+  await expect(sourceTooltip).toBeVisible();
+
+  await route.focus();
+  await page.keyboard.press("Tab");
+  await expect(source).toBeFocused();
+  await expect(sourceTooltip).toBeVisible();
+  await expect(sourceTooltip).toContainText("mass of abnormal cells");
+
+  const doctor = page.getByRole("button", { name: /1\. Doctor/ });
+  await doctor.click();
+  await source.focus();
+  await page.keyboard.press("Enter");
+  await expect(playfield.locator("[data-tower-id]")).toHaveCount(0);
+  await page.keyboard.press("Escape");
+  await expect(sourceTooltip).toBeHidden();
+  await expect(doctor).toHaveClass(/active/);
+
+  await clickMapPosition(playfield, { x: 470, y: 120 });
+  await expect(playfield.locator("[data-tower-id]")).toHaveCount(1);
+});
+
+test("campaign world paint remains visible, themed, placeable, and motion-safe", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.goto("/");
+  const playfield = getPlayfield(page);
+  const routeFlow = playfield.locator(".route-flow").first();
+  const routeCurrent = playfield.locator(".route-current").first();
+  await expect(routeFlow).toBeVisible();
+  await expect(routeCurrent).toBeVisible();
+  await expect(playfield.locator(".world-landmark-source")).toBeVisible();
+  await expect(playfield.locator(".world-landmark-marker")).toHaveCount(0);
+  const routeLayers = playfield.locator(".campaign-route-layer");
+  await expect(routeLayers).toHaveCount(4);
+  expect(
+    await routeLayers.evaluateAll((layers) =>
+      layers.map((layer) => layer.getAttribute("data-route-layer")),
+    ),
+  ).toEqual(["bed", "membrane", "flow", "current"]);
+  const routeLayerCounts = await routeLayers.evaluateAll((layers) =>
+    layers.map((layer) => layer.querySelectorAll("[data-route-segment]").length),
+  );
+  expect(new Set(routeLayerCounts).size).toBe(1);
+  expect(
+    await playfield
+      .locator(".campaign-route-beds")
+      .evaluate((layer) => getComputedStyle(layer).filter),
+  ).not.toBe("none");
+  expect(
+    await playfield
+      .locator(".route-bed")
+      .first()
+      .evaluate((path) => getComputedStyle(path).filter),
+  ).toBe("none");
+  expect(await routeFlow.evaluate((route) => getComputedStyle(route).strokeDasharray)).toBe("none");
+  expect(await routeCurrent.evaluate((route) => getComputedStyle(route).animationName)).not.toBe(
+    "none",
+  );
+
+  // Each campaign theme resolves the world token contract on the shipped playfield.
+  const themeTokens = await playfield.evaluate((element) => {
+    const themes = [
+      "capillary-crossroads",
+      "lymph_node_loop",
+      "alveolar_switchbacks",
+      "ductal_delta",
+      "vascular-bypass",
+      "fibrotic_sieve",
+      "marrow-lattice",
+      "metastatic-confluence",
+    ];
+    return themes.map((theme) => {
+      element.setAttribute("data-level-theme", theme);
+      const style = getComputedStyle(element);
+      return {
+        theme,
+        bed: style.getPropertyValue("--world-route-bed").trim(),
+        flow: style.getPropertyValue("--world-route-flow").trim(),
+        obstacle: style.getPropertyValue("--world-obstacle").trim(),
+      };
+    });
+  });
+  expect(themeTokens).toHaveLength(8);
+  for (const token of themeTokens) {
+    expect(token.bed).not.toBe("");
+    expect(token.flow).not.toBe("");
+    expect(token.obstacle).not.toBe("");
+  }
+  expect(new Set(themeTokens.map((token) => token.bed)).size).toBe(8);
+
+  // The Level 1 authored probes exercise the same visible pointer placement interaction.
+  const pointsBefore = await readTreatmentPoints(page);
+  await page.getByRole("button", { name: /1\. Doctor/ }).click();
+  await clickMapPosition(playfield, { x: 330, y: 100 });
+  expect(await readTreatmentPoints(page)).toBe(pointsBefore - 90);
+  await page.getByRole("button", { name: /1\. Doctor/ }).click();
+  await clickMapPosition(playfield, { x: 510, y: 374 });
+  expect(await readTreatmentPoints(page)).toBe(pointsBefore - 90);
+
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await expect
+    .poll(() => routeCurrent.evaluate((route) => getComputedStyle(route).animationName))
+    .toBe("none");
+
   for (const width of [680, 1280, 1600]) {
     await page.setViewportSize({ width, height: 900 });
-    await page.goto("/");
-    await expect(getPlayfield(page)).toBeVisible();
+    await expect(playfield).toBeVisible();
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
     ).toBe(true);
   }
 });
 
-test("the densest Cluster Corridor wave keeps every live SVG id unique", async ({ page }) => {
-  test.setTimeout(120_000);
+test("visible campaign transition switches the world route and landmark contract", async ({
+  page,
+}) => {
+  test.setTimeout(3 * 60_000);
   await page.addInitScript(() => {
     let frameTime = 0;
     window.requestAnimationFrame = (callback): number => {
@@ -293,30 +451,59 @@ test("the densest Cluster Corridor wave keeps every live SVG id unique", async (
     window.cancelAnimationFrame = (handle): void => window.clearTimeout(handle);
   });
   await page.goto("/");
+  await page.setViewportSize({ width: 1280, height: 800 });
   const playfield = getPlayfield(page);
-  const scenePlacements = [...SCENE_ONE_PLACEMENTS];
-  await placeAffordableTreatments(page, playfield, scenePlacements);
+  const reinforcements = [...SKIN_TISSUE_REINFORCEMENTS];
+  await placeAffordableTreatments(page, playfield, [...SKIN_TISSUE_CAMPAIGN_PLACEMENTS]);
   for (let wave = 1; wave <= 15; wave += 1) {
-    await (await waitForEnabledButton(page, `Start Wave ${wave}`)).click();
+    await waitForWaveControl(page, wave);
+    if (wave === 15) {
+      const tower = playfield.locator("[data-tower-id]").first();
+      await tower.focus();
+      await page.keyboard.press("Enter");
+      await expect(
+        page.getByRole("complementary", { name: "Selected treatment inspector" }),
+      ).toBeVisible();
+    }
+    await page.getByRole("button", { name: `Start Wave ${wave}`, exact: true }).click();
     if (wave < 15) {
-      await waitForEnabledButton(page, `Start Wave ${wave + 1}`);
-      await placeAffordableTreatments(page, playfield, scenePlacements);
+      await waitForWaveControl(page, wave + 1);
+      await upgradeVisibleTreatmentCoverage(page, playfield);
+      await placeAffordableTreatments(page, playfield, reinforcements);
     }
   }
-  await page.getByRole("button", { name: "Enter Cluster Corridor" }).click();
 
-  const clusterPlacements = [...CLUSTER_PLACEMENTS, ...makeClusterGrid()];
-  await placeAffordableTreatments(page, playfield, clusterPlacements);
-  await buyAffordableUpgrades(page);
-  for (let wave = 16; wave <= 20; wave += 1) {
-    await advanceThroughWave(page, wave);
-    await placeAffordableTreatments(page, playfield, clusterPlacements);
-    await buyAffordableUpgrades(page);
-  }
+  const terminal = page.getByRole("alert");
+  const terminalHeading = terminal.getByRole("heading");
+  await expect
+    .poll(async () => (await terminal.textContent())?.includes("LEVEL 1 CONTAINED") ?? false, {
+      timeout: 45_000,
+    })
+    .toBe(true);
+  await expect(terminalHeading).toBeVisible();
+  expect(
+    await terminalHeading.evaluate((heading) => {
+      const overlay = heading.closest(".terminal-overlay");
+      if (overlay === null) return false;
+      const headingBounds = heading.getBoundingClientRect();
+      const overlayBounds = overlay.getBoundingClientRect();
+      return headingBounds.top >= overlayBounds.top && headingBounds.bottom <= overlayBounds.bottom;
+    }),
+  ).toBe(true);
+  await page.getByRole("button", { name: "Continue to Level 2", exact: true }).click();
+  await expect(page.getByLabel("Game status")).toContainText("Level 2 of 10: Cluster Corridor");
+  await expect(playfield).toHaveAttribute("data-level-theme", "cluster-corridor");
+  await expect(playfield.locator('.world-landmarks[data-level="2"]')).toBeVisible();
+  await expect(playfield.locator(".campaign-route-segment").first()).toBeVisible();
+  await expect(playfield.locator(".world-landmark-source")).toBeVisible();
+  await expect(playfield.locator(".world-landmark-exit")).toBeVisible();
+});
 
-  await page.getByRole("button", { name: "Start Wave 21" }).click();
-  await expect(page.locator('[data-enemy-type="tumor_mass"]')).toBeVisible({ timeout: 30_000 });
-  await page.getByRole("button", { name: "Pause" }).click();
+test("a live campaign wave keeps generated SVG ids unique", async ({ page }) => {
+  await page.goto("/");
+  const playfield = getPlayfield(page);
+  await page.getByRole("button", { name: "Start Wave 1" }).click();
+  await expect(playfield.locator("[data-enemy-id]").first()).toBeVisible();
   const ids = await playfield
     .locator("[id]")
     .evaluateAll((elements) => elements.map((element) => element.id));

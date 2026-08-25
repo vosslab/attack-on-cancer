@@ -1,4 +1,13 @@
-import { For, Show, createEffect, createMemo, createSignal, onCleanup, onMount } from "solid-js";
+import {
+  For,
+  Index,
+  Show,
+  createEffect,
+  createMemo,
+  createSignal,
+  onCleanup,
+  onMount,
+} from "solid-js";
 import type { JSX } from "solid-js";
 import { createStore, reconcile } from "solid-js/store";
 import {
@@ -6,12 +15,10 @@ import {
   ENEMIES,
   PLAYFIELD_HEIGHT,
   PLAYFIELD_WIDTH,
-  SCENE_ONE_WAVE_COUNT,
   TOWERS,
   UPGRADES,
-  WAVES,
 } from "./config";
-import type { DifficultyId, Enemy, GameState, Point, Tower, TowerId } from "./game_types";
+import type { DifficultyId, Enemy, GameState, LevelId, Point, Tower, TowerId } from "./game_types";
 import { activateAudio, playTreatmentSound, playUiSound } from "./audio";
 import { AttackEffect } from "./attack_effect";
 import { CellDeathEffect, CellRepairEffect, EnemyActor } from "./enemy_actor";
@@ -24,7 +31,9 @@ import {
 import { loadSettings, recordBestResult, updateSettings } from "./persistence";
 import { TowerActor, TowerPlacementGhost } from "./tower_actor";
 import { WorldLandmarks } from "./world_landmarks";
+import { getCampaignLevel, getLevelWaves } from "./levels/campaign";
 import {
+  advanceLevel,
   canPlaceTower,
   canStartWave,
   createGameState,
@@ -33,7 +42,6 @@ import {
   getUpgradeCost,
   placeTower,
   sellTower,
-  startClusterScene,
   startWave,
   tickGame,
   togglePause,
@@ -120,11 +128,17 @@ export function App(): JSX.Element {
   const pendingCount = createMemo<number>(
     () => game().pendingSpawns.length + game().enemies.length,
   );
-  const sceneWaveLimit = createMemo<number>(() =>
-    game().scene === 1 ? SCENE_ONE_WAVE_COUNT : WAVES.length,
+  const level = createMemo(() => getCampaignLevel(game().level));
+  const levelWaveLimit = createMemo<number>(() => getLevelWaves(game().level).length);
+  const microenvironmentLandmarks = createMemo(() =>
+    level()
+      .landmarks.filter((landmark) => landmark.kind !== "source" && landmark.kind !== "exit")
+      .slice(0, 3),
   );
-  const sceneTitle = createMemo<string>(() =>
-    game().scene === 1 ? "Skin Tissue" : "Cluster Corridor",
+  const mapLabel = createMemo<string>(() =>
+    game().level === 1
+      ? "Skin tissue route from the primary tumor to a blood vessel exit"
+      : `${level().title} campaign map`,
   );
 
   function resetGame(difficulty: DifficultyId): void {
@@ -136,14 +150,16 @@ export function App(): JSX.Element {
 
   function beginWave(): void {
     setGame((current) => startWave(current));
+    setUi({ selectedTowerId: undefined, selectedEnemyId: undefined });
     if (soundEnabled()) {
       activateAudio();
       playUiSound("wave");
     }
   }
 
-  function enterClusterCorridor(): void {
-    setGame((current) => startClusterScene(current));
+  function advanceCampaignLevel(): void {
+    // The pure simulation is the authority for sequential campaign eligibility.
+    setGame((current) => advanceLevel(current));
     setCellDeaths([]);
     setCellRepairs([]);
     setUi({ selectedTreatment: undefined, selectedTowerId: undefined, selectedEnemyId: undefined });
@@ -176,6 +192,7 @@ export function App(): JSX.Element {
       return;
     }
     const validPlacement = canPlaceTower(game(), treatment, position);
+    // The simulation revalidates this untrusted pointer position before committing a tower.
     setGame((current) => placeTower(current, treatment, position));
     if (validPlacement) {
       setUi({ selectedTreatment: undefined });
@@ -203,13 +220,16 @@ export function App(): JSX.Element {
   }
 
   function mapPointerDown(event: PointerEvent): void {
+    const activeElement = document.activeElement;
+    if (activeElement instanceof SVGElement && activeElement.hasAttribute("data-scene-object")) {
+      activeElement.blur();
+    }
     const position = positionFromEvent(event);
     setUi("cursor", position);
     commitPlacement(position);
   }
 
-  function pickTower(event: MouseEvent, tower: Tower): void {
-    event.stopPropagation();
+  function pickTower(tower: Tower): void {
     setUi({ selectedTowerId: tower.id, selectedTreatment: undefined, selectedEnemyId: undefined });
   }
 
@@ -293,14 +313,14 @@ export function App(): JSX.Element {
       repairedEnemyIds,
     );
     const addedDeaths = destroyed.map((enemy) =>
-      createCellDeathVisual(enemy, previous.scene, currentTime),
+      createCellDeathVisual(enemy, previous.level, currentTime),
     );
     const previousRepairKeys = new Set(
       previous.repairEvents.map((event) => `${event.towerId}-${event.attempt}`),
     );
     const addedRepairs = next.repairEvents
       .filter((event) => !previousRepairKeys.has(`${event.towerId}-${event.attempt}`))
-      .map((event) => createCellRepairVisual(event, previous.scene, currentTime));
+      .map((event) => createCellRepairVisual(event, previous.level, currentTime));
     if (activeDeaths.length !== currentDeaths.length || addedDeaths.length > 0) {
       setCellDeaths([...activeDeaths, ...addedDeaths]);
     }
@@ -369,11 +389,11 @@ export function App(): JSX.Element {
           <span>
             <b>Metastases</b> {game().metastases}/{metastasisCapacity()}
           </span>
-          <span>
-            <b>Scene</b> {game().scene}: {sceneTitle()}
+          <span class="hud-level" data-level={game().level}>
+            <b>Level</b> {game().level} of 10: {level().title}
           </span>
           <span>
-            <b>Wave</b> {game().wave}/{sceneWaveLimit()}
+            <b>Wave</b> {game().wave}/{levelWaveLimit()}
           </span>
         </div>
         <button
@@ -403,29 +423,72 @@ export function App(): JSX.Element {
         </For>
       </section>
 
-      <section class="battle-area" aria-label="Microscopic skin tissue tower defense">
+      <section class="campaign-context" aria-label="Campaign map context">
+        <div>
+          <div class="campaign-hud">
+            <strong>
+              Level {game().level} of 10: {level().title}
+            </strong>
+            <small>
+              {level().routes.length} route{level().routes.length === 1 ? "" : "s"} through this
+              field
+            </small>
+          </div>
+          <p class="campaign-briefing">{level().briefing}</p>
+        </div>
+        <aside class="microenvironment-context" aria-label="Map microenvironment">
+          <div class="microenvironment-heading">
+            <span>Map microenvironment</span>
+            <small>Game model</small>
+          </div>
+          <p>{level().accessibleDescription}</p>
+          <Show when={microenvironmentLandmarks().length > 0}>
+            <p class="microenvironment-landmarks">
+              <b>Key sites:</b>{" "}
+              <For each={microenvironmentLandmarks()}>
+                {(landmark, index) => (
+                  <>
+                    {index() > 0 ? " · " : ""}
+                    {landmark.label}
+                  </>
+                )}
+              </For>
+            </p>
+          </Show>
+        </aside>
+      </section>
+
+      <section class="battle-area" aria-label={`${level().title} battlefield`}>
+        <span id="campaign-map-description" class="campaign-map-copy">
+          {level().accessibleDescription} Point to, tap, or use Tab to focus named scene objects and
+          read their learning tooltips.
+        </span>
         <svg
           ref={(element) => {
             mapElement = element;
           }}
           class="playfield"
+          classList={{ "placement-active": ui.selectedTreatment !== undefined }}
+          data-level-theme={level().theme}
           viewBox={`0 0 ${MAP_WIDTH} ${MAP_HEIGHT}`}
-          role="img"
-          aria-label="Skin tissue route from the primary tumor to a blood vessel exit"
+          preserveAspectRatio="none"
+          role="group"
+          aria-label={mapLabel()}
+          aria-describedby="campaign-map-description"
           onPointerMove={updateCursor}
           onPointerDown={mapPointerDown}
         >
-          <WorldLandmarks scene={game().scene} />
-          <For each={game().towers}>
+          <WorldLandmarks level={game().level} interactive />
+          <Index each={game().towers}>
             {(tower) => (
               <TowerActor
-                tower={tower}
+                tower={tower()}
                 time={game().time}
-                selected={ui.selectedTowerId === tower.id}
+                selected={ui.selectedTowerId === tower().id}
                 onPick={pickTower}
               />
             )}
-          </For>
+          </Index>
           <For
             each={game().towers.filter(
               (tower) =>
@@ -438,7 +501,7 @@ export function App(): JSX.Element {
             {(enemy) => (
               <EnemyActor
                 enemy={enemy}
-                scene={game().scene}
+                level={game().level}
                 time={game().time}
                 onPick={pickEnemy}
               />
@@ -457,6 +520,9 @@ export function App(): JSX.Element {
             )}
           </Show>
         </svg>
+        <p class="scene-learning-hint" aria-hidden="true">
+          <span>i</span> Point, tap, or Tab to explore objects
+        </p>
         <Show
           when={
             game().status === "intermission" || game().status === "won" || game().status === "lost"
@@ -465,16 +531,16 @@ export function App(): JSX.Element {
           <div class="terminal-overlay" role="alert">
             <h2>
               {game().status === "intermission"
-                ? "SKIN TISSUE CONTAINED"
+                ? `LEVEL ${game().level} CONTAINED`
                 : game().status === "won"
                   ? "CANCER CONTAINED"
                   : "CANCER HAS METASTASIZED"}
             </h2>
             <p>
               {game().status === "intermission"
-                ? "A multi-tumor cluster is feeding a longer, winding corridor. Rebuild with a 200 TP field grant."
+                ? `Prepare for Level ${game().level + 1}: ${getCampaignLevel((game().level + 1) as LevelId).title}. ${getCampaignLevel((game().level + 1) as LevelId).briefing}`
                 : game().status === "won"
-                  ? "All 21 waves are cleared, including the Cluster Corridor."
+                  ? "All ten campaign levels are contained."
                   : "The blood vessel has reached its metastasis capacity."}
             </p>
             <Show
@@ -485,8 +551,8 @@ export function App(): JSX.Element {
                 </button>
               }
             >
-              <button type="button" onClick={enterClusterCorridor}>
-                Enter Cluster Corridor
+              <button type="button" onClick={advanceCampaignLevel}>
+                Continue to Level {game().level + 1}
               </button>
             </Show>
           </div>
@@ -494,6 +560,23 @@ export function App(): JSX.Element {
       </section>
 
       <section class="controls-panel">
+        <div class="treatment-tray" aria-label="Treatment tray">
+          <For each={TOWER_IDS}>
+            {(type, index) => (
+              <button
+                type="button"
+                classList={{ active: ui.selectedTreatment === type }}
+                onClick={() => chooseTreatment(type)}
+              >
+                <b>
+                  {index() + 1}. {formatTreatmentName(type)}
+                </b>
+                <span>{TOWERS[type].cost} TP</span>
+                <em>{attackCue(type)}</em>
+              </button>
+            )}
+          </For>
+        </div>
         <div class="wave-controls">
           <button type="button" disabled={!waveReady()} onClick={beginWave}>
             Start Wave {game().wave + 1}
@@ -528,30 +611,13 @@ export function App(): JSX.Element {
           </button>
           <span>{pendingCount()} cells in play</span>
         </div>
-        <div class="treatment-tray" aria-label="Treatment tray">
-          <For each={TOWER_IDS}>
-            {(type, index) => (
-              <button
-                type="button"
-                classList={{ active: ui.selectedTreatment === type }}
-                onClick={() => chooseTreatment(type)}
-              >
-                <b>
-                  {index() + 1}. {formatTreatmentName(type)}
-                </b>
-                <span>{TOWERS[type].cost} TP</span>
-                <em>{attackCue(type)}</em>
-              </button>
-            )}
-          </For>
-        </div>
       </section>
 
       <Show when={selectedTower()}>
         {(tower) => {
           const upgradeCost = getUpgradeCost(tower());
           return (
-            <aside class="tower-card">
+            <aside class="tower-card" aria-label="Selected treatment inspector" aria-live="polite">
               <h2>
                 {TOWERS[tower().type].name} - tier {tower().tier + 1}
               </h2>

@@ -13,6 +13,7 @@ import type { ApoptosisFrame, VisualTier, VisualVariant } from "../generated/vis
 import { AttackEffect } from "./attack_effect";
 import { ENEMIES, TOWERS } from "./config";
 import type { EnemyId, RepairOutcome, Tower, TowerId } from "./game_types";
+import { CAMPAIGN_LEVELS } from "./levels/campaign";
 import { WorldLandmarks } from "./world_landmarks";
 
 const ENEMY_IDS: readonly EnemyId[] = [
@@ -307,18 +308,18 @@ export function VisualCatalog(): JSX.Element {
       <section>
         <h2>World landmarks and tissue regions</h2>
         <div class="catalog-world-grid">
-          <figure>
-            <svg class="catalog-world" viewBox="0 0 960 600">
-              <WorldLandmarks scene={1} />
-            </svg>
-            <figcaption>Skin Tissue</figcaption>
-          </figure>
-          <figure>
-            <svg class="catalog-world" viewBox="0 0 960 600">
-              <WorldLandmarks scene={2} />
-            </svg>
-            <figcaption>Cluster Corridor</figcaption>
-          </figure>
+          <For each={CAMPAIGN_LEVELS}>
+            {(level) => (
+              <figure data-catalog-level={level.id}>
+                <svg class="catalog-world" viewBox="0 0 960 600">
+                  <WorldLandmarks level={level.id} />
+                </svg>
+                <figcaption>
+                  Level {level.id}: {level.title}
+                </figcaption>
+              </figure>
+            )}
+          </For>
         </div>
       </section>
 
