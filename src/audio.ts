@@ -17,6 +17,15 @@ const TREATMENT_TONES: Record<TowerId, readonly Tone[]> = {
     { frequency: 470, duration: 0.1, gain: 0.045, type: "sine" },
     { frequency: 705, duration: 0.07, gain: 0.03, type: "sine" },
   ],
+  macrophage: [
+    { frequency: 205, duration: 0.14, gain: 0.065, type: "sine" },
+    { frequency: 335, duration: 0.09, gain: 0.035, type: "triangle" },
+  ],
+  crispr: [
+    { frequency: 392, duration: 0.08, gain: 0.04, type: "triangle" },
+    { frequency: 587, duration: 0.08, gain: 0.035, type: "sine" },
+    { frequency: 784, duration: 0.11, gain: 0.03, type: "sine" },
+  ],
 };
 
 let context: AudioContext | undefined;

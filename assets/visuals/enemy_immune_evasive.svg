@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" data-aoc-kind="enemy" data-aoc-key="immune_evasive"
+  data-aoc-frame-width="64" data-aoc-frame-height="64" viewBox="0 0 256 64">
+  <g data-aoc-editor-only="true"><rect x="0" y="0" width="256" height="64" fill="#eef0ff" /><text x="8" y="12" font-size="8" font-weight="700">Immune-evasive variants</text></g>
+  <g data-aoc-panel="variant-0" transform="translate(32 32)">
+    <g data-aoc-part="fringe" class="aoc-motion--fringe"><path class="cell-pseudopod" d="M-9-11Q-15-20-21-16M11-8Q20-15 23-8M-13 8Q-21 15-24 8" /></g>
+    <g data-aoc-part="membrane" class="aoc-motion--mask"><path class="cell-membrane" d="M0-16L5-12C11-15 16-9 14-3L20 1L14 6C15 13 7 17 1 14L-5 19L-8 13C-15 12-18 5-14 0L-20-5L-13-8C-10-15-4-17 0-16Z" /><ellipse class="cell-highlight" cx="-5" cy="-9" rx="6" ry="3" /></g>
+    <g data-aoc-part="nucleus" class="aoc-motion--drift"><path class="cell-nucleus" d="M-8-2C-6-9 4-10 8-4C11 2 5 9-2 8C-8 8-11 3-8-2Z" /></g>
+    <g data-aoc-part="shield" class="cell-shield aoc-motion--shield"><path d="M-15-12A20 20 0 0 1 17-8" /><path d="M17 8A20 20 0 0 1-14 13" /></g>
+  </g>
+  <g data-aoc-panel="variant-1" transform="translate(96 32)">
+    <g data-aoc-part="fringe" class="aoc-motion--fringe"><path class="cell-pseudopod" d="M-10-12Q-17-20-22-14M12-7Q21-13 24-6M-12 9Q-20 17-24 10" /></g>
+    <g data-aoc-part="membrane" class="aoc-motion--mask"><path class="cell-membrane" d="M-2-17L4-13C10-17 16-11 14-5L21-2L15 4C18 10 10 17 4 14L0 20L-5 14C-12 16-18 9-15 3L-21 0L-14-5C-13-12-7-17-2-17Z" /><ellipse class="cell-highlight" cx="-5" cy="-10" rx="6" ry="3" /></g>
+    <g data-aoc-part="nucleus" class="aoc-motion--drift"><path class="cell-nucleus" d="M-8-2C-6-9 4-9 8-3C10 3 4 9-2 8C-8 7-11 2-8-2Z" /></g>
+    <g data-aoc-part="shield" class="cell-shield aoc-motion--shield"><path d="M-16-11A20 20 0 0 1 16-9" /><path d="M18 7A20 20 0 0 1-13 14" /></g>
+  </g>
+  <g data-aoc-panel="variant-2" transform="translate(160 32)">
+    <g data-aoc-part="fringe" class="aoc-motion--fringe"><path class="cell-pseudopod" d="M-8-12Q-14-21-20-17M12-8Q21-14 24-7M-14 7Q-22 14-25 7" /></g>
+    <g data-aoc-part="membrane" class="aoc-motion--mask"><path class="cell-membrane" d="M1-17L6-12C13-13 17-6 13-1L20 4L13 7C12 14 4 17-1 13L-7 19L-9 12C-16 11-19 3-14-2L-19-8L-11-9C-8-16-3-18 1-17Z" /><ellipse class="cell-highlight" cx="-4" cy="-10" rx="6" ry="3" /></g>
+    <g data-aoc-part="nucleus" class="aoc-motion--drift"><path class="cell-nucleus" d="M-7-3C-5-9 4-9 8-3C10 3 4 9-2 8C-8 7-10 2-7-3Z" /></g>
+    <g data-aoc-part="shield" class="cell-shield aoc-motion--shield"><path d="M-14-13A20 20 0 0 1 18-7" /><path d="M16 9A20 20 0 0 1-15 12" /></g>
+  </g>
+  <g data-aoc-panel="variant-3" transform="translate(224 32)">
+    <g data-aoc-part="fringe" class="aoc-motion--fringe"><path class="cell-pseudopod" d="M-9-11Q-16-20-21-15M11-9Q20-16 24-9M-13 8Q-21 16-25 9" /></g>
+    <g data-aoc-part="membrane" class="aoc-motion--mask"><path class="cell-membrane" d="M-1-16L5-13C11-16 17-9 14-3L21 1L14 6C16 13 8 18 2 14L-4 20L-8 13C-15 14-19 6-15 0L-20-6L-12-8C-10-15-5-17-1-16Z" /><ellipse class="cell-highlight" cx="-5" cy="-9" rx="6" ry="3" /></g>
+    <g data-aoc-part="nucleus" class="aoc-motion--drift"><path class="cell-nucleus" d="M-8-2C-6-9 4-10 8-4C11 2 5 9-2 8C-8 8-11 3-8-2Z" /></g>
+    <g data-aoc-part="shield" class="cell-shield aoc-motion--shield"><path d="M-15-12A20 20 0 0 1 17-8" /><path d="M17 8A20 20 0 0 1-14 13" /></g>
+  </g>
+</svg>

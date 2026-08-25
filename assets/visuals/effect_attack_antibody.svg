@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" data-aoc-kind="effect" data-aoc-key="attack_antibody"
+  data-aoc-frame-width="80" data-aoc-frame-height="80" viewBox="0 0 80 80">
+  <g data-aoc-editor-only="true"><rect width="80" height="80" fill="#eafff8" /><text x="5" y="9" font-size="7">Antibody mark</text></g>
+  <g data-aoc-panel="state-0" transform="translate(40 40)">
+    <g data-aoc-part="mark" class="aoc-motion--mark"><circle class="attack-antibody-ring" r="25" /><path class="attack-antibody-y" d="M0 13V0M0 0L-9-12M0 0L9-12" /><circle class="attack-antibody-binding" cx="-9" cy="-12" r="3" /><circle class="attack-antibody-binding" cx="9" cy="-12" r="3" /></g>
+  </g>
+</svg>

@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" data-aoc-kind="enemy" data-aoc-key="basic"
+  data-aoc-frame-width="64" data-aoc-frame-height="64" viewBox="0 0 256 64">
+  <defs>
+    <linearGradient id="cell-highlight-gradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.9" />
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.15" />
+    </linearGradient>
+  </defs>
+  <g data-aoc-editor-only="true">
+    <rect x="0" y="0" width="256" height="64" fill="#fff4f7" />
+    <text x="8" y="12" font-size="8" font-weight="700">Basic cell variants</text>
+  </g>
+  <g data-aoc-panel="variant-0" transform="translate(32 32)">
+    <g data-aoc-part="membrane" class="aoc-motion--breathe">
+      <path class="cell-membrane" d="M0-15C9-17 16-10 15-2C19 6 11 15 2 15C-7 18-16 11-15 2C-18-7-10-15 0-15Z" />
+      <ellipse class="cell-highlight" cx="-5" cy="-8" rx="5" ry="3" fill="url(#cell-highlight-gradient)" />
+    </g>
+    <g data-aoc-part="nucleus" class="aoc-motion--drift">
+      <path class="cell-nucleus" d="M-7-2C-6-8 2-10 6-5C10 0 6 7 0 8C-7 8-10 3-7-2Z" />
+    </g>
+    <g data-aoc-part="vesicles">
+      <circle class="cell-vacuole" cx="9" cy="6" r="2.4" />
+      <circle class="cell-vacuole cell-vacuole-small" cx="8" cy="-8" r="1.5" />
+    </g>
+  </g>
+  <g data-aoc-panel="variant-1" transform="translate(96 32)">
+    <g data-aoc-part="membrane" class="aoc-motion--breathe">
+      <path class="cell-membrane" d="M-2-16C7-16 12-12 15-5C20 1 14 11 8 13C1 18-10 16-14 8C-18 1-14-10-7-12C-6-16-4-16-2-16Z" />
+      <ellipse class="cell-highlight" cx="-6" cy="-8" rx="5" ry="3" fill="url(#cell-highlight-gradient)" />
+    </g>
+    <g data-aoc-part="nucleus" class="aoc-motion--drift">
+      <path class="cell-nucleus" d="M-8-1C-5-8 3-9 7-4C9 2 4 8-2 8C-8 7-11 3-8-1Z" />
+    </g>
+    <g data-aoc-part="vesicles">
+      <circle class="cell-vacuole" cx="9" cy="5" r="2.2" />
+      <circle class="cell-vacuole cell-vacuole-small" cx="6" cy="-9" r="1.4" />
+    </g>
+  </g>
+  <g data-aoc-panel="variant-2" transform="translate(160 32)">
+    <g data-aoc-part="membrane" class="aoc-motion--breathe">
+      <path class="cell-membrane" d="M2-16C10-14 17-7 15 1C18 9 8 17 0 15C-8 18-17 9-14 1C-18-7-8-17 2-16Z" />
+      <ellipse class="cell-highlight" cx="-4" cy="-9" rx="5.5" ry="2.8" fill="url(#cell-highlight-gradient)" />
+    </g>
+    <g data-aoc-part="nucleus" class="aoc-motion--drift">
+      <path class="cell-nucleus" d="M-6-3C-3-9 5-8 8-2C9 4 3 9-3 7C-8 5-10 1-6-3Z" />
+    </g>
+    <g data-aoc-part="vesicles">
+      <circle class="cell-vacuole" cx="-9" cy="7" r="2.2" />
+      <circle class="cell-vacuole cell-vacuole-small" cx="8" cy="-7" r="1.6" />
+    </g>
+  </g>
+  <g data-aoc-panel="variant-3" transform="translate(224 32)">
+    <g data-aoc-part="membrane" class="aoc-motion--breathe">
+      <path class="cell-membrane" d="M-3-15C5-19 14-12 14-5C20 1 14 10 7 12C2 18-9 16-12 9C-20 5-16-6-10-10C-9-14-6-16-3-15Z" />
+      <ellipse class="cell-highlight" cx="-6" cy="-9" rx="5" ry="2.7" fill="url(#cell-highlight-gradient)" />
+    </g>
+    <g data-aoc-part="nucleus" class="aoc-motion--drift">
+      <path class="cell-nucleus" d="M-7-2C-5-9 4-9 8-3C9 3 4 8-2 8C-8 7-10 2-7-2Z" />
+    </g>
+    <g data-aoc-part="vesicles">
+      <circle class="cell-vacuole" cx="8" cy="6" r="2.5" />
+      <circle class="cell-vacuole cell-vacuole-small" cx="9" cy="-7" r="1.5" />
+    </g>
+  </g>
+</svg>

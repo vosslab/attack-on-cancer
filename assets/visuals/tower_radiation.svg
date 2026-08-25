@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" data-aoc-kind="tower" data-aoc-key="radiation"
+  data-aoc-frame-width="72" data-aoc-frame-height="72" viewBox="0 0 288 72">
+  <g data-aoc-editor-only="true"><rect width="288" height="72" fill="#fff7e6" /><text x="5" y="9" font-size="7" font-weight="700">Radiation linear accelerators, tiers 1-4</text></g>
+  <g data-aoc-panel="tier-0" transform="translate(36 36)">
+    <g data-aoc-part="base">
+      <circle class="tower-base" r="22" />
+      <rect class="radiation-chassis" x="-18" y="-14" width="22" height="28" rx="6" />
+      <circle class="radiation-core-lens" cx="-8" cy="0" r="7" />
+      <path class="radiation-stand" d="M-14 15L-20 22M-2 15L4 22" />
+    </g>
+    <g data-aoc-part="emitter" class="aoc-motion--track">
+      <g class="aoc-motion--recoil" transform="rotate(-8)">
+        <rect class="radiation-emitter" x="-1" y="-7" width="27" height="14" rx="4" />
+        <path class="radiation-collimator" d="M22-10L34-6V6L22 10Z" />
+        <circle class="radiation-emitter-lens" cx="32" cy="0" r="4" />
+        <path class="radiation-coil" d="M6-7V7M13-7V7" />
+      </g>
+    </g>
+    <g data-aoc-part="charge" class="aoc-motion--charge">
+      <path class="radiation-charge" d="M-15-19A25 25 0 0 1 18-18" />
+    </g>
+  </g>
+  <g data-aoc-panel="tier-1" transform="translate(108 36)">
+    <g data-aoc-part="base">
+      <circle class="tower-base" r="23" />
+      <rect class="radiation-chassis" x="-19" y="-15" width="23" height="30" rx="6" />
+      <circle class="radiation-core-lens" cx="-9" cy="0" r="8" />
+      <path class="radiation-stand" d="M-15 16L-21 23M-2 16L5 23" />
+      <circle class="tower-tier-light" cx="-18" cy="16" r="3" />
+    </g>
+    <g data-aoc-part="emitter" class="aoc-motion--track">
+      <g class="aoc-motion--recoil" transform="rotate(-6)">
+        <rect class="radiation-emitter" x="-2" y="-8" width="29" height="16" rx="4" />
+        <path class="radiation-collimator" d="M23-11L35-6V6L23 11Z" />
+        <circle class="radiation-emitter-lens" cx="33" cy="0" r="4.5" />
+        <path class="radiation-coil" d="M5-8V8M12-8V8M19-8V8" />
+        <path class="radiation-fins" d="M8-8L12-14M8 8L12 14" />
+      </g>
+    </g>
+    <g data-aoc-part="charge" class="aoc-motion--charge">
+      <path class="radiation-charge" d="M-17-20A27 27 0 0 1 20-18" />
+      <path class="radiation-charge radiation-charge-secondary" d="M-18 19A27 27 0 0 0 18 21" />
+    </g>
+  </g>
+  <g data-aoc-panel="tier-2" transform="translate(180 36)">
+    <g data-aoc-part="base">
+      <circle class="tower-base" r="24" />
+      <rect class="radiation-chassis" x="-20" y="-16" width="24" height="32" rx="6" />
+      <circle class="radiation-core-lens" cx="-10" cy="0" r="9" />
+      <path class="radiation-stand" d="M-16 17L-23 24M-2 17L6 24" />
+      <circle class="tower-tier-light" cx="-19" cy="17" r="3" />
+      <circle class="tower-tier-light" cx="-21" cy="9" r="2.5" />
+    </g>
+    <g data-aoc-part="emitter" class="aoc-motion--track">
+      <g class="aoc-motion--recoil" transform="rotate(-4)">
+        <rect class="radiation-emitter radiation-emitter-elite" x="-3" y="-9" width="31" height="18" rx="4" />
+        <path class="radiation-collimator" d="M23-12L35-7V7L23 12Z" />
+        <circle class="radiation-emitter-lens" cx="33" cy="0" r="5" />
+        <path class="radiation-coil" d="M4-9V9M11-9V9M18-9V9" />
+        <path class="radiation-fins" d="M7-9L12-16M7 9L12 16M18-9L22-14M18 9L22 14" />
+      </g>
+    </g>
+    <g data-aoc-part="charge" class="aoc-motion--charge">
+      <circle class="radiation-charge" r="29" />
+      <path class="radiation-charge radiation-charge-secondary" d="M-20-21A31 31 0 0 1 23-18" />
+    </g>
+  </g>
+  <g data-aoc-panel="tier-3" transform="translate(252 36)">
+    <g data-aoc-part="base">
+      <circle class="tower-base tower-base-elite" r="25" />
+      <rect class="radiation-chassis" x="-21" y="-17" width="25" height="34" rx="6" />
+      <circle class="radiation-core-lens radiation-core-lens-elite" cx="-11" cy="0" r="10" />
+      <path class="radiation-stand" d="M-17 18L-24 25M-2 18L7 25" />
+      <circle class="tower-tier-light" cx="-20" cy="18" r="3" />
+      <circle class="tower-tier-light" cx="-22" cy="10" r="2.5" />
+      <circle class="tower-tier-light" cx="-23" cy="2" r="2" />
+    </g>
+    <g data-aoc-part="emitter" class="aoc-motion--track">
+      <g class="aoc-motion--recoil" transform="rotate(-2)">
+        <rect class="radiation-emitter radiation-emitter-elite" x="-4" y="-10" width="32" height="20" rx="4" />
+        <path class="radiation-collimator radiation-collimator-elite" d="M22-13L35-7V7L22 13Z" />
+        <circle class="radiation-emitter-lens" cx="33" cy="0" r="5.5" />
+        <path class="radiation-coil" d="M3-10V10M10-10V10M17-10V10" />
+        <path class="radiation-fins" d="M5-10L11-17M5 10L11 17M17-10L23-16M17 10L23 16" />
+      </g>
+    </g>
+    <g data-aoc-part="charge" class="aoc-motion--charge">
+      <circle class="radiation-charge" r="30" />
+      <circle class="radiation-charge radiation-charge-secondary" r="33" />
+    </g>
+  </g>
+</svg>

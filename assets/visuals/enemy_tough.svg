@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" data-aoc-kind="enemy" data-aoc-key="tough"
+  data-aoc-frame-width="64" data-aoc-frame-height="64" viewBox="0 0 256 64">
+  <g data-aoc-editor-only="true">
+    <rect x="0" y="0" width="256" height="64" fill="#f8eef5" />
+    <text x="8" y="12" font-size="8" font-weight="700">Tough cell variants</text>
+  </g>
+  <g data-aoc-panel="variant-0" transform="translate(32 32)">
+    <g data-aoc-part="membrane" class="aoc-motion--heavy-pulse"><path class="cell-membrane" d="M-5-18C2-20 8-16 11-12C18-11 20-4 17 2C21 9 14 16 7 16C2 21-7 19-11 14C-19 13-21 5-17-2C-21-9-14-16-5-18Z" /><path class="cell-membrane-ridge" d="M-12-9C-2-16 12-10 14 1C15 10 5 16-5 13" /><ellipse class="cell-highlight" cx="-6" cy="-10" rx="6" ry="3" /></g>
+    <g data-aoc-part="nucleus" class="aoc-motion--restrained-drift"><path class="cell-nucleus cell-nucleus-lobed" d="M-9-1C-8-8-1-10 3-6C8-9 12-3 9 2C12 8 3 12-1 8C-7 11-12 5-9-1Z" /></g>
+    <g data-aoc-part="granules"><circle class="cell-granule" cx="11" cy="9" r="2.2" /><circle class="cell-granule" cx="11" cy="-7" r="1.8" /><circle class="cell-granule" cx="-11" cy="8" r="1.6" /></g>
+  </g>
+  <g data-aoc-panel="variant-1" transform="translate(96 32)">
+    <g data-aoc-part="membrane" class="aoc-motion--heavy-pulse"><path class="cell-membrane" d="M1-19C8-18 14-13 14-8C21-5 21 4 17 8C18 16 8 20 2 17C-4 22-13 18-15 11C-22 7-20-2-16-6C-17-14-7-19 1-19Z" /><path class="cell-membrane-ridge" d="M-12-10C-1-16 12-9 15 2C14 11 4 16-7 13" /><ellipse class="cell-highlight" cx="-5" cy="-11" rx="6" ry="3" /></g>
+    <g data-aoc-part="nucleus" class="aoc-motion--restrained-drift"><path class="cell-nucleus cell-nucleus-lobed" d="M-8-2C-8-8-1-10 3-6C8-8 11-2 8 2C11 7 3 11-1 8C-7 10-11 4-8-2Z" /></g>
+    <g data-aoc-part="granules"><circle class="cell-granule" cx="12" cy="8" r="2" /><circle class="cell-granule" cx="10" cy="-8" r="1.7" /><circle class="cell-granule" cx="-12" cy="7" r="1.8" /></g>
+  </g>
+  <g data-aoc-panel="variant-2" transform="translate(160 32)">
+    <g data-aoc-part="membrane" class="aoc-motion--heavy-pulse"><path class="cell-membrane" d="M-2-19C7-20 12-14 14-9C21-6 20 3 17 7C20 15 11 20 4 17C-2 22-11 18-13 12C-21 9-21 0-16-5C-18-13-10-18-2-19Z" /><path class="cell-membrane-ridge" d="M-13-9C-2-16 11-11 15 0C16 9 6 16-5 14" /><ellipse class="cell-highlight" cx="-6" cy="-10" rx="6" ry="3" /></g>
+    <g data-aoc-part="nucleus" class="aoc-motion--restrained-drift"><path class="cell-nucleus cell-nucleus-lobed" d="M-9-2C-7-9 0-10 4-6C9-8 12-2 9 3C11 8 3 11-2 8C-7 10-12 4-9-2Z" /></g>
+    <g data-aoc-part="granules"><circle class="cell-granule" cx="12" cy="7" r="2.1" /><circle class="cell-granule" cx="9" cy="-9" r="1.8" /><circle class="cell-granule" cx="-11" cy="9" r="1.7" /></g>
+  </g>
+  <g data-aoc-panel="variant-3" transform="translate(224 32)">
+    <g data-aoc-part="membrane" class="aoc-motion--heavy-pulse"><path class="cell-membrane" d="M-7-17C0-21 7-17 10-13C18-13 21-6 18 0C22 6 17 14 11 15C7 21-2 20-7 16C-15 19-21 11-18 4C-23-2-17-11-12-12C-12-15-10-17-7-17Z" /><path class="cell-membrane-ridge" d="M-14-8C-4-16 10-12 15-2C17 8 7 15-4 14" /><ellipse class="cell-highlight" cx="-7" cy="-9" rx="6" ry="3" /></g>
+    <g data-aoc-part="nucleus" class="aoc-motion--restrained-drift"><path class="cell-nucleus cell-nucleus-lobed" d="M-9-1C-8-8-1-10 3-6C8-9 11-3 9 2C11 8 3 11-1 8C-7 11-12 5-9-1Z" /></g>
+    <g data-aoc-part="granules"><circle class="cell-granule" cx="12" cy="8" r="2.2" /><circle class="cell-granule" cx="9" cy="-8" r="1.9" /><circle class="cell-granule" cx="-13" cy="7" r="1.7" /></g>
+  </g>
+</svg>

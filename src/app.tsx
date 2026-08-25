@@ -4,7 +4,6 @@ import { createStore, reconcile } from "solid-js/store";
 import {
   DIFFICULTIES,
   ENEMIES,
-  getScenePath,
   PLAYFIELD_HEIGHT,
   PLAYFIELD_WIDTH,
   SCENE_ONE_WAVE_COUNT,
@@ -14,16 +13,23 @@ import {
 } from "./config";
 import type { DifficultyId, Enemy, GameState, Point, Tower, TowerId } from "./game_types";
 import { activateAudio, playTreatmentSound, playUiSound } from "./audio";
-import { CellDeathEffect, EnemyActor } from "./enemy_cell";
-import type { CellDeathVisual } from "./enemy_visuals";
-import { createCellDeathVisual, findDestroyedEnemies } from "./enemy_visuals";
+import { AttackEffect } from "./attack_effect";
+import { CellDeathEffect, CellRepairEffect, EnemyActor } from "./enemy_actor";
+import type { CellDeathVisual, CellRepairVisual } from "./enemy_visuals";
+import {
+  createCellDeathVisual,
+  createCellRepairVisual,
+  findDestroyedEnemies,
+} from "./enemy_visuals";
 import { loadSettings, recordBestResult, updateSettings } from "./persistence";
+import { TowerActor, TowerPlacementGhost } from "./tower_actor";
+import { WorldLandmarks } from "./world_landmarks";
 import {
   canPlaceTower,
   canStartWave,
   createGameState,
+  getRepairChance,
   getSellValue,
-  getTowerRange,
   getUpgradeCost,
   placeTower,
   sellTower,
@@ -34,7 +40,15 @@ import {
   upgradeTower,
 } from "./simulation";
 
-const TOWER_IDS: readonly TowerId[] = ["doctor", "chemotherapy", "t_cell", "radiation", "antibody"];
+const TOWER_IDS: readonly TowerId[] = [
+  "doctor",
+  "chemotherapy",
+  "t_cell",
+  "radiation",
+  "antibody",
+  "macrophage",
+  "crispr",
+];
 const DIFFICULTY_IDS: readonly DifficultyId[] = ["practice", "standard", "challenge"];
 const MAP_WIDTH = PLAYFIELD_WIDTH;
 const MAP_HEIGHT = PLAYFIELD_HEIGHT;
@@ -59,68 +73,10 @@ function attackCue(type: TowerId): string {
     t_cell: "rapid immune strike",
     radiation: "focused beam",
     antibody: "mark and slow",
+    macrophage: "engulf and digest",
+    crispr: "repair or mismatch",
   };
   return cues[type];
-}
-
-function AttackEffect(props: { tower: Tower }): JSX.Element {
-  const point = props.tower.attackPoint;
-  if (point === undefined) return <g />;
-  const { position, type } = props.tower;
-  if (type === "doctor") {
-    return (
-      <g class="attack-effect attack-doctor" pointer-events="none">
-        <line x1={position.x} y1={position.y} x2={point.x} y2={point.y} />
-        <path
-          d={`M ${point.x - 18} ${point.y + 8} L ${point.x + 9} ${point.y - 9} L ${point.x + 15} ${point.y - 3} L ${point.x - 12} ${point.y + 14} Z`}
-        />
-      </g>
-    );
-  }
-  if (type === "chemotherapy") {
-    return (
-      <g class="attack-effect attack-chemotherapy" pointer-events="none">
-        <circle cx={point.x} cy={point.y} r="13" />
-        <circle cx={point.x - 20} cy={point.y + 9} r="9" />
-        <circle cx={point.x + 18} cy={point.y - 11} r="10" />
-      </g>
-    );
-  }
-  if (type === "t_cell") {
-    return (
-      <g class="attack-effect attack-t_cell" pointer-events="none">
-        <line x1={position.x} y1={position.y} x2={point.x} y2={point.y} />
-        <path
-          d={`M ${point.x - 16} ${point.y - 13} l 12 13 l -12 13 M ${point.x - 2} ${point.y - 13} l 12 13 l -12 13`}
-        />
-      </g>
-    );
-  }
-  if (type === "radiation") {
-    return (
-      <g class="attack-effect attack-radiation" pointer-events="none">
-        <line x1={position.x} y1={position.y} x2={point.x} y2={point.y} />
-        <line class="radiation-core" x1={position.x} y1={position.y} x2={point.x} y2={point.y} />
-        <rect x={point.x - 17} y={point.y - 17} width="34" height="34" rx="5" />
-      </g>
-    );
-  }
-  return (
-    <g class="attack-effect attack-antibody" pointer-events="none">
-      <line x1={position.x} y1={position.y} x2={point.x} y2={point.y} />
-      <circle
-        cx={position.x + (point.x - position.x) * 0.32}
-        cy={position.y + (point.y - position.y) * 0.32}
-        r="5"
-      />
-      <circle
-        cx={position.x + (point.x - position.x) * 0.62}
-        cy={position.y + (point.y - position.y) * 0.62}
-        r="6"
-      />
-      <circle cx={point.x} cy={point.y} r="25" />
-    </g>
-  );
 }
 
 export function App(): JSX.Element {
@@ -130,6 +86,7 @@ export function App(): JSX.Element {
   const [soundEnabled, setSoundEnabled] = createSignal(saved.soundEnabled);
   const [enemyViews, setEnemyViews] = createStore<Enemy[]>([]);
   const [cellDeaths, setCellDeaths] = createSignal<CellDeathVisual[]>([]);
+  const [cellRepairs, setCellRepairs] = createSignal<CellRepairVisual[]>([]);
   const [ui, setUi] = createStore<UiState>({
     inspectOpen: false,
     settingsOpen: false,
@@ -173,6 +130,7 @@ export function App(): JSX.Element {
   function resetGame(difficulty: DifficultyId): void {
     setGame(createGameState(difficulty));
     setCellDeaths([]);
+    setCellRepairs([]);
     setUi({ selectedTreatment: undefined, selectedTowerId: undefined, selectedEnemyId: undefined });
   }
 
@@ -187,6 +145,7 @@ export function App(): JSX.Element {
   function enterClusterCorridor(): void {
     setGame((current) => startClusterScene(current));
     setCellDeaths([]);
+    setCellRepairs([]);
     setUi({ selectedTreatment: undefined, selectedTowerId: undefined, selectedEnemyId: undefined });
     if (soundEnabled()) {
       activateAudio();
@@ -275,7 +234,7 @@ export function App(): JSX.Element {
   }
 
   function keyboardInput(event: KeyboardEvent): void {
-    if (event.key >= "1" && event.key <= "5") {
+    if (event.key >= "1" && event.key <= "7") {
       const number = Number(event.key);
       const type = TOWER_IDS[number - 1];
       if (type !== undefined) {
@@ -319,17 +278,34 @@ export function App(): JSX.Element {
     }
   }
 
-  function updateCellDeaths(previous: GameState, next: GameState): void {
+  function updateCellTransitions(previous: GameState, next: GameState): void {
     const currentTime = performance.now();
     const currentDeaths = cellDeaths();
     const activeDeaths = currentDeaths.filter((death) => death.expiresAt > currentTime);
+    const currentRepairs = cellRepairs();
+    const activeRepairs = currentRepairs.filter((repair) => repair.expiresAt > currentTime);
     const escapedCount = Math.max(0, next.metastases - previous.metastases);
-    const destroyed = findDestroyedEnemies(previous.enemies, next.enemies, escapedCount);
+    const repairedEnemyIds = next.repairEvents.map((event) => event.enemyId);
+    const destroyed = findDestroyedEnemies(
+      previous.enemies,
+      next.enemies,
+      escapedCount,
+      repairedEnemyIds,
+    );
     const addedDeaths = destroyed.map((enemy) =>
       createCellDeathVisual(enemy, previous.scene, currentTime),
     );
+    const previousRepairKeys = new Set(
+      previous.repairEvents.map((event) => `${event.towerId}-${event.attempt}`),
+    );
+    const addedRepairs = next.repairEvents
+      .filter((event) => !previousRepairKeys.has(`${event.towerId}-${event.attempt}`))
+      .map((event) => createCellRepairVisual(event, previous.scene, currentTime));
     if (activeDeaths.length !== currentDeaths.length || addedDeaths.length > 0) {
       setCellDeaths([...activeDeaths, ...addedDeaths]);
+    }
+    if (activeRepairs.length !== currentRepairs.length || addedRepairs.length > 0) {
+      setCellRepairs([...activeRepairs, ...addedRepairs]);
     }
   }
 
@@ -338,7 +314,7 @@ export function App(): JSX.Element {
       const elapsed = (now - previousFrame) / 1000;
       const current = game();
       const next = tickGame(current, elapsed * speed());
-      updateCellDeaths(current, next);
+      updateCellTransitions(current, next);
       if (soundEnabled()) {
         for (const tower of next.towers) {
           const previous = current.towers.find((candidate) => candidate.id === tower.id);
@@ -439,121 +415,15 @@ export function App(): JSX.Element {
           onPointerMove={updateCursor}
           onPointerDown={mapPointerDown}
         >
-          <defs>
-            <linearGradient id="tissue" x1="0" x2="1">
-              <stop stop-color="#fff4df" />
-              <stop offset="1" stop-color="#e7f7ed" />
-            </linearGradient>
-          </defs>
-          <rect x="0" y="0" width={MAP_WIDTH} height={MAP_HEIGHT} rx="24" fill="url(#tissue)" />
-          <For
-            each={[
-              { x: 150, y: 95 },
-              { x: 385, y: 445 },
-              { x: 625, y: 95 },
-              { x: 835, y: 420 },
-            ]}
-          >
-            {(dot, index) => (
-              <circle
-                class={`tissue-cell tissue-cell-${index() + 1}`}
-                cx={dot.x}
-                cy={dot.y}
-                r="31"
-                fill="#dcefdc"
-                stroke="#b8d9bd"
-                stroke-width="4"
-              />
-            )}
-          </For>
-          <path
-            class="route-bed"
-            d={`M ${getScenePath(game().scene)
-              .map((point) => `${point.x},${point.y}`)
-              .join(" L ")}`}
-            fill="none"
-            stroke="#ffd5b6"
-            stroke-width="52"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-          <path
-            class="route-flow"
-            d={`M ${getScenePath(game().scene)
-              .map((point) => `${point.x},${point.y}`)
-              .join(" L ")}`}
-            fill="none"
-            stroke="#ea8b6c"
-            stroke-width="34"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-dasharray="6 8"
-          />
-          <Show
-            when={game().scene === 1}
-            fallback={
-              <g class="cluster-source" aria-label="Multi-tumor cluster">
-                <circle class="cluster-node cluster-node-a" cx="45" cy="300" r="31" />
-                <circle class="cluster-node cluster-node-b" cx="72" cy="320" r="34" />
-                <circle class="cluster-node cluster-node-c" cx="45" cy="342" r="27" />
-                <circle cx="57" cy="320" r="17" fill="#ef718c" />
-                <text x="64" y="392" text-anchor="middle">
-                  Tumor cluster
-                </text>
-              </g>
-            }
-          >
-            <g class="tumor-source" aria-label="Primary tumor">
-              <circle cx="52" cy="324" r="40" fill="#c54267" />
-              <circle cx="45" cy="316" r="15" fill="#ef718c" />
-              <circle cx="67" cy="336" r="10" fill="#f69bb0" />
-              <text x="52" y="388" text-anchor="middle">
-                Primary tumor
-              </text>
-            </g>
-          </Show>
-          <g class="blood-exit" aria-label="Blood vessel exit">
-            <rect x="888" y="205" width="62" height="82" rx="28" fill="#d34c5d" />
-            <path d="M900 218v55m16-55v55m16-55v55" stroke="#ffbec3" stroke-width="8" />
-            <text x="919" y="318" text-anchor="middle">
-              Blood exit
-            </text>
-          </g>
+          <WorldLandmarks scene={game().scene} />
           <For each={game().towers}>
             {(tower) => (
-              <g class={`tower tower-${tower.type}`} onClick={(event) => pickTower(event, tower)}>
-                <circle
-                  cx={tower.position.x}
-                  cy={tower.position.y}
-                  r="24"
-                  fill={TOWERS[tower.type].color}
-                  stroke="#173858"
-                  stroke-width="3"
-                />
-                <circle
-                  class="tower-aura"
-                  cx={tower.position.x}
-                  cy={tower.position.y}
-                  r="29"
-                  fill="none"
-                  stroke={TOWERS[tower.type].color}
-                  stroke-width="2"
-                />
-                <text x={tower.position.x} y={tower.position.y + 5} text-anchor="middle">
-                  {TOWERS[tower.type].shortName}
-                </text>
-                <Show when={ui.selectedTowerId === tower.id}>
-                  <circle
-                    cx={tower.position.x}
-                    cy={tower.position.y}
-                    r={getTowerRange(tower)}
-                    fill="none"
-                    stroke={TOWERS[tower.type].color}
-                    stroke-width="2"
-                    stroke-dasharray="7 6"
-                  />
-                </Show>
-              </g>
+              <TowerActor
+                tower={tower}
+                time={game().time}
+                selected={ui.selectedTowerId === tower.id}
+                onPick={pickTower}
+              />
             )}
           </For>
           <For
@@ -575,26 +445,15 @@ export function App(): JSX.Element {
             )}
           </For>
           <For each={cellDeaths()}>{(death) => <CellDeathEffect death={death} />}</For>
+          <For each={cellRepairs()}>{(repair) => <CellRepairEffect repair={repair} />}</For>
           <Show when={ui.selectedTreatment}>
             {(treatment) => (
-              <g class="placement-ghost" pointer-events="none">
-                <circle
-                  cx={ui.cursor.x}
-                  cy={ui.cursor.y}
-                  r={TOWERS[treatment()].range}
-                  fill={placementValid() ? "#2aaa7720" : "#e34848"}
-                  stroke={placementValid() ? "#2aaa77" : "#e34848"}
-                  stroke-width="2"
-                  stroke-dasharray="8 7"
-                />
-                <circle
-                  cx={ui.cursor.x}
-                  cy={ui.cursor.y}
-                  r="22"
-                  fill={TOWERS[treatment()].color}
-                  opacity=".65"
-                />
-              </g>
+              <TowerPlacementGhost
+                type={treatment()}
+                position={ui.cursor}
+                range={TOWERS[treatment()].range}
+                valid={placementValid()}
+              />
             )}
           </Show>
         </svg>
@@ -697,6 +556,13 @@ export function App(): JSX.Element {
                 {TOWERS[tower().type].name} - tier {tower().tier + 1}
               </h2>
               <p>{TOWERS[tower().type].description}</p>
+              <Show when={tower().type === "crispr"}>
+                <p class="repair-status" aria-live="polite">
+                  Next repair chance: {Math.round(getRepairChance(tower()) * 100)}% after{" "}
+                  {tower().repairMisses ?? 0} sequence mismatches. Seven consecutive mismatches
+                  guarantee the next repair.
+                </p>
+              </Show>
               <button
                 type="button"
                 disabled={upgradeCost === undefined || game().tp < (upgradeCost ?? 0)}
@@ -757,7 +623,7 @@ export function App(): JSX.Element {
         </aside>
       </Show>
       <footer>
-        Keys: 1-5 choose treatment, arrows move placement, Enter place, Esc cancel, Space pause, N
+        Keys: 1-7 choose treatment, arrows move placement, Enter place, Esc cancel, Space pause, N
         next wave.
       </footer>
     </main>

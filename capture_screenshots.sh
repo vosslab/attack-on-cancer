@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# capture_screenshots.sh - refresh the managed README gameplay screenshot.
+# capture_screenshots.sh - refresh managed gameplay images and the visual catalog.
 #
 # Usage: ./capture_screenshots.sh
 
@@ -23,13 +23,14 @@ cleanup() {
 trap cleanup EXIT INT TERM HUP
 
 ./build_github_pages.sh
+node tools/build_visual_catalog.mjs
 source source_me.sh
-python3 -m http.server "${port}" --bind 127.0.0.1 --directory dist >"${server_log}" 2>&1 &
+python3 -m http.server "${port}" --bind 127.0.0.1 --directory . >"${server_log}" 2>&1 &
 server_pid=$!
 
 server_ready=0
 for _ in {1..50}; do
-	if curl --fail --silent "http://127.0.0.1:${port}/" >/dev/null 2>&1; then
+	if curl --fail --silent "http://127.0.0.1:${port}/dist/" >/dev/null 2>&1; then
 		server_ready=1
 		break
 	fi
@@ -43,7 +44,9 @@ if [ "${server_ready}" -ne 1 ]; then
 fi
 
 mkdir -p "${capture_dir}"
-node tools/capture_docs_screenshots.mjs "http://127.0.0.1:${port}/" "${capture_dir}"
+node tools/capture_docs_screenshots.mjs "http://127.0.0.1:${port}/dist/" "${capture_dir}"
+node tools/capture_visual_catalog.mjs \
+	"http://127.0.0.1:${port}/test-results/visual-assets/"
 
 mkdir -p docs/screenshots
 for screenshot in skin_tissue_battle.png antibody_targeting.png cluster_corridor.png; do

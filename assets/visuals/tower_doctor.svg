@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" data-aoc-kind="tower" data-aoc-key="doctor"
+  data-aoc-frame-width="72" data-aoc-frame-height="72" viewBox="0 0 288 72">
+  <g data-aoc-editor-only="true"><rect width="288" height="72" fill="#edf7ff" /><text x="5" y="9" font-size="7" font-weight="700">Doctor syringe turrets, tiers 1-4</text></g>
+  <g data-aoc-panel="tier-0" transform="translate(36 36)">
+    <g data-aoc-part="base">
+      <circle class="tower-base" r="22" />
+      <circle class="tower-face" cx="-7" cy="4" r="14" />
+      <path class="tower-symbol doctor-badge" d="M-10-4H-4V1H1V7H-4V12H-10V7H-15V1H-10Z" />
+    </g>
+    <g data-aoc-part="scanner" class="aoc-motion--scan">
+      <path class="tower-scanner" d="M-19-15A25 25 0 0 1 19-14" />
+    </g>
+    <g data-aoc-part="syringe" class="aoc-motion--recoil" transform="rotate(-18)">
+      <rect class="doctor-syringe" x="-3" y="-7" width="29" height="14" rx="4" />
+      <rect class="doctor-fluid" x="6" y="-4" width="12" height="8" rx="2" />
+      <path class="doctor-plunger" d="M-3-10V10M-8-10H2M-8 10H2" />
+      <path class="doctor-needle" d="M26 0H35" />
+    </g>
+  </g>
+  <g data-aoc-panel="tier-1" transform="translate(108 36)">
+    <g data-aoc-part="base">
+      <circle class="tower-base" r="23" />
+      <circle class="tower-face" cx="-8" cy="4" r="15" />
+      <path class="tower-symbol doctor-badge" d="M-11-5H-4V1H2V8H-4V14H-11V8H-17V1H-11Z" />
+      <circle class="tower-tier-light" cx="-17" cy="16" r="3" />
+    </g>
+    <g data-aoc-part="scanner" class="aoc-motion--scan">
+      <path class="tower-scanner" d="M-21-14A26 26 0 0 1 21-12" />
+      <path class="tower-scanner tower-scanner-secondary" d="M-19 17A25 25 0 0 0 18 18" />
+    </g>
+    <g data-aoc-part="syringe" class="aoc-motion--recoil" transform="rotate(-15)">
+      <rect class="doctor-syringe" x="-4" y="-7" width="31" height="14" rx="4" />
+      <rect class="doctor-fluid" x="5" y="-4" width="14" height="8" rx="2" />
+      <path class="doctor-plunger" d="M-4-10V10M-9-10H1M-9 10H1" />
+      <path class="doctor-needle" d="M27 0H35" />
+      <path class="doctor-dose-mark" d="M9-5V-1M14-5V-1M19-5V-1" />
+    </g>
+  </g>
+  <g data-aoc-panel="tier-2" transform="translate(180 36)">
+    <g data-aoc-part="base">
+      <circle class="tower-base" r="24" />
+      <circle class="tower-face" cx="-9" cy="4" r="15" />
+      <path class="tower-symbol doctor-badge" d="M-12-5H-5V1H1V8H-5V14H-12V8H-18V1H-12Z" />
+      <circle class="tower-tier-light" cx="-18" cy="16" r="3" />
+      <circle class="tower-tier-light" cx="-20" cy="8" r="2.5" />
+    </g>
+    <g data-aoc-part="scanner" class="aoc-motion--scan">
+      <circle class="tower-scanner" r="28" />
+      <path class="tower-scanner tower-scanner-secondary" d="M-23-16A29 29 0 0 1 24-13" />
+    </g>
+    <g data-aoc-part="syringe" class="aoc-motion--recoil" transform="rotate(-12)">
+      <rect class="doctor-syringe" x="-5" y="-8" width="33" height="16" rx="4" />
+      <rect class="doctor-fluid" x="5" y="-5" width="16" height="10" rx="2" />
+      <path class="doctor-plunger" d="M-5-11V11M-10-11H0M-10 11H0" />
+      <path class="doctor-needle" d="M28 0H35" />
+      <path class="doctor-dose-mark" d="M9-6V-1M14-6V-1M19-6V-1" />
+      <path class="doctor-syringe-guard" d="M23-8L28-12M23 8L28 12" />
+    </g>
+  </g>
+  <g data-aoc-panel="tier-3" transform="translate(252 36)">
+    <g data-aoc-part="base">
+      <circle class="tower-base tower-base-elite" r="25" />
+      <circle class="tower-face" cx="-10" cy="4" r="16" />
+      <path class="tower-symbol doctor-badge" d="M-13-6H-6V0H0V7H-6V13H-13V7H-19V0H-13Z" />
+      <circle class="tower-tier-light" cx="-19" cy="17" r="3" />
+      <circle class="tower-tier-light" cx="-21" cy="9" r="2.5" />
+      <circle class="tower-tier-light" cx="-22" cy="1" r="2" />
+    </g>
+    <g data-aoc-part="scanner" class="aoc-motion--scan">
+      <circle class="tower-scanner" r="29" />
+      <circle class="tower-scanner tower-scanner-secondary" r="32" />
+    </g>
+    <g data-aoc-part="syringe" class="aoc-motion--recoil" transform="rotate(-9)">
+      <rect class="doctor-syringe" x="-6" y="-8" width="34" height="16" rx="4" />
+      <rect class="doctor-fluid doctor-fluid-elite" x="4" y="-5" width="18" height="10" rx="2" />
+      <path class="doctor-plunger" d="M-6-12V12M-12-12H0M-12 12H0" />
+      <path class="doctor-needle" d="M28-2H35M28 2H35" />
+      <path class="doctor-dose-mark" d="M8-6V-1M13-6V-1M18-6V-1" />
+      <path class="doctor-syringe-guard" d="M23-8L28-13M23 8L28 13" />
+    </g>
+  </g>
+</svg>

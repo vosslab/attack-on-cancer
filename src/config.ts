@@ -18,31 +18,129 @@ export const SCENE_ONE_WAVE_COUNT = 15;
 export const CLUSTER_SCENE_BUILD_GRANT = 200;
 export const SELL_REFUND_RATE = 0.55;
 
-export const PATH: readonly Point[] = [
-  { x: 52, y: 324 },
-  { x: 185, y: 324 },
-  { x: 255, y: 205 },
-  { x: 395, y: 205 },
-  { x: 485, y: 375 },
-  { x: 630, y: 375 },
-  { x: 718, y: 245 },
-  { x: 900, y: 245 },
-] as const;
+interface CubicRouteSegment {
+  controlOne: Point;
+  controlTwo: Point;
+  end: Point;
+}
 
-const CLUSTER_PATH: readonly Point[] = [
-  { x: 52, y: 318 },
-  { x: 150, y: 318 },
-  { x: 218, y: 148 },
-  { x: 342, y: 112 },
-  { x: 448, y: 218 },
-  { x: 380, y: 354 },
-  { x: 510, y: 480 },
-  { x: 670, y: 450 },
-  { x: 744, y: 300 },
-  { x: 648, y: 180 },
-  { x: 800, y: 116 },
-  { x: 900, y: 242 },
-] as const;
+const ROUTE_STEPS_PER_CURVE = 8;
+
+function sampleCubicRoute(start: Point, segments: readonly CubicRouteSegment[]): readonly Point[] {
+  const points: Point[] = [{ ...start }];
+  let segmentStart = start;
+  for (const segment of segments) {
+    for (let step = 1; step <= ROUTE_STEPS_PER_CURVE; step += 1) {
+      const fraction = step / ROUTE_STEPS_PER_CURVE;
+      const inverse = 1 - fraction;
+      points.push({
+        x:
+          inverse ** 3 * segmentStart.x +
+          3 * inverse ** 2 * fraction * segment.controlOne.x +
+          3 * inverse * fraction ** 2 * segment.controlTwo.x +
+          fraction ** 3 * segment.end.x,
+        y:
+          inverse ** 3 * segmentStart.y +
+          3 * inverse ** 2 * fraction * segment.controlOne.y +
+          3 * inverse * fraction ** 2 * segment.controlTwo.y +
+          fraction ** 3 * segment.end.y,
+      });
+    }
+    segmentStart = segment.end;
+  }
+  return points;
+}
+
+export const PATH: readonly Point[] = sampleCubicRoute({ x: 52, y: 324 }, [
+  {
+    controlOne: { x: 126, y: 332 },
+    controlTwo: { x: 178, y: 316 },
+    end: { x: 218, y: 252 },
+  },
+  {
+    controlOne: { x: 258, y: 188 },
+    controlTwo: { x: 338, y: 177 },
+    end: { x: 388, y: 210 },
+  },
+  {
+    controlOne: { x: 430, y: 238 },
+    controlTwo: { x: 448, y: 352 },
+    end: { x: 510, y: 374 },
+  },
+  {
+    controlOne: { x: 558, y: 394 },
+    controlTwo: { x: 622, y: 400 },
+    end: { x: 658, y: 360 },
+  },
+  {
+    controlOne: { x: 692, y: 322 },
+    controlTwo: { x: 700, y: 265 },
+    end: { x: 750, y: 242 },
+  },
+  {
+    controlOne: { x: 792, y: 222 },
+    controlTwo: { x: 854, y: 250 },
+    end: { x: 900, y: 245 },
+  },
+]);
+
+const CLUSTER_PATH: readonly Point[] = sampleCubicRoute({ x: 52, y: 318 }, [
+  {
+    controlOne: { x: 108, y: 326 },
+    controlTwo: { x: 164, y: 310 },
+    end: { x: 190, y: 254 },
+  },
+  {
+    controlOne: { x: 216, y: 194 },
+    controlTwo: { x: 218, y: 142 },
+    end: { x: 278, y: 116 },
+  },
+  {
+    controlOne: { x: 326, y: 94 },
+    controlTwo: { x: 374, y: 100 },
+    end: { x: 416, y: 142 },
+  },
+  {
+    controlOne: { x: 458, y: 184 },
+    controlTwo: { x: 478, y: 220 },
+    end: { x: 456, y: 278 },
+  },
+  {
+    controlOne: { x: 438, y: 326 },
+    controlTwo: { x: 392, y: 358 },
+    end: { x: 418, y: 408 },
+  },
+  {
+    controlOne: { x: 442, y: 454 },
+    controlTwo: { x: 490, y: 482 },
+    end: { x: 548, y: 474 },
+  },
+  {
+    controlOne: { x: 604, y: 468 },
+    controlTwo: { x: 654, y: 450 },
+    end: { x: 686, y: 402 },
+  },
+  {
+    controlOne: { x: 720, y: 352 },
+    controlTwo: { x: 742, y: 320 },
+    end: { x: 724, y: 278 },
+  },
+  {
+    controlOne: { x: 708, y: 238 },
+    controlTwo: { x: 664, y: 210 },
+    end: { x: 674, y: 174 },
+  },
+  {
+    controlOne: { x: 688, y: 126 },
+    controlTwo: { x: 766, y: 108 },
+    end: { x: 812, y: 132 },
+  },
+  {
+    controlOne: { x: 856, y: 154 },
+    controlTwo: { x: 864, y: 220 },
+    end: { x: 900, y: 242 },
+  },
+]);
 
 export function getScenePath(scene: SceneId): readonly Point[] {
   return scene === 1 ? PATH : CLUSTER_PATH;
@@ -107,6 +205,36 @@ export const TOWERS: Record<TowerId, TowerConfig> = {
     slowFactor: 0.76,
     color: "#18a890",
     description: "Marks a cell: it slows, takes more damage, and loses immune evasion.",
+  },
+  macrophage: {
+    name: "CAR Macrophage",
+    shortName: "CAR-M",
+    cost: 210,
+    range: 76,
+    damage: 78,
+    cooldown: 1.55,
+    markedDamageMultiplier: 1.85,
+    attackVisualDuration: 0.38,
+    color: "#287f85",
+    description:
+      "An experimental engineered phagocyte: slow, close-range engulfing with extra damage to antibody-marked cells.",
+  },
+  crispr: {
+    name: "CRISPR Repair Editor",
+    shortName: "CRISPR",
+    cost: 180,
+    range: 155,
+    damage: 0,
+    cooldown: 1.2,
+    attackVisualDuration: 0.48,
+    repairChanceByTier: [0.12, 0.16, 0.22, 0.3],
+    repairPityStep: 0.03,
+    repairGuaranteeAfterMisses: 7,
+    tumorEditDamage: 72,
+    tumorShedDelay: 82,
+    color: "#5968d8",
+    description:
+      "A speculative genome editor: low-chance cell repair, with sequence confidence after mismatches. Tumor Mass edits only suppress shedding and remove one segment.",
   },
 };
 

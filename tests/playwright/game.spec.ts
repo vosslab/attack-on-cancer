@@ -67,3 +67,33 @@ test("a player can select a treatment, place it in open tissue, and inspect it",
     page.locator(".inspect").getByText("A reliable syringe for nearby cells."),
   ).toBeVisible();
 });
+
+test("keyboard shortcut 6 selects and places the CAR Macrophage", async ({ page }) => {
+  await page.goto("/");
+  const pointsBefore = await readTreatmentPoints(page);
+  await page.keyboard.press("6");
+  const macrophageButton = page.getByRole("button", { name: /6\. CAR Macrophage/ });
+  await expect(macrophageButton).toHaveClass(/active/);
+
+  const playfield = page.getByRole("img", {
+    name: "Skin tissue route from the primary tumor to a blood vessel exit",
+  });
+  await playfield.click({ position: { x: 470, y: 120 } });
+  await expect(page.locator('[data-tower-type="macrophage"]')).toBeVisible();
+  expect(await readTreatmentPoints(page)).toBeLessThan(pointsBefore);
+});
+
+test("keyboard shortcut 7 selects and places the CRISPR Repair Editor", async ({ page }) => {
+  await page.goto("/");
+  const pointsBefore = await readTreatmentPoints(page);
+  await page.keyboard.press("7");
+  const crisprButton = page.getByRole("button", { name: /7\. CRISPR Repair Editor/ });
+  await expect(crisprButton).toHaveClass(/active/);
+
+  const playfield = page.getByRole("img", {
+    name: "Skin tissue route from the primary tumor to a blood vessel exit",
+  });
+  await playfield.click({ position: { x: 470, y: 120 } });
+  await expect(page.locator('[data-tower-type="crispr"]')).toBeVisible();
+  expect(await readTreatmentPoints(page)).toBeLessThan(pointsBefore);
+});

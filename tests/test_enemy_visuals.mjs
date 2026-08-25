@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { cellDeathKind, cellVariant, findDestroyedEnemies } from "../src/enemy_visuals.ts";
+import { getEnemyVisualPosition } from "../src/simulation.ts";
 
 function enemy(id, type, pathDistance) {
   return {
@@ -13,6 +14,15 @@ function enemy(id, type, pathDistance) {
   };
 }
 
+test("visual lanes separate cells sharing the same route progress deterministically", () => {
+  const first = getEnemyVisualPosition(1, 320, 2);
+  const firstAgain = getEnemyVisualPosition(1, 320, 2);
+  const neighbor = getEnemyVisualPosition(2, 320, 2);
+
+  assert.deepEqual(first, firstAgain);
+  assert.notDeepEqual(first, neighbor);
+});
+
 test("cell variants are deterministic and visibly diverse", () => {
   const firstPass = Array.from({ length: 8 }, (_, id) => cellVariant(id));
   const secondPass = Array.from({ length: 8 }, (_, id) => cellVariant(id));
@@ -23,7 +33,17 @@ test("cell variants are deterministic and visibly diverse", () => {
 test("destroyed-cell detection excludes cells that metastasized", () => {
   const destroyed = enemy(1, "basic", 120);
   const escaped = enemy(2, "fast", 880);
-  const result = findDestroyedEnemies([destroyed, escaped], [], 1);
+  const result = findDestroyedEnemies([destroyed, escaped], [], 1, []);
+  assert.deepEqual(
+    result.map((cell) => cell.id),
+    [destroyed.id],
+  );
+});
+
+test("repaired cells do not emit a destruction transition", () => {
+  const repaired = enemy(3, "tough", 240);
+  const destroyed = enemy(4, "basic", 220);
+  const result = findDestroyedEnemies([repaired, destroyed], [], 0, [repaired.id]);
   assert.deepEqual(
     result.map((cell) => cell.id),
     [destroyed.id],

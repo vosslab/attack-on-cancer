@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" data-aoc-kind="world" data-aoc-key="tumor_cluster"
+  data-aoc-frame-width="112" data-aoc-frame-height="112" viewBox="0 0 112 112">
+  <g data-aoc-editor-only="true"><rect width="112" height="112" fill="#faedf4" /><text x="5" y="9" font-size="7">Tumor cluster</text></g>
+  <g data-aoc-panel="state-0" transform="translate(56 56)">
+    <g data-aoc-part="cluster"><circle class="cluster-node cluster-node-a" cx="-12" cy="-20" r="31" /><circle class="cluster-node cluster-node-b" cx="15" cy="0" r="34" /><circle class="cluster-node cluster-node-c" cx="-12" cy="22" r="27" /><circle class="cluster-core" r="17" /></g>
+  </g>
+</svg>

@@ -1,8 +1,10 @@
 export type DifficultyId = "practice" | "standard" | "challenge";
-export type TowerId = "doctor" | "chemotherapy" | "t_cell" | "radiation" | "antibody";
+export type TowerId =
+  "doctor" | "chemotherapy" | "t_cell" | "radiation" | "antibody" | "macrophage" | "crispr";
 export type EnemyId = "basic" | "fast" | "tough" | "dividing" | "immune_evasive" | "tumor_mass";
 export type GameStatus = "briefing" | "playing" | "paused" | "intermission" | "won" | "lost";
 export type SceneId = 1 | 2;
+export type RepairOutcome = "repair" | "mismatch" | "tumor_suppressed";
 
 export interface Point {
   x: number;
@@ -21,6 +23,13 @@ export interface TowerConfig {
   splashRadius?: number;
   markDuration?: number;
   slowFactor?: number;
+  markedDamageMultiplier?: number;
+  attackVisualDuration?: number;
+  repairChanceByTier?: readonly [number, number, number, number];
+  repairPityStep?: number;
+  repairGuaranteeAfterMisses?: number;
+  tumorEditDamage?: number;
+  tumorShedDelay?: number;
 }
 
 export interface UpgradeConfig {
@@ -70,6 +79,17 @@ export interface Tower {
   cooldownRemaining: number;
   attackPoint?: Point;
   attackFlashUntil?: number;
+  attackOutcome?: RepairOutcome;
+  repairMisses?: number;
+  attackSequence?: number;
+}
+
+export interface CellRepairEvent {
+  towerId: number;
+  attempt: number;
+  enemyId: number;
+  type: EnemyId;
+  pathDistance: number;
 }
 
 export interface GameState {
@@ -84,6 +104,7 @@ export interface GameState {
   nextEnemyId: number;
   nextTowerId: number;
   pendingSpawns: Array<{ type: EnemyId; at: number }>;
+  repairEvents: CellRepairEvent[];
   time: number;
 }
 

@@ -62,7 +62,7 @@ async function createCapturePage(browser, url, accelerated) {
         JSON.stringify({
           version: 1,
           soundEnabled: false,
-          preferredSpeed: 4,
+          preferredSpeed: useAcceleratedFrames ? 1 : 4,
           bestResults: {},
         }),
       );
@@ -88,15 +88,20 @@ function getPlayfield(page) {
   });
 }
 
-async function placeTreatment(page, playfield, name, position) {
-  await page.getByRole("button", { name }).click();
+async function clickMapPosition(playfield, position) {
   const box = await playfield.boundingBox();
   assert.notEqual(box, null, "Playfield has no rendered bounds");
-  const renderedPosition = {
-    x: (position.x * box.width) / MAP_SIZE.width,
-    y: (position.y * box.height) / MAP_SIZE.height,
-  };
-  await playfield.click({ position: renderedPosition });
+  await playfield.click({
+    position: {
+      x: (position.x * box.width) / MAP_SIZE.width,
+      y: (position.y * box.height) / MAP_SIZE.height,
+    },
+  });
+}
+
+async function placeTreatment(page, playfield, name, position) {
+  await page.getByRole("button", { name }).click();
+  await clickMapPosition(playfield, position);
 }
 
 async function readTreatmentPoints(page) {
@@ -174,7 +179,7 @@ async function captureAntibodyTargeting(browser, url, outputPath) {
     await session.page.getByRole("button", { name: "Start Wave 1" }).click();
     await session.page.locator(".marked-halo").first().waitFor({ state: "visible" });
     await session.page.getByRole("button", { name: "Pause" }).click();
-    await session.page.locator(".tower-antibody").click();
+    await clickMapPosition(playfield, { x: 780, y: 160 });
 
     assertNoBrowserErrors(session.browserErrors);
     await session.page.locator(".battle-area").screenshot({

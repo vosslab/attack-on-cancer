@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" data-aoc-kind="enemy" data-aoc-key="fast"
+  data-aoc-frame-width="64" data-aoc-frame-height="64" viewBox="0 0 256 64">
+  <g data-aoc-editor-only="true">
+    <rect x="0" y="0" width="256" height="64" fill="#fff7ee" />
+    <text x="8" y="12" font-size="8" font-weight="700">Fast cell variants</text>
+  </g>
+  <g data-aoc-panel="variant-0" transform="translate(32 32)">
+    <g data-aoc-part="pseudopods" class="aoc-motion--ripple">
+      <path class="cell-pseudopod" d="M-10-9Q-19-18-23-12M-14 5Q-23 12-25 5" />
+    </g>
+    <g data-aoc-part="membrane" class="aoc-motion--compress">
+      <path class="cell-membrane" d="M-19-5C-13-16 1-18 12-11L21-4L14 1C11 11 1 17-11 12C-17 9-21 3-19-5Z" />
+      <ellipse class="cell-highlight" cx="-5" cy="-9" rx="7" ry="2.6" />
+    </g>
+    <g data-aoc-part="nucleus" class="aoc-motion--drift"><ellipse class="cell-nucleus" cx="1" cy="1" rx="7" ry="5" /></g>
+    <g data-aoc-part="striations"><path class="cell-striation" d="M8-8Q13-5 15-2M9 6Q14 4 16 1" /></g>
+  </g>
+  <g data-aoc-panel="variant-1" transform="translate(96 32)">
+    <g data-aoc-part="pseudopods" class="aoc-motion--ripple"><path class="cell-pseudopod" d="M-12-7Q-21-13-24-7M-13 7Q-22 15-25 8" /></g>
+    <g data-aoc-part="membrane" class="aoc-motion--compress">
+      <path class="cell-membrane" d="M-20 2C-18-10-7-17 5-14L19-9L14-1L21 5L8 7C1 17-14 15-19 7Z" />
+      <ellipse class="cell-highlight" cx="-6" cy="-8" rx="7" ry="2.5" />
+    </g>
+    <g data-aoc-part="nucleus" class="aoc-motion--drift"><ellipse class="cell-nucleus" cx="-1" cy="1" rx="6.5" ry="5" /></g>
+    <g data-aoc-part="striations"><path class="cell-striation" d="M7-9Q13-6 16-4M8 5Q14 3 17 0" /></g>
+  </g>
+  <g data-aoc-panel="variant-2" transform="translate(160 32)">
+    <g data-aoc-part="pseudopods" class="aoc-motion--ripple"><path class="cell-pseudopod" d="M-10-10Q-19-18-24-12M-15 4Q-23 10-26 3" /></g>
+    <g data-aoc-part="membrane" class="aoc-motion--compress">
+      <path class="cell-membrane" d="M-18-9C-7-17 7-14 13-7L22-1L13 4C7 14-7 18-16 10C-21 5-22-3-18-9Z" />
+      <ellipse class="cell-highlight" cx="-4" cy="-9" rx="7" ry="2.6" />
+    </g>
+    <g data-aoc-part="nucleus" class="aoc-motion--drift"><ellipse class="cell-nucleus" cx="0" cy="2" rx="7" ry="5" /></g>
+    <g data-aoc-part="striations"><path class="cell-striation" d="M8-7Q14-4 17-1M8 7Q13 5 15 2" /></g>
+  </g>
+  <g data-aoc-panel="variant-3" transform="translate(224 32)">
+    <g data-aoc-part="pseudopods" class="aoc-motion--ripple"><path class="cell-pseudopod" d="M-11-8Q-20-16-24-10M-14 6Q-22 13-25 6" /></g>
+    <g data-aoc-part="membrane" class="aoc-motion--compress">
+      <path class="cell-membrane" d="M-21-1C-17-12-5-17 7-12L20-4L13 2L19 8L6 10C-4 18-18 11-21-1Z" />
+      <ellipse class="cell-highlight" cx="-6" cy="-8" rx="7" ry="2.5" />
+    </g>
+    <g data-aoc-part="nucleus" class="aoc-motion--drift"><ellipse class="cell-nucleus" cx="-1" cy="1" rx="6.5" ry="5.2" /></g>
+    <g data-aoc-part="striations"><path class="cell-striation" d="M7-8Q12-5 15-2M7 7Q13 5 16 2" /></g>
+  </g>
+</svg>

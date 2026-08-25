@@ -8,14 +8,14 @@ backend, analytics, or external art assets.
 
 **Play online:** [vosslab.github.io/attack-on-cancer](https://vosslab.github.io/attack-on-cancer/)
 
-## Two scenes, five treatments
+## Two scenes, seven treatments
 
 The signature promise is a complete tower-defense loop with biology as optional flavor: cartoon
 cells leave a primary tumor, travel toward a blood vessel, and make every targeting decision visible.
 
 - Clear 15 Skin Tissue waves, then rebuild for six much denser waves on the winding Cluster Corridor.
-- Read each treatment at a glance: syringe shot, area burst, immune strike, radiation beam, or
-  antibody chain.
+- Read each treatment at a glance: syringe shot, area burst, immune strike, radiation beam,
+  antibody chain, phagocytic cup, or guide-RNA editor.
 - Use pointer, touch, or keyboard controls; pause or fast-forward at 1x, 2x, or 4x.
 - Choose Practice, Standard, or the intentionally dense, resource-tight Challenge mode.
 
@@ -51,14 +51,21 @@ Build the static artifact without starting a server:
 ./build_github_pages.sh
 ```
 
+Regenerate the ignored visual catalog and run the complete fast gate:
+
+```bash
+./run_fast_checks.sh
+```
+
 The build writes the GitHub Pages-ready site to `dist/`. The preview script selects a random local
 port and opens the browser when run from an interactive macOS terminal. For a meaningful first
 result, place a Doctor or T Cell on open tissue and select **Start Wave 1**.
 
 ## How to play
 
-Choose a difficulty, place treatments on open tissue, and start waves when ready. Destroyed cells
-earn Treatment Points (TP); every cell reaching the blood-vessel exit adds one metastasis point.
+Choose a difficulty, place treatments on open tissue, and start waves when ready. Destroyed or
+repaired cells earn Treatment Points (TP); every cell reaching the blood-vessel exit adds one
+metastasis point.
 
 - Clear the first 15 waves to unlock the Cluster Corridor. Its multi-tumor source feeds a longer,
   winding route and grants 200 TP for a fresh build.
@@ -75,7 +82,7 @@ earn Treatment Points (TP); every cell reaching the blood-vessel exit adds one m
 
 | Action                | Pointer or touch     | Keyboard                  |
 | --------------------- | -------------------- | ------------------------- |
-| Select treatment      | Select a tray button | `1` through `5`           |
+| Select treatment      | Select a tray button | `1` through `7`           |
 | Move placement cursor | Move pointer         | Arrow keys                |
 | Place treatment       | Tap or click tissue  | Enter                     |
 | Cancel placement      | Select another tool  | Esc                       |
@@ -92,6 +99,13 @@ earn Treatment Points (TP); every cell reaching the blood-vessel exit adds one m
 | Cytotoxic T Cell | Fast single-target immune attacks.                                          | Red rapid immune strike.           |
 | Radiation Bot    | Expensive, long-range, heavy strikes.                                       | Heavy gold beam and target lock.   |
 | Antibody Therapy | Marks, slows, and sensitizes cells; it removes immune evasion while marked. | Teal antibody chain and mark ring. |
+| CAR Macrophage   | Experimental, slow, close-range engulfing with an antibody-marked bonus.    | Closing teal phagocytic cup.       |
+| CRISPR Repair Editor | Speculative low-chance repair that gains confidence after mismatches. | Indigo guide-RNA target.           |
+
+The CRISPR Repair Editor is a game abstraction, not an approved treatment. Its hopeful visual idea
+is inspired by laboratory studies of [mutation correction in colorectal cancer cells](https://pubmed.ncbi.nlm.nih.gov/32021251/)
+and [selective disruption of mutant EGFR](https://pubmed.ncbi.nlm.nih.gov/28575452/), not a claim
+that editing a cancer cell would safely restore normal tissue in a patient.
 
 ## Difficulty
 

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" data-aoc-kind="death" data-aoc-key="apoptosis"
+  data-aoc-frame-width="64" data-aoc-frame-height="64" viewBox="0 0 320 64">
+  <g data-aoc-editor-only="true"><rect width="320" height="64" fill="#fff3f7" /><text x="5" y="9" font-size="7" font-weight="700">Apoptosis: arrest, condensation, blebbing, bodies, clearance</text></g>
+  <g data-aoc-panel="frame-0" transform="translate(32 32)">
+    <g data-aoc-part="contracting-cell"><circle class="death-membrane" r="15" /><path class="death-nucleus" d="M-8-3C-5-10 5-10 8-3C10 4 3 9-3 8C-9 7-11 2-8-3Z" /><path class="death-arrest-ring" d="M-20 0A20 20 0 0 1 0-20" /></g>
+  </g>
+  <g data-aoc-panel="frame-1" transform="translate(96 32)">
+    <g data-aoc-part="condensed-cell"><circle class="death-membrane" r="12.5" /><path class="death-nucleus death-nucleus-condensed" d="M-6-2C-4-7 4-7 6-2C7 3 2 7-2 6C-7 5-8 1-6-2Z" /><circle class="death-chromatin" cx="-2" cy="-2" r="2" /><circle class="death-chromatin" cx="3" cy="2" r="1.7" /></g>
+  </g>
+  <g data-aoc-panel="frame-2" transform="translate(160 32)">
+    <g data-aoc-part="blebbing-cell"><circle class="death-membrane" r="11" /><path class="death-nucleus death-nucleus-condensed" d="M-5-2C-3-6 3-6 5-2C6 2 2 6-2 5C-6 4-7 1-5-2Z" /><circle class="death-bleb" cx="-11" cy="-6" r="4" /><circle class="death-bleb" cx="8" cy="-10" r="3.5" /><circle class="death-bleb" cx="11" cy="7" r="4.5" /><circle class="death-bleb" cx="-7" cy="11" r="3" /></g>
+  </g>
+  <g data-aoc-panel="frame-3" transform="translate(224 32)">
+    <g data-aoc-part="apoptotic-bodies"><g class="apoptotic-body-static" transform="translate(-12 -8)"><circle class="death-membrane" r="5" /><circle class="death-nucleus" r="1.7" /></g><g class="apoptotic-body-static" transform="translate(10 -9)"><circle class="death-membrane" r="4.2" /><circle class="death-nucleus" r="1.4" /></g><g class="apoptotic-body-static" transform="translate(12 10)"><circle class="death-membrane" r="5.4" /><circle class="death-nucleus" r="1.5" /></g><g class="apoptotic-body-static" transform="translate(-10 11)"><circle class="death-membrane" r="3.8" /></g></g>
+  </g>
+  <g data-aoc-panel="frame-4" transform="translate(288 32)">
+    <g data-aoc-part="clearance"><circle class="death-clearance-body" cx="-13" cy="-7" r="3.5" opacity="0.45" /><circle class="death-clearance-body" cx="9" cy="-9" r="3" opacity="0.35" /><circle class="death-clearance-body" cx="12" cy="9" r="4" opacity="0.3" /><circle class="death-clearance-body" cx="-9" cy="11" r="2.8" opacity="0.2" /><path class="death-clearance-sweep" d="M-22 15Q0 27 23 10" /></g>
+  </g>
+</svg>

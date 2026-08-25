@@ -1,7 +1,8 @@
-import type { Enemy, EnemyId, Point, SceneId } from "./game_types";
-import { getPathPosition } from "./simulation";
+import type { CellRepairEvent, Enemy, EnemyId, Point, SceneId } from "./game_types";
+import { getEnemyVisualPosition } from "./simulation";
+import type { VisualVariant } from "../generated/visual_assets";
 
-export type CellVariant = 0 | 1 | 2 | 3;
+export type CellVariant = VisualVariant;
 export type CellDeathKind = "apoptosis" | "rupture";
 
 export interface CellDeathVisual {
@@ -13,11 +14,25 @@ export interface CellDeathVisual {
   expiresAt: number;
 }
 
+export interface CellRepairVisual {
+  eventKey: string;
+  enemyId: number;
+  type: EnemyId;
+  position: Point;
+  expiresAt: number;
+}
+
 export const CELL_DEATH_DURATION_MS = 950;
+export const CELL_REPAIR_DURATION_MS = 1100;
 
 export function cellVariant(enemyId: number): CellVariant {
   const variant = Math.abs(enemyId) % 4;
   return variant as CellVariant;
+}
+
+export function actorAnimationDelay(actorId: number): string {
+  const phase = (Math.abs(actorId) % 17) * 0.073;
+  return `-${phase.toFixed(3)}s`;
 }
 
 export function cellDeathKind(enemy: Enemy): CellDeathKind {
@@ -31,9 +46,13 @@ export function findDestroyedEnemies(
   previousEnemies: readonly Enemy[],
   nextEnemies: readonly Enemy[],
   escapedCount: number,
+  repairedEnemyIds: readonly number[],
 ): Enemy[] {
   const nextIds = new Set(nextEnemies.map((enemy) => enemy.id));
-  const removed = previousEnemies.filter((enemy) => !nextIds.has(enemy.id));
+  const repairedIds = new Set(repairedEnemyIds);
+  const removed = previousEnemies.filter(
+    (enemy) => !nextIds.has(enemy.id) && !repairedIds.has(enemy.id),
+  );
   if (escapedCount <= 0) {
     return removed;
   }
@@ -50,6 +69,20 @@ export function findDestroyedEnemies(
   return destroyed;
 }
 
+export function createCellRepairVisual(
+  event: CellRepairEvent,
+  scene: SceneId,
+  startedAt: number,
+): CellRepairVisual {
+  return {
+    eventKey: `${event.towerId}-${event.attempt}`,
+    enemyId: event.enemyId,
+    type: event.type,
+    position: getEnemyVisualPosition(event.enemyId, event.pathDistance, scene),
+    expiresAt: startedAt + CELL_REPAIR_DURATION_MS,
+  };
+}
+
 export function createCellDeathVisual(
   enemy: Enemy,
   scene: SceneId,
@@ -58,7 +91,7 @@ export function createCellDeathVisual(
   const visual: CellDeathVisual = {
     enemyId: enemy.id,
     type: enemy.type,
-    position: getPathPosition(enemy.pathDistance, scene),
+    position: getEnemyVisualPosition(enemy.id, enemy.pathDistance, scene),
     variant: cellVariant(enemy.id),
     kind: cellDeathKind(enemy),
     expiresAt: startedAt + CELL_DEATH_DURATION_MS,

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" data-aoc-kind="world" data-aoc-key="tumor_source"
+  data-aoc-frame-width="104" data-aoc-frame-height="104" viewBox="0 0 104 104">
+  <g data-aoc-editor-only="true"><rect width="104" height="104" fill="#faedf4" /><text x="5" y="9" font-size="7">Primary tumor</text></g>
+  <g data-aoc-panel="state-0" transform="translate(52 52)">
+    <g data-aoc-part="mass" class="aoc-motion--tumor-breathe"><circle class="world-tumor-main" r="40" /><circle class="world-tumor-nodule" cx="-7" cy="-8" r="15" /><circle class="world-tumor-nodule world-tumor-nodule-small" cx="15" cy="12" r="10" /><path class="world-tumor-vessel" d="M-27 15C-9 2 5 4 28-14M-17-27C-8-12 6-11 16-2" /></g>
+  </g>
+</svg>

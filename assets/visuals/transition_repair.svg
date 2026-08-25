@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" data-aoc-kind="transition" data-aoc-key="repair"
+  data-aoc-frame-width="80" data-aoc-frame-height="80" viewBox="0 0 80 80">
+  <g data-aoc-editor-only="true"><rect width="80" height="80" fill="#e9fff3" /><text x="5" y="9" font-size="7">Repaired healthy smiling cell transition</text></g>
+  <g data-aoc-panel="state-0" transform="translate(40 40)">
+    <g data-aoc-part="repair-halo" class="repair-halo"><circle r="24" /><path d="M0-31V-27M22-22L19-19M31 0H27M22 22L19 19M0 31V27M-22 22L-19 19M-31 0H-27M-22-22L-19-19" /></g>
+    <g data-aoc-part="healthy-cell" class="repair-cell-body">
+      <path class="repair-membrane" d="M0-20C12-22 23-11 21 2C24 13 13 23 1 21C-11 24-22 13-20 1C-23-11-12-22 0-20Z" />
+      <ellipse class="repair-nucleus" cx="-7" cy="-3" rx="7" ry="6" />
+      <g data-aoc-part="smiling-face" class="repair-smile"><circle cx="-10" cy="-4" r="1.5" /><circle cx="6" cy="-4" r="1.5" /><path d="M-10 5Q-2 13 7 5" /></g>
+      <g data-aoc-part="healthy-organelles" class="repair-organelles"><circle cx="10" cy="7" r="2.4" /><circle cx="4" cy="14" r="1.8" /><circle cx="12" cy="-12" r="1.7" /></g>
+    </g>
+  </g>
+</svg>

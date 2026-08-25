@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" data-aoc-kind="world" data-aoc-key="blood_exit"
+  data-aoc-frame-width="88" data-aoc-frame-height="112" viewBox="0 0 88 112">
+  <g data-aoc-editor-only="true"><rect width="88" height="112" fill="#fff0f1" /><text x="5" y="9" font-size="7">Blood exit</text></g>
+  <g data-aoc-panel="state-0" transform="translate(44 56)">
+    <g data-aoc-part="vessel" class="aoc-motion--vessel-pulse"><rect class="blood-vessel" x="-31" y="-41" width="62" height="82" rx="28" /><path class="blood-vessel-flow" d="M-19-28V27M-3-28V27M13-28V27" /></g>
+  </g>
+</svg>

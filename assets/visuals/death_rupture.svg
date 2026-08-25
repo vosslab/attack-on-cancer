@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" data-aoc-kind="death" data-aoc-key="rupture"
+  data-aoc-frame-width="80" data-aoc-frame-height="80" viewBox="0 0 80 80">
+  <g data-aoc-editor-only="true"><rect width="80" height="80" fill="#fff3f7" /><text x="5" y="9" font-size="7">Rupture rig</text></g>
+  <g data-aoc-panel="state-0" transform="translate(40 40)">
+    <g data-aoc-part="wave"><circle class="rupture-wave" r="13" /></g>
+    <g data-aoc-part="membrane" class="aoc-motion--rupture"><path class="rupture-membrane" d="M0-14L4-8L11-10L10-3L17 1L10 5L11 12L4 9L0 16L-4 9L-12 12L-10 4L-17 0L-10-4L-12-11L-4-8Z" /></g>
+    <g data-aoc-part="fragments"><circle class="rupture-droplet rupture-droplet-a" r="3.4" /><circle class="rupture-droplet rupture-droplet-b" r="2.8" /><circle class="rupture-droplet rupture-droplet-c" r="3.8" /><circle class="rupture-droplet rupture-droplet-d" r="2.5" /></g>
+  </g>
+</svg>

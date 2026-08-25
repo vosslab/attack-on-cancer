@@ -13,6 +13,7 @@ import {
   WAVES,
 } from "./config";
 import type {
+  CellRepairEvent,
   DifficultyId,
   Enemy,
   EnemyId,
@@ -27,6 +28,9 @@ import type {
 const TOWER_OVERLAP_RADIUS = 42;
 const PATH_CLEARANCE = 34;
 const MARK_DAMAGE_MULTIPLIER = 1.35;
+const ENEMY_VISUAL_TANGENT_SAMPLE = 8;
+const ENEMY_VISUAL_LANE_JITTER = 3;
+const ENEMY_VISUAL_TRAVEL_JITTER = 2.5;
 
 //============================================
 // Path helpers
@@ -102,6 +106,64 @@ export function getPathPosition(pathDistance: number, scene: SceneId = 1): Point
   return { x: exit.x, y: exit.y };
 }
 
+function getEnemyVisualNoise(enemyId: number, salt: number): number {
+  const seed = Math.abs(enemyId) + salt;
+  let scrambled = Math.imul(seed ^ (seed >>> 16), 0x45d9f3b);
+  scrambled = Math.imul(scrambled ^ (scrambled >>> 16), 0x45d9f3b);
+  const normalized = (scrambled >>> 0) / 0xffffffff;
+  return normalized * 2 - 1;
+}
+
+function getEnemyVisualLane(enemyId: number): number {
+  let lane: number;
+  switch (Math.abs(enemyId) % 7) {
+    case 0:
+      lane = 0;
+      break;
+    case 1:
+      lane = 27;
+      break;
+    case 2:
+      lane = -9;
+      break;
+    case 3:
+      lane = 18;
+      break;
+    case 4:
+      lane = -18;
+      break;
+    case 5:
+      lane = 9;
+      break;
+    default:
+      lane = -27;
+  }
+  return lane + getEnemyVisualNoise(enemyId, 31) * ENEMY_VISUAL_LANE_JITTER;
+}
+
+export function getEnemyVisualPosition(
+  enemyId: number,
+  pathDistance: number,
+  scene: SceneId = 1,
+): Point {
+  const center = getPathPosition(pathDistance, scene);
+  const before = getPathPosition(pathDistance - ENEMY_VISUAL_TANGENT_SAMPLE, scene);
+  const after = getPathPosition(pathDistance + ENEMY_VISUAL_TANGENT_SAMPLE, scene);
+  const horizontal = after.x - before.x;
+  const vertical = after.y - before.y;
+  const tangentLength = Math.hypot(horizontal, vertical);
+  if (tangentLength === 0) {
+    throw new Error("The enemy visual lane needs a non-zero route tangent.");
+  }
+  const lane = getEnemyVisualLane(enemyId);
+  const travel = getEnemyVisualNoise(enemyId, 67) * ENEMY_VISUAL_TRAVEL_JITTER;
+  const position = {
+    x: center.x + (horizontal / tangentLength) * travel + (-vertical / tangentLength) * lane,
+    y: center.y + (vertical / tangentLength) * travel + (horizontal / tangentLength) * lane,
+  };
+  return position;
+}
+
 export function isPathClear(position: Point, scene: SceneId = 1): boolean {
   const path = getScenePath(scene);
   for (let index = 0; index < path.length - 1; index += 1) {
@@ -134,6 +196,7 @@ export function createGameState(difficulty: DifficultyId): GameState {
     nextEnemyId: 1,
     nextTowerId: 1,
     pendingSpawns: [],
+    repairEvents: [],
     time: 0,
   };
   return state;
@@ -181,6 +244,8 @@ export function placeTower(state: GameState, type: TowerId, position: Point): Ga
     position: { x: position.x, y: position.y },
     tier: 0,
     cooldownRemaining: 0,
+    repairMisses: type === "crispr" ? 0 : undefined,
+    attackSequence: type === "crispr" ? 0 : undefined,
   };
   const nextState: GameState = {
     ...state,
@@ -308,6 +373,7 @@ export function startClusterScene(state: GameState): GameState {
     towers: [],
     enemies: [],
     pendingSpawns: [],
+    repairEvents: [],
     nextTowerId: 1,
   };
 }
@@ -366,6 +432,44 @@ function getTowerCooldown(tower: Tower): number {
   return cooldown;
 }
 
+export function getRepairChance(tower: Tower): number {
+  const config = getTowerConfig(tower);
+  const chances = config.repairChanceByTier;
+  const pityStep = config.repairPityStep;
+  const guaranteeAfter = config.repairGuaranteeAfterMisses;
+  if (
+    tower.type !== "crispr" ||
+    chances === undefined ||
+    pityStep === undefined ||
+    guaranteeAfter === undefined
+  ) {
+    throw new Error("The CRISPR Repair Editor requires complete repair-chance configuration.");
+  }
+  if (!Number.isInteger(tower.tier) || tower.tier < 0 || tower.tier >= chances.length) {
+    throw new Error(`CRISPR tier must be 0-${chances.length - 1}, received ${tower.tier}.`);
+  }
+  const misses = Math.max(0, tower.repairMisses ?? 0);
+  if (misses >= guaranteeAfter) {
+    return 1;
+  }
+  const tierChance = chances[tower.tier];
+  if (tierChance === undefined) {
+    throw new Error(`CRISPR tier ${tower.tier} has no repair chance.`);
+  }
+  return Math.min(1, tierChance + misses * pityStep);
+}
+
+function getRepairRoll(tower: Tower, target: Enemy): number {
+  const attempt = tower.attackSequence ?? 0;
+  let seed = Math.imul(tower.id + 1, 0x9e3779b1);
+  seed ^= Math.imul(target.id + 1, 0x85ebca77);
+  seed ^= Math.imul(attempt + 1, 0xc2b2ae3d);
+  seed = Math.imul(seed ^ (seed >>> 16), 0x7feb352d);
+  seed = Math.imul(seed ^ (seed >>> 15), 0x846ca68b);
+  const normalized = ((seed ^ (seed >>> 16)) >>> 0) / 0x100000000;
+  return normalized;
+}
+
 function isMarked(enemy: Enemy, time: number): boolean {
   const marked = enemy.markedUntil > time;
   return marked;
@@ -373,14 +477,18 @@ function isMarked(enemy: Enemy, time: number): boolean {
 
 function getTarget(tower: Tower, enemies: readonly Enemy[], scene: SceneId): Enemy | undefined {
   const range = getTowerRange(tower);
+  const inRange = enemies.filter(
+    (enemy) => distanceBetween(tower.position, getPathPosition(enemy.pathDistance, scene)) <= range,
+  );
+  const ordinaryTargets = inRange.filter((enemy) => enemy.type !== "tumor_mass");
+  const targetPool =
+    tower.type === "crispr" && ordinaryTargets.length > 0 ? ordinaryTargets : inRange;
   let selected: Enemy | undefined;
-  for (const enemy of enemies) {
-    const position = getPathPosition(enemy.pathDistance, scene);
+  for (const enemy of targetPool) {
     if (
-      distanceBetween(tower.position, position) <= range &&
-      (selected === undefined ||
-        enemy.pathDistance > selected.pathDistance ||
-        (enemy.pathDistance === selected.pathDistance && enemy.id < selected.id))
+      selected === undefined ||
+      enemy.pathDistance > selected.pathDistance ||
+      (enemy.pathDistance === selected.pathDistance && enemy.id < selected.id)
     ) {
       selected = enemy;
     }
@@ -390,7 +498,8 @@ function getTarget(tower: Tower, enemies: readonly Enemy[], scene: SceneId): Ene
 
 function applyDamage(enemy: Enemy, source: TowerId, baseDamage: number, time: number): Enemy {
   const marked = isMarked(enemy, time);
-  let damage = marked ? baseDamage * MARK_DAMAGE_MULTIPLIER : baseDamage;
+  const markedDamageMultiplier = TOWERS[source].markedDamageMultiplier ?? MARK_DAMAGE_MULTIPLIER;
+  let damage = marked ? baseDamage * markedDamageMultiplier : baseDamage;
   if (source === "t_cell" && enemy.type === "immune_evasive" && !marked) {
     damage *= 0.5;
   }
@@ -398,10 +507,71 @@ function applyDamage(enemy: Enemy, source: TowerId, baseDamage: number, time: nu
   return damagedEnemy;
 }
 
-function fireTower(tower: Tower, enemies: readonly Enemy[], time: number, scene: SceneId): Enemy[] {
-  const target = getTarget(tower, enemies, scene);
-  if (target === undefined) {
-    return [...enemies];
+interface TowerFireResult {
+  enemies: Enemy[];
+  tower: Tower;
+  reward: number;
+  repairEvent?: CellRepairEvent;
+}
+
+function fireCrispr(tower: Tower, target: Enemy, enemies: readonly Enemy[]): TowerFireResult {
+  const config = getTowerConfig(tower);
+  const attempt = tower.attackSequence ?? 0;
+  const successful = getRepairRoll(tower, target) < getRepairChance(tower);
+  const attemptedTower: Tower = { ...tower, attackSequence: attempt + 1 };
+  if (!successful) {
+    return {
+      enemies: [...enemies],
+      tower: {
+        ...attemptedTower,
+        attackOutcome: "mismatch",
+        repairMisses: (tower.repairMisses ?? 0) + 1,
+      },
+      reward: 0,
+    };
+  }
+
+  if (target.type === "tumor_mass") {
+    const tumorEditDamage = config.tumorEditDamage;
+    const tumorShedDelay = config.tumorShedDelay;
+    if (tumorEditDamage === undefined || tumorShedDelay === undefined) {
+      throw new Error("CRISPR Tumor Mass editing requires damage and shedding-delay values.");
+    }
+    const editedTarget: Enemy = {
+      ...target,
+      health: target.health - tumorEditDamage,
+      nextShedDistance: (target.nextShedDistance ?? target.pathDistance + 105) + tumorShedDelay,
+    };
+    return {
+      enemies: enemies.map((enemy) => (enemy.id === target.id ? editedTarget : enemy)),
+      tower: { ...attemptedTower, attackOutcome: "tumor_suppressed", repairMisses: 0 },
+      reward: 0,
+    };
+  }
+
+  return {
+    enemies: enemies.filter((enemy) => enemy.id !== target.id),
+    tower: { ...attemptedTower, attackOutcome: "repair", repairMisses: 0 },
+    reward: ENEMIES[target.type].reward,
+    repairEvent: {
+      towerId: tower.id,
+      attempt,
+      enemyId: target.id,
+      type: target.type,
+      pathDistance: target.pathDistance,
+    },
+  };
+}
+
+function fireTower(
+  tower: Tower,
+  target: Enemy,
+  enemies: readonly Enemy[],
+  time: number,
+  scene: SceneId,
+): TowerFireResult {
+  if (tower.type === "crispr") {
+    return fireCrispr(tower, target, enemies);
   }
 
   const config = getTowerConfig(tower);
@@ -413,7 +583,7 @@ function fireTower(tower: Tower, enemies: readonly Enemy[], time: number, scene:
   const splashRadius = config.splashRadius;
   if (splashRadius === undefined) {
     const result = enemies.map((enemy) => (enemy.id === target.id ? firstHit : enemy));
-    return result;
+    return { enemies: result, tower, reward: 0 };
   }
 
   const targetPosition = getPathPosition(target.pathDistance, scene);
@@ -425,7 +595,7 @@ function fireTower(tower: Tower, enemies: readonly Enemy[], time: number, scene:
     const insideSplash = distanceBetween(targetPosition, enemyPosition) <= splashRadius;
     return insideSplash ? applyDamage(enemy, tower.type, getTowerDamage(tower), time) : enemy;
   });
-  return damagedEnemies;
+  return { enemies: damagedEnemies, tower, reward: 0 };
 }
 
 function spawnReadyEnemies(state: GameState, time: number): GameState {
@@ -565,6 +735,8 @@ function resolveDestroyedEnemies(state: GameState): GameState {
 
 function attackWithReadyTowers(state: GameState, deltaSeconds: number): GameState {
   let enemies = state.enemies;
+  let reward = 0;
+  const repairEvents = [...state.repairEvents];
   const towers = state.towers.map((tower) => {
     const cooldownRemaining = Math.max(0, tower.cooldownRemaining - deltaSeconds);
     if (cooldownRemaining > 0) {
@@ -574,16 +746,27 @@ function attackWithReadyTowers(state: GameState, deltaSeconds: number): GameStat
     if (target === undefined) {
       return { ...tower, cooldownRemaining: 0 };
     }
-    enemies = fireTower(tower, enemies, state.time, state.scene);
+    const result = fireTower(tower, target, enemies, state.time, state.scene);
+    enemies = result.enemies;
+    reward += result.reward;
+    if (result.repairEvent !== undefined) {
+      repairEvents.push(result.repairEvent);
+    }
     const firedTower: Tower = {
-      ...tower,
-      attackPoint: getPathPosition(target.pathDistance, state.scene),
-      attackFlashUntil: state.time + 0.22,
+      ...result.tower,
+      attackPoint: getEnemyVisualPosition(target.id, target.pathDistance, state.scene),
+      attackFlashUntil: state.time + (TOWERS[tower.type].attackVisualDuration ?? 0.22),
       cooldownRemaining: getTowerCooldown(tower),
     };
     return firedTower;
   });
-  const nextState: GameState = { ...state, enemies, towers };
+  const nextState: GameState = {
+    ...state,
+    tp: state.tp + reward,
+    enemies,
+    towers,
+    repairEvents,
+  };
   return nextState;
 }
 
@@ -603,7 +786,7 @@ export function tickGame(state: GameState, deltaSeconds: number): GameState {
   }
   const elapsed = deltaSeconds;
   const time = state.time + elapsed;
-  let nextState: GameState = { ...state, time };
+  let nextState: GameState = { ...state, time, repairEvents: [] };
   nextState = spawnReadyEnemies(nextState, time);
   nextState = { ...nextState, enemies: moveEnemies(nextState.enemies, elapsed, time) };
   nextState = shedTumorMassCells(nextState);

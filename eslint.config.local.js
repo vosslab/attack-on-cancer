@@ -17,5 +17,10 @@
 //     },
 //   ];
 //
-// Default: no local overrides.
-export default [];
+export default [
+  {
+    // Generated TSX is type-checked, but its authored source is the SVG catalog.
+    // The temporary visual catalog is bundled proof, not lint input.
+    ignores: ["generated/**", "test-results/**"],
+  },
+];

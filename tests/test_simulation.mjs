@@ -14,6 +14,7 @@ import {
   createGameState,
   getPathLength,
   getPathPosition,
+  getRepairChance,
   getSellValue,
   placeTower,
   startClusterScene,
@@ -111,6 +112,209 @@ test("antibody marks remove immune-evasion resistance for a following T Cell att
   assert.ok(enemy !== undefined);
   assert.ok(enemy.markedUntil > advanced.time);
   assert.equal(enemy.health, ENEMIES.immune_evasive.health - expectedDamage);
+});
+
+function damageFromSingleTower(type, markedUntil) {
+  const initial = createGameState("practice");
+  const state = {
+    ...initial,
+    status: "playing",
+    towers: [{ id: 1, type, position: { x: 80, y: 280 }, tier: 0, cooldownRemaining: 0 }],
+    nextTowerId: 2,
+    enemies: [
+      {
+        id: 1,
+        type: "tough",
+        health: ENEMIES.tough.health,
+        pathDistance: 0,
+        markedUntil,
+      },
+    ],
+  };
+  const advanced = tickGame(state, 0.01);
+  const enemy = advanced.enemies[0];
+  assert.ok(enemy !== undefined);
+  return ENEMIES.tough.health - enemy.health;
+}
+
+test("CAR Macrophage gets a larger antibody-marked damage boost than ordinary treatments", () => {
+  const macrophageUnmarked = damageFromSingleTower("macrophage", 0);
+  const macrophageMarked = damageFromSingleTower("macrophage", 10);
+  const doctorUnmarked = damageFromSingleTower("doctor", 0);
+  const doctorMarked = damageFromSingleTower("doctor", 10);
+
+  assert.ok(macrophageUnmarked > doctorUnmarked);
+  assert.ok(macrophageMarked / macrophageUnmarked > doctorMarked / doctorUnmarked);
+});
+
+test("CRISPR upgrades and sequence confidence increase repair likelihood", () => {
+  const baseTower = {
+    id: 1,
+    type: "crispr",
+    position: { x: 80, y: 280 },
+    tier: 0,
+    cooldownRemaining: 0,
+    repairMisses: 0,
+    attackSequence: 0,
+  };
+  const tierChances = [0, 1, 2, 3].map((tier) => getRepairChance({ ...baseTower, tier }));
+  const afterMismatch = getRepairChance({ ...baseTower, repairMisses: 1 });
+  const guaranteed = getRepairChance({ ...baseTower, repairMisses: 7 });
+
+  assert.ok(tierChances.every((chance, index) => index === 0 || chance > tierChances[index - 1]));
+  assert.ok(afterMismatch > tierChances[0]);
+  assert.equal(guaranteed, 1);
+});
+
+test("CRISPR repair is deterministic, rewards containment, and does not trigger death logic", () => {
+  const initial = createGameState("practice");
+  const state = {
+    ...initial,
+    status: "playing",
+    towers: [
+      {
+        id: 1,
+        type: "crispr",
+        position: { x: 80, y: 280 },
+        tier: 0,
+        cooldownRemaining: 0,
+        repairMisses: 7,
+        attackSequence: 0,
+      },
+    ],
+    enemies: [
+      {
+        id: 8,
+        type: "dividing",
+        health: ENEMIES.dividing.health,
+        pathDistance: 0,
+        markedUntil: 0,
+      },
+    ],
+  };
+
+  const first = tickGame(state, 0.01);
+  const repeated = tickGame(state, 0.01);
+  assert.deepEqual(first, repeated);
+  assert.equal(first.enemies.length, 0);
+  assert.equal(first.tp, initial.tp + ENEMIES.dividing.reward);
+  assert.equal(first.repairEvents.length, 1);
+  assert.equal(first.repairEvents[0].type, "dividing");
+  assert.equal(first.towers[0].attackOutcome, "repair");
+  assert.equal(first.towers[0].repairMisses, 0);
+});
+
+test("a deterministic CRISPR mismatch leaves the target intact and builds confidence", () => {
+  const initial = createGameState("practice");
+  const state = {
+    ...initial,
+    status: "playing",
+    towers: [
+      {
+        id: 1,
+        type: "crispr",
+        position: { x: 80, y: 280 },
+        tier: 0,
+        cooldownRemaining: 0,
+        repairMisses: 0,
+        attackSequence: 0,
+      },
+    ],
+    enemies: [
+      {
+        id: 1,
+        type: "basic",
+        health: ENEMIES.basic.health,
+        pathDistance: 0,
+        markedUntil: 0,
+      },
+    ],
+  };
+
+  const advanced = tickGame(state, 0.01);
+  assert.equal(advanced.towers[0].attackOutcome, "mismatch");
+  assert.equal(advanced.towers[0].repairMisses, 1);
+  assert.equal(advanced.enemies[0].health, ENEMIES.basic.health);
+  assert.equal(advanced.repairEvents.length, 0);
+});
+
+test("CRISPR prioritizes repairable cells over a Tumor Mass in the same range", () => {
+  const initial = createGameState("practice");
+  const state = {
+    ...initial,
+    status: "playing",
+    towers: [
+      {
+        id: 1,
+        type: "crispr",
+        position: { x: 80, y: 280 },
+        tier: 0,
+        cooldownRemaining: 0,
+        repairMisses: 7,
+        attackSequence: 0,
+      },
+    ],
+    enemies: [
+      {
+        id: 2,
+        type: "basic",
+        health: ENEMIES.basic.health,
+        pathDistance: 0,
+        markedUntil: 0,
+      },
+      {
+        id: 3,
+        type: "tumor_mass",
+        health: ENEMIES.tumor_mass.health,
+        pathDistance: 12,
+        markedUntil: 0,
+        nextShedDistance: 200,
+      },
+    ],
+  };
+
+  const advanced = tickGame(state, 0.01);
+  assert.equal(advanced.repairEvents[0].type, "basic");
+  assert.equal(advanced.enemies.length, 1);
+  assert.equal(advanced.enemies[0].type, "tumor_mass");
+  assert.equal(advanced.enemies[0].health, ENEMIES.tumor_mass.health);
+});
+
+test("a successful Tumor Mass edit suppresses shedding without converting the boss", () => {
+  const initial = createGameState("practice");
+  const state = {
+    ...initial,
+    status: "playing",
+    towers: [
+      {
+        id: 1,
+        type: "crispr",
+        position: { x: 80, y: 280 },
+        tier: 0,
+        cooldownRemaining: 0,
+        repairMisses: 7,
+        attackSequence: 0,
+      },
+    ],
+    enemies: [
+      {
+        id: 9,
+        type: "tumor_mass",
+        health: ENEMIES.tumor_mass.health,
+        pathDistance: 0,
+        markedUntil: 0,
+        nextShedDistance: 200,
+      },
+    ],
+  };
+
+  const advanced = tickGame(state, 0.01);
+  const tumor = advanced.enemies[0];
+  assert.equal(tumor.type, "tumor_mass");
+  assert.ok(tumor.health < ENEMIES.tumor_mass.health && tumor.health > 0);
+  assert.ok(tumor.nextShedDistance > 200);
+  assert.equal(advanced.repairEvents.length, 0);
+  assert.equal(advanced.towers[0].attackOutcome, "tumor_suppressed");
 });
 
 test("escapes cause immediate defeat at capacity and an empty final scene wave is victory", () => {

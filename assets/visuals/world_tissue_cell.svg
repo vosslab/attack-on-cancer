@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" data-aoc-kind="world" data-aoc-key="tissue_cell"
+  data-aoc-frame-width="80" data-aoc-frame-height="80" viewBox="0 0 80 80">
+  <g data-aoc-editor-only="true"><rect width="80" height="80" fill="#f3faef" /><text x="5" y="9" font-size="7">Tissue landmark</text></g>
+  <g data-aoc-panel="state-0" transform="translate(40 40)">
+    <g data-aoc-part="membrane" class="aoc-motion--tissue-drift"><path class="tissue-landmark-membrane" d="M-2-31C15-33 30-20 31-4C34 14 20 30 3 31C-14 34-31 20-31 2C-34-15-20-29-2-31Z" /></g>
+    <g data-aoc-part="nucleus"><ellipse class="tissue-landmark-nucleus" cx="-4" cy="2" rx="10" ry="8" /></g>
+  </g>
+</svg>

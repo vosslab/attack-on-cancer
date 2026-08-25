@@ -1,0 +1,183 @@
+/* This file owns tissue, route, and world-landmark paint and motion. */
+.route-bed,
+.route-membrane,
+.route-flow {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.route-bed {
+  filter: drop-shadow(0 5px 6px #7b4a3b2b);
+  stroke: #f7bea9;
+  stroke-width: 60;
+}
+.route-membrane {
+  stroke: #ffd9bd;
+  stroke-width: 51;
+}
+.route-flow {
+  animation: circulation 1.25s linear infinite;
+  stroke: #dc765e;
+  stroke-dasharray: 7 10;
+  stroke-width: 36;
+}
+.tissue-depth,
+.tissue-matrix,
+.tissue-folds,
+.tissue-cell {
+  pointer-events: none;
+}
+.tissue-depth {
+  mix-blend-mode: soft-light;
+}
+.tissue-matrix {
+  opacity: 0.58;
+}
+.tissue-matrix-fiber {
+  fill: none;
+  opacity: 0.38;
+  stroke: #c49685;
+  stroke-linecap: round;
+  stroke-width: 2.4;
+}
+.tissue-matrix-fiber-secondary {
+  opacity: 0.24;
+  stroke: #73aa91;
+  stroke-width: 1.6;
+}
+.tissue-matrix-speck {
+  fill: #b78482;
+  opacity: 0.3;
+}
+.tissue-folds {
+  fill: none;
+  opacity: 0.26;
+  stroke: #fff9e9;
+  stroke-linecap: round;
+  stroke-width: 12;
+}
+.tissue-region-2 .tissue-matrix-fiber {
+  opacity: 0.46;
+  stroke: #b9859b;
+}
+.tissue-region-2 .tissue-matrix-fiber-secondary {
+  stroke: #7699a5;
+}
+.tissue-region-2 .tissue-folds {
+  opacity: 0.2;
+  stroke: #fff2ed;
+}
+.tissue-landmark-membrane {
+  fill: #dcefdc;
+  stroke: #b8d9bd;
+  stroke-width: 4;
+}
+.tissue-landmark-nucleus {
+  fill: #b8d9bd;
+  opacity: 0.55;
+}
+.tissue-cell .aoc-motion--tissue-drift {
+  animation: tissue-drift 7s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.tissue-cell-2 .aoc-motion--tissue-drift {
+  animation-delay: -1.8s;
+}
+.tissue-cell-3 .aoc-motion--tissue-drift {
+  animation-delay: -3.7s;
+}
+.tissue-cell-4 .aoc-motion--tissue-drift {
+  animation-delay: -5.2s;
+}
+.world-tumor-main {
+  fill: #c54267;
+  stroke: #7d284a;
+  stroke-width: 4;
+}
+.world-tumor-nodule {
+  fill: #ef718c;
+}
+.world-tumor-nodule-small {
+  fill: #f69bb0;
+}
+.world-tumor-vessel {
+  fill: none;
+  opacity: 0.75;
+  stroke: #8b3056;
+  stroke-linecap: round;
+  stroke-width: 4;
+}
+.tumor-source .aoc-motion--tumor-breathe {
+  animation: tumor-breathe 2.8s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.cluster-source {
+  filter: drop-shadow(0 0 8px #b83f7199);
+}
+.cluster-node {
+  fill: #b63867;
+  stroke: #78284d;
+  stroke-width: 3;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.cluster-node-a {
+  animation: cluster-throb 1.3s ease-in-out infinite;
+}
+.cluster-node-b {
+  animation: cluster-throb 1.3s -0.32s ease-in-out infinite;
+}
+.cluster-node-c {
+  animation: cluster-throb 1.3s -0.68s ease-in-out infinite;
+}
+.cluster-core {
+  fill: #ef718c;
+}
+.blood-vessel {
+  fill: #d34c5d;
+}
+.blood-vessel-flow {
+  fill: none;
+  stroke: #ffbec3;
+  stroke-linecap: round;
+  stroke-width: 8;
+}
+.blood-exit .aoc-motion--vessel-pulse {
+  animation: vessel-pulse 2.1s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@keyframes circulation {
+  to { stroke-dashoffset: -28px; }
+}
+@keyframes tumor-breathe {
+  50% { filter: drop-shadow(0 0 12px #d34c6a99); transform: scale(1.06); }
+}
+@keyframes cluster-throb {
+  0%, 100% { transform: scale(1); }
+  28% { fill: #e45d88; transform: scale(1.13); }
+  48% { transform: scale(0.98); }
+}
+@keyframes vessel-pulse {
+  50% { filter: drop-shadow(0 0 10px #d34c5d99); transform: scale(1.035); }
+}
+@keyframes tissue-drift {
+  50% { transform: translateY(-7px) scale(1.04); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .playfield .aoc-motion--tissue-drift,
+  .playfield .aoc-motion--tumor-breathe,
+  .playfield .aoc-motion--vessel-pulse,
+  .playfield .route-flow,
+  .playfield .cluster-node {
+    animation: none !important;
+  }
+}
+.reduced-motion-preview .route-flow,
+.reduced-motion-preview .cluster-node {
+  animation: none !important;
+}

@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" data-aoc-kind="tower" data-aoc-key="crispr"
+  data-aoc-frame-width="72" data-aoc-frame-height="72" viewBox="0 0 288 72">
+  <g data-aoc-editor-only="true"><rect width="288" height="72" fill="#eef0ff" /><text x="5" y="9" font-size="7" font-weight="700">CRISPR Repair Editor guide-RNA rigs, tiers 1-4</text></g>
+  <g data-aoc-panel="tier-0" transform="translate(36 36)">
+    <g data-aoc-part="platform"><path class="tower-base" d="M-28 17L-20 7H15L26 17L18 25H-19Z" /><circle class="tower-face" cx="-8" cy="6" r="18" /></g>
+    <g data-aoc-part="dna-cartridge" class="aoc-motion--sequence" fill="none" stroke-linecap="round">
+      <path class="crispr-dna-a" d="M-17-8C-4-2-13 8 1 15" /><path class="crispr-dna-b" d="M-3-12C9-4 0 6 12 11" />
+      <path class="crispr-dna-rungs" d="M-12-7L1-8M-10-1L3-2M-8 5L5 4M-4 11L8 9" />
+    </g>
+    <g data-aoc-part="cas9-clamp" class="aoc-motion--edit"><path class="crispr-clamp" d="M7-16L20-10L14-2L25 4L17 13L5 5L9-3L1-8Z" /><path class="crispr-cut" d="M15-4L22-10M15-4L24-1" /></g>
+    <g data-aoc-part="guide-rna"><path class="crispr-guide" d="M-24 2Q-30-13-17-22Q-7-28 5-20" /><circle class="crispr-guide-tip" cx="6" cy="-20" r="3" /></g>
+  </g>
+  <g data-aoc-panel="tier-1" transform="translate(108 36)">
+    <g data-aoc-part="platform"><path class="tower-base" d="M-29 17L-21 6H16L28 17L19 26H-20Z" /><circle class="tower-face" cx="-8" cy="5" r="19" /><circle class="tower-tier-light" cx="-22" cy="17" r="2.6" /></g>
+    <g data-aoc-part="dna-cartridge" class="aoc-motion--sequence" fill="none" stroke-linecap="round">
+      <path class="crispr-dna-a" d="M-18-10C-4-3-14 8 1 16" /><path class="crispr-dna-b" d="M-4-14C10-5 0 6 13 12" />
+      <path class="crispr-dna-rungs" d="M-13-9L1-10M-11-2L4-3M-8 5L6 4M-4 12L9 10" />
+    </g>
+    <g data-aoc-part="cas9-clamp" class="aoc-motion--edit"><path class="crispr-clamp" d="M7-17L21-11L15-2L27 4L18 14L5 6L10-3L1-9Z" /><path class="crispr-cut" d="M16-4L24-11M16-4L26-1" /><circle class="crispr-focus" cx="16" cy="-4" r="4" /></g>
+    <g data-aoc-part="guide-rna"><path class="crispr-guide" d="M-25 2Q-31-14-18-23Q-6-30 7-21" /><circle class="crispr-guide-tip" cx="8" cy="-21" r="3.2" /><path class="crispr-guide-secondary" d="M-24 9Q-30 19-17 24" /></g>
+  </g>
+  <g data-aoc-panel="tier-2" transform="translate(180 36)">
+    <g data-aoc-part="platform"><path class="tower-base" d="M-30 17L-22 5H17L29 17L20 27H-21Z" /><circle class="tower-face" cx="-8" cy="4" r="20" /><circle class="tower-tier-light" cx="-23" cy="18" r="2.6" /><circle class="tower-tier-light" cx="-16" cy="23" r="2.2" /></g>
+    <g data-aoc-part="dna-cartridge" class="aoc-motion--sequence" fill="none" stroke-linecap="round">
+      <path class="crispr-dna-a" d="M-19-12C-4-4-15 8 1 17" /><path class="crispr-dna-b" d="M-4-16C11-6 0 6 14 13" />
+      <path class="crispr-dna-rungs" d="M-14-10L1-12M-12-3L4-4M-9 4L7 3M-5 12L10 10" />
+    </g>
+    <g data-aoc-part="cas9-clamp" class="aoc-motion--edit"><path class="crispr-clamp" d="M6-18L22-12L15-3L29 4L19 15L4 7L10-3L0-10Z" /><path class="crispr-cut" d="M16-5L25-13M16-5L28-1" /><circle class="crispr-focus" cx="16" cy="-5" r="5" /></g>
+    <g data-aoc-part="guide-rna"><path class="crispr-guide" d="M-26 1Q-33-15-19-25Q-6-32 9-22" /><circle class="crispr-guide-tip" cx="10" cy="-22" r="3.4" /><path class="crispr-guide-secondary" d="M-26 8Q-33 20-18 26M-20-22Q-27-28-20-33" /></g>
+  </g>
+  <g data-aoc-panel="tier-3" transform="translate(252 36)">
+    <g data-aoc-part="confidence-halo" class="aoc-motion--sequence"><circle class="crispr-confidence-halo" r="31" /><path class="crispr-confidence-ticks" d="M0-31V-27M22-22L19-19M31 0H27M22 22L19 19M0 31V27M-22 22L-19 19M-31 0H-27M-22-22L-19-19" /></g>
+    <g data-aoc-part="platform"><path class="tower-base tower-base-elite" d="M-31 17L-23 4H18L30 17L21 28H-22Z" /><circle class="tower-face" cx="-8" cy="3" r="21" /><circle class="tower-tier-light" cx="-24" cy="18" r="2.8" /><circle class="tower-tier-light" cx="-17" cy="24" r="2.4" /><circle class="tower-tier-light" cx="-8" cy="26" r="2" /></g>
+    <g data-aoc-part="dna-cartridge" class="aoc-motion--sequence" fill="none" stroke-linecap="round">
+      <path class="crispr-dna-a crispr-dna-elite" d="M-20-13C-4-5-16 8 1 18" /><path class="crispr-dna-b crispr-dna-elite" d="M-4-17C12-7 0 6 15 14" />
+      <path class="crispr-dna-rungs" d="M-15-11L1-13M-13-4L5-5M-10 4L8 2M-5 13L11 10" />
+    </g>
+    <g data-aoc-part="cas9-clamp" class="aoc-motion--edit"><path class="crispr-clamp crispr-clamp-elite" d="M5-19L23-13L16-3L30 4L20 16L3 8L10-4L-1-11Z" /><path class="crispr-cut" d="M16-5L27-14M16-5L29-1" /><circle class="crispr-focus" cx="16" cy="-5" r="6" /></g>
+    <g data-aoc-part="guide-rna"><path class="crispr-guide" d="M-27 1Q-34-16-20-26Q-6-34 10-23" /><circle class="crispr-guide-tip" cx="11" cy="-23" r="3.7" /><path class="crispr-guide-secondary" d="M-27 8Q-34 21-18 27M-21-23Q-29-30-21-35" /></g>
+  </g>
+</svg>

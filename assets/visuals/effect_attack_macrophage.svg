@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" data-aoc-kind="effect" data-aoc-key="attack_macrophage"
+  data-aoc-frame-width="72" data-aoc-frame-height="72" viewBox="0 0 72 72">
+  <g data-aoc-editor-only="true"><rect width="72" height="72" fill="#e8f7f4" /><text x="5" y="9" font-size="7">CAR macrophage engulf</text></g>
+  <g data-aoc-panel="state-0" transform="translate(36 36)">
+    <g data-aoc-part="phagocytic-cup" class="attack-macrophage-cup" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M-27-16Q-13-29 1-24Q15-29 27-16Q18-14 14-6" stroke="#287f85" stroke-width="6" />
+      <path d="M-27 16Q-13 29 1 24Q15 29 27 16Q18 14 14 6" stroke="#287f85" stroke-width="6" />
+      <path d="M-20-12Q-8-20 4-16M-20 12Q-8 20 4 16" stroke="#fff6ac" stroke-width="2.5" />
+    </g>
+    <g data-aoc-part="digestive-granules" fill="#f2bd56" stroke="#173858" stroke-width="1.2"><circle cx="-12" cy="-4" r="3" /><circle cx="-8" cy="6" r="2.5" /><circle cx="3" cy="-8" r="2.2" /><circle cx="6" cy="7" r="3" /></g>
+    <circle data-aoc-part="engulfed-target" r="10" fill="#287f85" fill-opacity="0.24" stroke="#287f85" stroke-dasharray="3 3" stroke-width="2" />
+  </g>
+</svg>

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" data-aoc-kind="effect" data-aoc-key="attack_radiation"
+  data-aoc-frame-width="80" data-aoc-frame-height="80" viewBox="0 0 80 80">
+  <g data-aoc-editor-only="true"><rect width="80" height="80" fill="#fff8e7" /><text x="5" y="9" font-size="7">Radiation lock</text></g>
+  <g data-aoc-panel="state-0" transform="translate(40 40)">
+    <g data-aoc-part="target-lock" class="aoc-motion--lock"><rect class="attack-radiation-lock" x="-17" y="-17" width="34" height="34" rx="5" /><circle class="attack-radiation-core" r="7" /><path class="attack-radiation-crosshair" d="M-28 0H-12M12 0H28M0-28V-12M0 12V28" /></g>
+  </g>
+</svg>

@@ -12,7 +12,7 @@ play.
 
 1. Choose a difficulty and place treatments on open tissue.
 2. Start the Skin Tissue waves, then enter the Cluster Corridor for its denser finale.
-3. Earn Treatment Points (TP) by destroying cells.
+3. Earn Treatment Points (TP) by destroying cells or completing a CRISPR repair.
 4. Spend TP on more treatments or three linear upgrades.
 5. Keep cells from reaching the blood-vessel exit.
 
@@ -36,8 +36,9 @@ more cells in each fixed wave group while preserving the same enemy mix and rele
 ## Treatments
 
 Every treatment has three named, linear upgrades: Calibrated, Focused, and
-Breakthrough. Costs, range, damage, cooldowns, and special values live in typed
-configuration tables so balance changes do not alter simulation rules.
+Breakthrough. Costs, range, damage, cooldowns, explicit CRISPR repair chances,
+and special values live in typed configuration tables so balance changes do
+not alter simulation rules.
 
 | Treatment        | Core role               | Special behavior                                      | Attack cue                         |
 | ---------------- | ----------------------- | ----------------------------------------------------- | ---------------------------------- |
@@ -46,6 +47,23 @@ configuration tables so balance changes do not alter simulation rules.
 | Cytotoxic T Cell | Fast single target      | Immune-evasive cells resist it unless marked.         | Red rapid immune strike.           |
 | Radiation Bot    | Long-range heavy damage | Trades high cost and slow attacks for strong hits.    | Heavy gold beam and target lock.   |
 | Antibody Therapy | Support and control     | Marks, slows, sensitizes, and removes immune evasion. | Teal antibody chain and mark ring. |
+| CAR Macrophage   | Close-range heavy hit   | Engulfs slowly; antibody marks amplify its damage.    | Closing teal phagocytic cup.       |
+| CRISPR Repair Editor | High-variance support | Repairs ordinary cells or gains sequence confidence. | Indigo guide-RNA target.           |
+
+The CAR Macrophage is explicitly experimental. Its game role is inspired by
+[antigen-specific phagocytosis by engineered human macrophages](https://www.nature.com/articles/s41587-020-0462-y)
+and macrophage [antibody-dependent cellular phagocytosis](https://pubmed.ncbi.nlm.nih.gov/35302839/),
+not a claim about an approved treatment or patient outcome.
+
+The CRISPR Repair Editor is also explicitly speculative. Its tier chances are 12%, 16%, 22%, and
+30%; each mismatch adds a small confidence bonus, and seven consecutive mismatches guarantee the
+next repair. A repaired ordinary cell becomes a mint smiling cell, leaves the route, and awards its
+normal TP without triggering destruction or division. The editor prioritizes ordinary cells. A
+successful Tumor Mass attempt can only edit one segment: it removes a bounded health chunk and
+delays the next shedding point, never converts the boss. This game role is inspired by laboratory
+work on [mutation correction in colorectal cancer cells](https://pubmed.ncbi.nlm.nih.gov/32021251/)
+and [selective mutant EGFR disruption](https://pubmed.ncbi.nlm.nih.gov/28575452/), not a claim that
+genome editing is an approved cancer treatment or can safely normalize tumors in patients.
 
 ## Cancer cells
 
@@ -58,8 +76,8 @@ configuration tables so balance changes do not alter simulation rules.
 | Immune-Evasive | Takes half T Cell damage until antibody-marked.                          |         10 |
 | Tumor Mass     | Slow MOAB-inspired capstone that sheds cells and ruptures into ten more. |         15 |
 
-Cells stay on the current fixed path from a tumor source to the blood-vessel exit. A destroyed cell
-awards configured TP. The Tumor Mass is the v1 capstone boss.
+Cells stay on the current fixed path from a tumor source to the blood-vessel exit. A destroyed or
+repaired ordinary cell awards configured TP. The Tumor Mass is the v1 capstone boss.
 
 ## Waves and outcomes
 
@@ -97,7 +115,7 @@ V1 ships two connected scenes rather than a partial campaign. It does not includ
 - Additional maps beyond Cluster Corridor, branching paths, campaign progression, or metastatic side maps.
 - Additional bosses beyond Tumor Mass or in-progress run saves.
 - NK Cells, Cancer Vaccine, Oncolytic Virus, Surgery, CAR-T, or Proton Therapy.
-- Mutation, biomarkers, receptor matching, clinical decision-making, or outcomes.
+- Patient-specific mutation matching, biomarkers, clinical decision-making, or outcomes.
 - Accounts, analytics, backend services, routing, external art assets, or mandatory audio.
 
 Future content begins with a separate plan after this vertical slice is stable and fun.

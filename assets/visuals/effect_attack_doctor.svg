@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" data-aoc-kind="effect" data-aoc-key="attack_doctor"
+  data-aoc-frame-width="72" data-aoc-frame-height="72" viewBox="0 0 72 72">
+  <g data-aoc-editor-only="true"><rect width="72" height="72" fill="#edf7ff" /><text x="5" y="9" font-size="7">Doctor hit</text></g>
+  <g data-aoc-panel="state-0" transform="translate(36 36)">
+    <g data-aoc-part="syringe" class="aoc-motion--impact"><path class="attack-doctor-syringe" d="M-18 8L9-9L15-3L-12 14Z" /><path class="attack-doctor-plunger" d="M-20 5L-12 13M-23 8L-15 16" /><line class="attack-doctor-needle" x1="15" y1="-3" x2="24" y2="-9" /></g>
+  </g>
+</svg>

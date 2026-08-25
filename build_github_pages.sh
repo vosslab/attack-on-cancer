@@ -10,13 +10,14 @@
 #   - Type-checks via 'tsc --noEmit -p tsconfig.json'.
 #   - Resolves the entry: src/main.tsx, src/main.ts, then src/init.ts.
 #     Aborts with an actionable error if neither exists.
-#   - Verifies src/index.html and both source stylesheets exist before copying;
+#   - Generates the validated SolidJS visual catalog before TypeScript checks.
+#   - Verifies src/index.html and all three source stylesheets exist before copying;
 #     aborts with an actionable error if missing.
 #   - Verifies src/index.html references dist/main.js with a module script
 #     tag (warns if missing -- the page will load but main.js is dead).
 #   - Bundles the entry into dist/main.js with esbuild (ESM, es2020,
 #     browser, minified, with sourcemap).
-#   - Copies src/index.html and both source stylesheets into dist/.
+#   - Copies src/index.html and all three source stylesheets into dist/.
 #   - Writes dist/.nojekyll so GitHub Pages serves files starting with _.
 #   - Asserts the HTML, bundle, and component stylesheet exist before exiting.
 #
@@ -39,7 +40,7 @@ else
 fi
 
 # Verify required static assets before any destructive step.
-for required in src/index.html src/style.css src/cancer_cells.css; do
+for required in src/index.html src/style.css src/world_visuals.css src/combat_visuals.css generate_visual_assets.py; do
 	if [ ! -f "$required" ]; then
 		echo "ERROR: required source file missing: $required" >&2
 		case "$required" in
@@ -47,8 +48,10 @@ for required in src/index.html src/style.css src/cancer_cells.css; do
 				echo "  Create src/index.html with a <script type=\"module\" src=\"main.js\"></script> tag." >&2 ;;
 			src/style.css)
 				echo "  Create src/style.css (empty file is fine)." >&2 ;;
-			src/cancer_cells.css)
-				echo "  Create src/cancer_cells.css for cancer-cell motion." >&2 ;;
+			src/world_visuals.css)
+				echo "  Create src/world_visuals.css for tissue and route motion." >&2 ;;
+			src/combat_visuals.css)
+				echo "  Create src/combat_visuals.css for combat motion." >&2 ;;
 		esac
 		exit 1
 	fi
@@ -64,17 +67,23 @@ fi
 rm -rf dist
 mkdir -p dist
 
+# ASVS 5.3.2: the generator reads and writes only fixed repository-owned paths.
+# CI pins Python 3.12; local full checks source source_me.sh before this build.
+python3 generate_visual_assets.py
+
 npx tsc --noEmit -p tsconfig.json
 
 node tools/build_solid.mjs "$ENTRY"
 
 cp src/index.html dist/index.html
 cp src/style.css dist/style.css
-cp src/cancer_cells.css dist/cancer_cells.css
+cp src/world_visuals.css dist/world_visuals.css
+cp src/combat_visuals.css dist/combat_visuals.css
 touch dist/.nojekyll
 
 test -f dist/index.html
 test -f dist/main.js
-test -f dist/cancer_cells.css
+test -f dist/world_visuals.css
+test -f dist/combat_visuals.css
 
 echo "Built dist/ with component styles (GitHub Pages-ready)."
