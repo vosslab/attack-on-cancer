@@ -1,0 +1,76 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="64"
+  height="64"
+  viewBox="0 0 64 64"
+  role="img"
+  aria-labelledby="favicon-title favicon-description"
+>
+  <title id="favicon-title">Attack on Cancer</title>
+  <desc id="favicon-description">A cancer cell held inside treatment targeting brackets.</desc>
+  <defs>
+    <linearGradient
+      id="favicon-background"
+      x1="8"
+      y1="5"
+      x2="56"
+      y2="59"
+      gradientUnits="userSpaceOnUse"
+    >
+      <stop stop-color="#1d527b" />
+      <stop offset="1" stop-color="#0d294b" />
+    </linearGradient>
+    <radialGradient
+      id="favicon-cell"
+      cx="0"
+      cy="0"
+      r="1"
+      gradientTransform="translate(26 24) rotate(48) scale(28)"
+      gradientUnits="userSpaceOnUse"
+    >
+      <stop stop-color="#ff9eb7" />
+      <stop offset="0.55" stop-color="#df5a7f" />
+      <stop offset="1" stop-color="#a93664" />
+    </radialGradient>
+  </defs>
+  <g id="background">
+    <rect
+      x="2"
+      y="2"
+      width="60"
+      height="60"
+      rx="15"
+      fill="url(#favicon-background)"
+      stroke="#173858"
+      stroke-width="2"
+    />
+    <circle cx="32" cy="32" r="24" fill="#8fe8d3" opacity="0.08" />
+  </g>
+  <path
+    id="treatment-lock"
+    d="M24 13H18A5 5 0 0 0 13 18V24M40 13H46A5 5 0 0 1 51 18V24M51 40V46A5 5 0 0 1 46 51H40M24 51H18A5 5 0 0 1 13 46V40"
+    fill="none"
+    stroke="#8fe8d3"
+    stroke-linecap="round"
+    stroke-width="3.5"
+  />
+  <g id="cancer-cell">
+    <path
+      id="cell-membrane"
+      d="M31 19C35 17 39 19 41 22C46 22 48 27 46 31C49 35 47 40 43 41C41 45 36 47 32 44C28 47 23 45 21 41C17 39 16 34 19 30C18 26 21 22 25 22C27 20 29 19 31 19Z"
+      fill="url(#favicon-cell)"
+      stroke="#ffd0dc"
+      stroke-linejoin="round"
+      stroke-width="2"
+    />
+    <path
+      id="cell-nucleus"
+      d="M27 31C28 27 33 25 37 28C41 31 39 37 35 39C30 40 26 36 27 31Z"
+      fill="#67275c"
+      stroke="#351e4c"
+      stroke-width="1.5"
+    />
+    <circle cx="26" cy="27" r="2" fill="#ffd3df" opacity="0.9" />
+    <circle cx="40" cy="34" r="1.8" fill="#ffb2c6" opacity="0.75" />
+  </g>
+</svg>

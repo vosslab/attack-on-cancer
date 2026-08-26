@@ -2,6 +2,8 @@
 
 ### Additions and New Features
 
+- Added a crisp, editable SVG favicon that combines the game's cancer-cell art
+  with treatment-target brackets and ships in the GitHub Pages build.
 - Replaced the two-scene game model with a validated, typed Level 1-10 campaign
   catalog. Definitions own routes, shared segments, waves and route cycles,
   landmarks, obstacles, placement probes, economy envelopes, and player-facing

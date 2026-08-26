@@ -11,7 +11,7 @@
 #   - Resolves the entry: src/main.tsx, src/main.ts, then src/init.ts.
 #     Aborts with an actionable error if neither exists.
 #   - Generates the validated SolidJS visual components before TypeScript checks.
-#   - Verifies src/index.html and all four source stylesheets exist before copying;
+#   - Verifies src/index.html, src/favicon.svg, and all four source stylesheets exist before copying;
 #     aborts with an actionable error if missing.
 #   - Verifies src/index.html references dist/main.js with a module script
 #     tag (warns if missing -- the page will load but main.js is dead).
@@ -43,6 +43,7 @@ fi
 # Verify required static assets before any destructive step.
 REQUIRED_FILES=(
 	src/index.html
+	src/favicon.svg
 	src/style.css
 	src/world_visuals.css
 	src/combat_visuals.css
@@ -55,6 +56,8 @@ for required in "${REQUIRED_FILES[@]}"; do
 		case "$required" in
 			src/index.html)
 				echo "  Create src/index.html with a <script type=\"module\" src=\"main.js\"></script> tag." >&2 ;;
+			src/favicon.svg)
+				echo "  Create src/favicon.svg as the browser-tab icon." >&2 ;;
 			src/style.css)
 				echo "  Create src/style.css (empty file is fine)." >&2 ;;
 			src/world_visuals.css)
@@ -87,6 +90,7 @@ npx tsc --noEmit -p tsconfig.json
 node tools/build_solid.mjs "$ENTRY"
 
 cp src/index.html dist/index.html
+cp src/favicon.svg dist/favicon.svg
 cp src/style.css dist/style.css
 cp src/world_visuals.css dist/world_visuals.css
 cp src/combat_visuals.css dist/combat_visuals.css
@@ -94,6 +98,7 @@ cp src/combat_motion.css dist/combat_motion.css
 touch dist/.nojekyll
 
 test -f dist/index.html
+test -f dist/favicon.svg
 test -f dist/main.js
 test -f dist/world_visuals.css
 test -f dist/combat_visuals.css
