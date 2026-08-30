@@ -21,6 +21,7 @@ import {
   shouldDoubleTap,
 } from "./tower_signatures";
 import { getCampaignLevel, getLevelRoutePoints, getLevelWaves } from "./levels/campaign";
+import { nextTowerTier } from "./game_types";
 import type {
   CellRepairEvent,
   DifficultyId,
@@ -41,6 +42,17 @@ const MARK_DAMAGE_MULTIPLIER = 1.35;
 const ENEMY_VISUAL_TANGENT_SAMPLE = 8;
 const ENEMY_VISUAL_LANE_JITTER = 3;
 const ENEMY_VISUAL_TRAVEL_JITTER = 2.5;
+const NEXT_LEVEL_BY_ID: Readonly<Partial<Record<LevelId, LevelId>>> = {
+  1: 2,
+  2: 3,
+  3: 4,
+  4: 5,
+  5: 6,
+  6: 7,
+  7: 8,
+  8: 9,
+  9: 10,
+};
 
 //============================================
 // Path helpers
@@ -324,6 +336,9 @@ export function sellTower(state: GameState, towerId: number): GameState {
 }
 
 export function getUpgradeCost(tower: Tower): number | undefined {
+  if (tower.tier === 3) {
+    return undefined;
+  }
   const upgrade = UPGRADE_PATHS[tower.type][tower.tier];
   const cost = upgrade?.cost;
   return cost;
@@ -342,9 +357,13 @@ export function upgradeTower(state: GameState, towerId: number): GameState {
   ) {
     return state;
   }
+  const nextTier = nextTowerTier(tower.tier);
+  if (nextTier === undefined) {
+    return state;
+  }
   const upgradedTower: Tower = {
     ...tower,
-    tier: tower.tier + 1,
+    tier: nextTier,
     upgradeFlashUntil: state.time + 0.6,
   };
   const nextTowers = state.towers.map((candidate) =>
@@ -410,6 +429,15 @@ export function startWave(state: GameState): GameState {
   return nextState;
 }
 
+/** Returns the authored successor for a non-final campaign level. */
+export function getNextLevel(level: LevelId): LevelId {
+  const nextLevel = NEXT_LEVEL_BY_ID[level];
+  if (nextLevel === undefined) {
+    throw new Error(`Level ${level} has no configured successor.`);
+  }
+  return nextLevel;
+}
+
 /**
  * Starts the next campaign field after a cleared level.  Campaign fields are
  * rebuilt deliberately: tumors clear, metastases persist, and only capped
@@ -418,7 +446,7 @@ export function startWave(state: GameState): GameState {
 export function advanceLevel(state: GameState): GameState {
   if (state.status !== "intermission" || state.level >= 10) return state;
 
-  const nextLevel = (state.level + 1) as LevelId;
+  const nextLevel = getNextLevel(state.level);
   const economy = getCampaignLevel(nextLevel).economy;
   return {
     ...state,
@@ -459,11 +487,11 @@ export function getTowerAttackVisualDuration(tower: Tower): number {
 }
 
 export function getTowerSplashRadius(tower: Tower): number | undefined {
-  const config = getTowerConfig(tower);
-  if (config.splashRadiusByTier !== undefined) {
-    return config.splashRadiusByTier[tower.tier] ?? config.splashRadiusByTier[0];
+  if (tower.type !== "chemotherapy") {
+    return undefined;
   }
-  return config.splashRadius;
+  const config = TOWERS.chemotherapy;
+  return config.splashRadiusByTier[tower.tier] ?? config.splashRadiusByTier[0];
 }
 
 function getUpgradeMultiplier(
@@ -503,12 +531,12 @@ export function getTowerCooldown(tower: Tower): number {
 }
 
 export function getRepairChance(tower: Tower): number {
-  const config = getTowerConfig(tower);
-  const chances = config.repairChanceByTier;
-  const pityStep = config.repairPityStep;
-  if (tower.type !== "crispr" || chances === undefined || pityStep === undefined) {
+  if (tower.type !== "crispr") {
     throw new Error("The CRISPR Repair Editor requires complete repair-chance configuration.");
   }
+  const config = TOWERS.crispr;
+  const chances = config.repairChanceByTier;
+  const pityStep = config.repairPityStep;
   if (!Number.isInteger(tower.tier) || tower.tier < 0 || tower.tier >= chances.length) {
     throw new Error(`CRISPR tier must be 0-${chances.length - 1}, received ${tower.tier}.`);
   }
@@ -570,7 +598,8 @@ function getTarget(tower: Tower, enemies: readonly Enemy[], level: LevelId): Ene
 
 function applyDamage(enemy: Enemy, source: TowerId, baseDamage: number, time: number): Enemy {
   const marked = isMarked(enemy, time);
-  const markedDamageMultiplier = TOWERS[source].markedDamageMultiplier ?? MARK_DAMAGE_MULTIPLIER;
+  const markedDamageMultiplier =
+    source === "macrophage" ? TOWERS.macrophage.markedDamageMultiplier : MARK_DAMAGE_MULTIPLIER;
   let damage = marked ? baseDamage * markedDamageMultiplier : baseDamage;
   if (source === "t_cell" && enemy.type === "immune_evasive" && !marked) {
     damage *= 0.5;
@@ -588,7 +617,7 @@ interface TowerFireResult {
 }
 
 function fireCrispr(tower: Tower, target: Enemy, enemies: readonly Enemy[]): TowerFireResult {
-  const config = getTowerConfig(tower);
+  const config = TOWERS.crispr;
   const attempt = tower.attackSequence ?? 0;
   const successful = getRepairRoll(tower, target) < getRepairChance(tower);
   const attemptedTower: Tower = { ...tower, attackSequence: attempt + 1 };
@@ -605,15 +634,11 @@ function fireCrispr(tower: Tower, target: Enemy, enemies: readonly Enemy[]): Tow
   }
 
   if (target.type === "tumor_mass") {
-    const tumorEditDamage = config.tumorEditDamage;
-    const tumorShedDelay = config.tumorShedDelay;
-    if (tumorEditDamage === undefined || tumorShedDelay === undefined) {
-      throw new Error("CRISPR Tumor Mass editing requires damage and shedding-delay values.");
-    }
     const editedTarget: Enemy = {
       ...target,
-      health: target.health - tumorEditDamage * getTumorEditMultiplier(tower),
-      nextShedDistance: (target.nextShedDistance ?? target.pathDistance + 105) + tumorShedDelay,
+      health: target.health - config.tumorEditDamage * getTumorEditMultiplier(tower),
+      nextShedDistance:
+        (target.nextShedDistance ?? target.pathDistance + 105) + config.tumorShedDelay,
     };
     return {
       enemies: enemies.map((enemy) => (enemy.id === target.id ? editedTarget : enemy)),
@@ -648,16 +673,15 @@ function fireTower(
     return fireCrispr(tower, target, enemies);
   }
 
-  const config = getTowerConfig(tower);
   const markedUntil =
-    config.markDuration === undefined
-      ? target.markedUntil
-      : Math.max(target.markedUntil, time + config.markDuration);
+    tower.type === "antibody"
+      ? Math.max(target.markedUntil, time + TOWERS.antibody.markDuration)
+      : target.markedUntil;
   const clonalDamage = getTowerDamage(tower) * getClonalSurgeMultiplier(tower, target.id);
   const firstHit = applyDamage({ ...target, markedUntil }, tower.type, clonalDamage, time);
   let signatureTower: Tower = {
     ...advanceClonalSurge(tower, target.id),
-    signatureTriggered: undefined,
+    cooldownResetPending: undefined,
   };
   const doubleTap = shouldDoubleTap(tower);
   signatureTower = advanceDoubleTap(signatureTower);
@@ -701,9 +725,7 @@ function fireTower(
     const trogocytosis = hasSignature(tower) && tower.type === "macrophage" && firstHit.health <= 0;
     return {
       enemies: result,
-      tower: trogocytosis
-        ? { ...signatureTower, signatureTriggered: "trogocytosis" }
-        : signatureTower,
+      tower: trogocytosis ? { ...signatureTower, cooldownResetPending: true } : signatureTower,
       reward: trogocytosis ? getTrogocytosisRefund(target) : 0,
     };
   }
@@ -918,8 +940,7 @@ function attackWithReadyTowers(state: GameState, deltaSeconds: number): GameStat
         target.routeId,
       ),
       attackFlashUntil: state.time + getTowerAttackVisualDuration(tower),
-      cooldownRemaining:
-        result.tower.signatureTriggered === "trogocytosis" ? 0 : getTowerCooldown(tower),
+      cooldownRemaining: result.tower.cooldownResetPending ? 0 : getTowerCooldown(tower),
     };
     return firedTower;
   });

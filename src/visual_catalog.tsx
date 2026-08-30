@@ -15,6 +15,7 @@ import { AttackEffect } from "./attack_effect";
 import { ENEMIES, TOWERS } from "./config";
 import type { EnemyId, RepairOutcome, Tower, TowerId } from "./game_types";
 import { CAMPAIGN_LEVELS } from "./levels/campaign";
+import { TOWER_IDS } from "./tower_ids";
 import { WorldLandmarks } from "./world_landmarks";
 
 const ENEMY_IDS: readonly EnemyId[] = [
@@ -24,15 +25,6 @@ const ENEMY_IDS: readonly EnemyId[] = [
   "dividing",
   "immune_evasive",
   "tumor_mass",
-];
-const TOWER_IDS: readonly TowerId[] = [
-  "doctor",
-  "chemotherapy",
-  "t_cell",
-  "radiation",
-  "antibody",
-  "macrophage",
-  "crispr",
 ];
 const VARIANTS: readonly VisualVariant[] = [0, 1, 2, 3];
 const TIERS: readonly VisualTier[] = [0, 1, 2, 3];
@@ -110,7 +102,7 @@ function sampleTower(type: TowerId, id: number, outcome?: RepairOutcome): Tower 
     id,
     type,
     position: { x: 30, y: 50 },
-    tier: 3,
+    tier: 3 as const,
     cooldownRemaining: 0,
     attackPoint: { x: 126, y: 50 },
     attackFlashUntil: 1,

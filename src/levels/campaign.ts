@@ -1,4 +1,4 @@
-import type { LevelId, Point } from "../game_types";
+import type { LevelId, Point, RouteId } from "../game_types";
 import { LEVEL_01_SKIN_TISSUE } from "./level_01_skin_tissue";
 import { LEVEL_02_CLUSTER_CORRIDOR } from "./level_02_cluster_corridor";
 import { LEVEL_03_CAPILLARY_CROSSROADS } from "./level_03_capillary_crossroads";
@@ -14,7 +14,6 @@ import {
   type CampaignWaveDefinition,
   type LevelDefinition,
   type RouteDefinition,
-  type RouteId,
 } from "./level_definition";
 
 export const CAMPAIGN_LEVELS = [

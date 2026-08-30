@@ -1,4 +1,5 @@
-import type { DifficultyId, SettingsSave } from "./game_types";
+import type { DifficultyId } from "./game_types";
+import type { SettingsSave } from "./save_types";
 
 export const SETTINGS_STORAGE_KEY = "attack-on-cancer.settings.v1";
 

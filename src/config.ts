@@ -3,8 +3,7 @@ import type {
   DifficultyId,
   EnemyConfig,
   EnemyId,
-  TowerConfig,
-  TowerId,
+  TowerConfigById,
 } from "./game_types";
 
 export const PLAYFIELD_WIDTH = 960;
@@ -18,7 +17,7 @@ export const DIFFICULTIES: Record<DifficultyId, DifficultyConfig> = {
   challenge: { label: "Challenge", startingTp: 200, metastasisCapacity: 7 },
 };
 
-export const TOWERS: Record<TowerId, TowerConfig> = {
+export const TOWERS = {
   doctor: {
     name: "Doctor",
     shortName: "Dr",
@@ -109,7 +108,7 @@ export const TOWERS: Record<TowerId, TowerConfig> = {
       "A speculative genome editor: low-chance cell repair, with sequence confidence after " +
       "mismatches. Tumor Mass edits only suppress shedding and remove one segment.",
   },
-};
+} as const satisfies TowerConfigById;
 
 export const ENEMIES: Record<EnemyId, EnemyConfig> = {
   basic: {

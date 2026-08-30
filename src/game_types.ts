@@ -1,6 +1,7 @@
+import type { TowerId } from "./tower_ids";
+
+export type { TowerId } from "./tower_ids";
 export type DifficultyId = "practice" | "standard" | "challenge";
-export type TowerId =
-  "doctor" | "chemotherapy" | "t_cell" | "radiation" | "antibody" | "macrophage" | "crispr";
 export type EnemyId = "basic" | "fast" | "tough" | "dividing" | "immune_evasive" | "tumor_mass";
 export type GameStatus = "briefing" | "playing" | "paused" | "intermission" | "won" | "lost";
 export type LevelId = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
@@ -15,47 +16,87 @@ export type SignatureId =
   | "trogocytosis"
   | "base_editor";
 export type TierValues = readonly [number, number, number, number];
+export type TowerTier = 0 | 1 | 2 | 3;
+export type UpgradeBurstTier = 1 | 2 | 3;
+
+export function nextTowerTier(tier: TowerTier): TowerTier | undefined {
+  const nextTiers: Readonly<Record<TowerTier, TowerTier | undefined>> = {
+    0: 1,
+    1: 2,
+    2: 3,
+    3: undefined,
+  };
+  return nextTiers[tier];
+}
+
+export function upgradeBurstTier(tier: TowerTier): UpgradeBurstTier | undefined {
+  return tier === 0 ? undefined : tier;
+}
 
 export interface Point {
   x: number;
   y: number;
 }
 
-export interface TowerConfig {
-  name: string;
-  shortName: string;
-  cost: number;
-  range: number;
-  damage: number;
-  cooldown: number;
-  color: string;
-  description: string;
-  splashRadius?: number;
-  splashRadiusByTier?: TierValues;
-  markDuration?: number;
-  slowFactor?: number;
-  markedDamageMultiplier?: number;
-  attackVisualDurationByTier: TierValues;
-  repairChanceByTier?: readonly [number, number, number, number];
-  repairPityStep?: number;
-  tumorEditDamage?: number;
-  tumorShedDelay?: number;
+export interface TowerConfigBase {
+  readonly name: string;
+  readonly shortName: string;
+  readonly cost: number;
+  readonly range: number;
+  readonly damage: number;
+  readonly cooldown: number;
+  readonly color: string;
+  readonly description: string;
+  readonly attackVisualDurationByTier: TierValues;
 }
 
+export interface ChemotherapyTowerConfig extends TowerConfigBase {
+  readonly splashRadius: number;
+  readonly splashRadiusByTier: TierValues;
+}
+
+export interface AntibodyTowerConfig extends TowerConfigBase {
+  readonly markDuration: number;
+  readonly slowFactor: number;
+}
+
+export interface MacrophageTowerConfig extends TowerConfigBase {
+  readonly markedDamageMultiplier: number;
+}
+
+export interface CrisprTowerConfig extends TowerConfigBase {
+  readonly repairChanceByTier: TierValues;
+  readonly repairPityStep: number;
+  readonly tumorEditDamage: number;
+  readonly tumorShedDelay: number;
+}
+
+export type TowerConfigById = {
+  readonly doctor: TowerConfigBase;
+  readonly chemotherapy: ChemotherapyTowerConfig;
+  readonly t_cell: TowerConfigBase;
+  readonly radiation: TowerConfigBase;
+  readonly antibody: AntibodyTowerConfig;
+  readonly macrophage: MacrophageTowerConfig;
+  readonly crispr: CrisprTowerConfig;
+};
+
+export type TowerConfig = TowerConfigById[TowerId];
+
 export interface UpgradeConfig {
-  name: string;
-  cost: number;
-  damageMultiplier: number;
-  rangeBonus: number;
-  cooldownMultiplier: number;
-  description: string;
-  biologicalFact: string;
-  gameRole: string;
+  readonly name: string;
+  readonly cost: number;
+  readonly damageMultiplier: number;
+  readonly rangeBonus: number;
+  readonly cooldownMultiplier: number;
+  readonly description: string;
+  readonly biologicalFact: string;
+  readonly gameRole: string;
 }
 
 export interface SignatureUpgradeConfig extends UpgradeConfig {
-  signature: SignatureId;
-  signatureName: string;
+  readonly signature: SignatureId;
+  readonly signatureName: string;
 }
 
 export interface EnemyConfig {
@@ -93,7 +134,7 @@ export interface Tower {
   id: number;
   type: TowerId;
   position: Point;
-  tier: number;
+  tier: TowerTier;
   cooldownRemaining: number;
   attackPoint?: Point;
   attackFlashUntil?: number;
@@ -101,10 +142,10 @@ export interface Tower {
   attackOutcome?: RepairOutcome;
   repairMisses?: number;
   attackSequence?: number;
-  // Doctor stores shots modulo three; T-cell stores capped same-target stacks.
-  signatureCharge?: number;
-  signatureTargetId?: number;
-  signatureTriggered?: SignatureId;
+  doubleTapShots?: 0 | 1 | 2;
+  clonalTargetId?: number;
+  clonalStacks?: number;
+  cooldownResetPending?: boolean;
 }
 
 export interface CellRepairEvent {
@@ -145,11 +186,4 @@ export interface LingeringField {
   damagePerSecond: number;
   expiresAt: number;
   sourceTowerId: number;
-}
-
-export interface SettingsSave {
-  version: 1;
-  soundEnabled: boolean;
-  preferredSpeed: 1 | 2 | 4;
-  bestResults: Partial<Record<DifficultyId, number>>;
 }

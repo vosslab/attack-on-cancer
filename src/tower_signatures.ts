@@ -2,33 +2,38 @@ import { ENEMIES } from "./config";
 import { UPGRADE_PATHS } from "./upgrade_paths";
 import type { Enemy, Point, Tower } from "./game_types";
 
+const NEXT_DOUBLE_TAP_SHOTS: Readonly<Record<0 | 1 | 2, 0 | 1 | 2>> = {
+  0: 1,
+  1: 2,
+  2: 0,
+};
+
 export function hasSignature(tower: Tower): boolean {
   return tower.tier === 3;
 }
 
 export function getClonalSurgeMultiplier(tower: Tower, targetId: number): number {
-  if (!hasSignature(tower) || tower.type !== "t_cell" || tower.signatureTargetId !== targetId) {
+  if (!hasSignature(tower) || tower.type !== "t_cell" || tower.clonalTargetId !== targetId) {
     return 1;
   }
-  const stacks = Math.min(tower.signatureCharge ?? 0, 5);
+  const stacks = Math.min(tower.clonalStacks ?? 0, 5);
   return 1 + stacks * 0.12;
 }
 
 export function advanceClonalSurge(tower: Tower, targetId: number): Tower {
   if (!hasSignature(tower) || tower.type !== "t_cell") return tower;
-  const charge =
-    tower.signatureTargetId === targetId ? Math.min((tower.signatureCharge ?? 0) + 1, 5) : 1;
-  return { ...tower, signatureTargetId: targetId, signatureCharge: charge };
+  const charge = tower.clonalTargetId === targetId ? Math.min((tower.clonalStacks ?? 0) + 1, 5) : 1;
+  return { ...tower, clonalTargetId: targetId, clonalStacks: charge };
 }
 
 export function advanceDoubleTap(tower: Tower): Tower {
   if (!hasSignature(tower) || tower.type !== "doctor") return tower;
-  const charge = (tower.signatureCharge ?? 0) + 1;
-  return { ...tower, signatureCharge: charge % 3 };
+  const currentShots = tower.doubleTapShots ?? 0;
+  return { ...tower, doubleTapShots: NEXT_DOUBLE_TAP_SHOTS[currentShots] };
 }
 
 export function shouldDoubleTap(tower: Tower): boolean {
-  return hasSignature(tower) && tower.type === "doctor" && (tower.signatureCharge ?? 0) === 2;
+  return hasSignature(tower) && tower.type === "doctor" && (tower.doubleTapShots ?? 0) === 2;
 }
 
 export function getPiercingTarget(target: Enemy, enemies: readonly Enemy[]): Enemy | undefined {

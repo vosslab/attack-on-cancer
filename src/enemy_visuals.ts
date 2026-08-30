@@ -25,9 +25,14 @@ export interface CellRepairVisual {
 export const CELL_DEATH_DURATION_MS = 950;
 export const CELL_REPAIR_DURATION_MS = 1100;
 
+const CELL_VARIANTS = [0, 1, 2, 3] as const satisfies readonly CellVariant[];
+
 export function cellVariant(enemyId: number): CellVariant {
-  const variant = Math.abs(enemyId) % 4;
-  return variant as CellVariant;
+  const variant = CELL_VARIANTS[Math.abs(enemyId) % CELL_VARIANTS.length];
+  if (variant === undefined) {
+    throw new Error("Cell variant catalog is incomplete.");
+  }
+  return variant;
 }
 
 export function actorAnimationDelay(actorId: number): string {

@@ -1,5 +1,6 @@
 import { TOWERS } from "./config";
 import type { SignatureUpgradeConfig, TowerId, UpgradeConfig } from "./game_types";
+import { TOWER_IDS } from "./tower_ids";
 
 export type UpgradePath = readonly [UpgradeConfig, UpgradeConfig, SignatureUpgradeConfig];
 
@@ -267,7 +268,7 @@ export const UPGRADE_PATHS: Readonly<Record<TowerId, UpgradePath>> = {
 };
 
 export function validateUpgradePaths(): void {
-  for (const type of Object.keys(TOWERS) as TowerId[]) {
+  for (const type of TOWER_IDS) {
     const path = UPGRADE_PATHS[type];
     if (path.length !== 3) throw new Error(`${type} needs exactly three upgrades.`);
     for (const upgrade of path) {

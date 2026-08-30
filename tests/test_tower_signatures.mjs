@@ -48,7 +48,7 @@ test("DOUBLE TAP triggers every third Doctor shot", () => {
   const first = advanceDoubleTap(TIER_FOUR_DOCTOR);
   const second = advanceDoubleTap(first);
   assert.equal(shouldDoubleTap(second), true);
-  assert.equal(advanceDoubleTap(second).signatureCharge, 0);
+  assert.equal(advanceDoubleTap(second).doubleTapShots, 0);
 });
 
 test("CLONAL SURGE caps same-target pressure and resets on a new cell", () => {

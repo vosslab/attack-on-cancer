@@ -14,6 +14,8 @@
   defense under the new treatment-specific upgrade costs.
 - Made LINGERING CLOUD damage time-based so its balance is independent of frame rate, and removed
   obsolete upgrade-state and CRISPR guarantee configuration ownership.
+- Made treatment identity, tiers, and treatment-specific configuration requirements explicit
+  TypeScript contracts. Saved settings now have their own persistence-owned boundary.
 
 ### Developer Tests and Notes
 

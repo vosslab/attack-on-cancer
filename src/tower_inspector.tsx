@@ -11,6 +11,7 @@ import {
   getTowerRange,
 } from "./simulation";
 import { UPGRADE_PATHS } from "./upgrade_paths";
+import { nextTowerTier } from "./game_types";
 import type { UpgradePath } from "./upgrade_paths";
 
 function formatValue(value: number): string {
@@ -26,8 +27,13 @@ export function TowerInspector(props: {
   onSell: () => void;
 }): JSX.Element {
   const path = (): UpgradePath => UPGRADE_PATHS[props.tower.type];
-  const upgrade = (): UpgradeConfig | undefined => path()[props.tower.tier];
-  const nextTower = (): Tower => ({ ...props.tower, tier: props.tower.tier + 1 });
+  const upgrade = (): UpgradeConfig | undefined =>
+    props.tower.tier === 3 ? undefined : path()[props.tower.tier];
+  const nextTower = (): Tower => {
+    const nextTier = nextTowerTier(props.tower.tier);
+    if (nextTier === undefined) return props.tower;
+    return { ...props.tower, tier: nextTier };
+  };
   const signatureUpgrade = (): boolean => props.tower.tier === 2;
   const canAfford = (): boolean => {
     const next = upgrade();

@@ -12,7 +12,8 @@ import type { JSX } from "solid-js";
 import { createStore, reconcile } from "solid-js/store";
 import { DIFFICULTIES, ENEMIES, PLAYFIELD_HEIGHT, PLAYFIELD_WIDTH, TOWERS } from "./config";
 import { UPGRADE_PATHS } from "./upgrade_paths";
-import type { DifficultyId, Enemy, GameState, LevelId, Point, Tower, TowerId } from "./game_types";
+import type { DifficultyId, Enemy, GameState, Point, Tower, TowerId } from "./game_types";
+import { TOWER_IDS } from "./tower_ids";
 import { activateAudio, playTreatmentSound, playUiSound } from "./audio";
 import { AttackEffect } from "./attack_effect";
 import { CellDeathEffect, CellRepairEffect, EnemyActor } from "./enemy_actor";
@@ -32,6 +33,7 @@ import {
   canPlaceTower,
   canStartWave,
   createGameState,
+  getNextLevel,
   placeTower,
   sellTower,
   startWave,
@@ -40,15 +42,6 @@ import {
   upgradeTower,
 } from "./simulation";
 
-const TOWER_IDS: readonly TowerId[] = [
-  "doctor",
-  "chemotherapy",
-  "t_cell",
-  "radiation",
-  "antibody",
-  "macrophage",
-  "crispr",
-];
 const DIFFICULTY_IDS: readonly DifficultyId[] = ["practice", "standard", "challenge"];
 const MAP_WIDTH = PLAYFIELD_WIDTH;
 const MAP_HEIGHT = PLAYFIELD_HEIGHT;
@@ -162,6 +155,12 @@ export function App(): JSX.Element {
       activateAudio();
       playUiSound("wave");
     }
+  }
+
+  function nextLevelMessage(): string {
+    const nextLevelId = getNextLevel(game().level);
+    const nextLevel = getCampaignLevel(nextLevelId);
+    return `Prepare for Level ${nextLevelId}: ${nextLevel.title}. ${nextLevel.briefing}`;
   }
 
   function pauseGame(): void {
@@ -571,7 +570,7 @@ export function App(): JSX.Element {
             </h2>
             <p>
               {game().status === "intermission"
-                ? `Prepare for Level ${game().level + 1}: ${getCampaignLevel((game().level + 1) as LevelId).title}. ${getCampaignLevel((game().level + 1) as LevelId).briefing}`
+                ? nextLevelMessage()
                 : game().status === "won"
                   ? "All ten campaign levels are contained."
                   : "The blood vessel has reached its metastasis capacity."}

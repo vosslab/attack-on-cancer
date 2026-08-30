@@ -4,13 +4,13 @@ import type { JSX } from "solid-js";
 import { TowerArtwork, UpgradeBurstArtwork } from "../generated/visual_assets";
 import type { VisualTier } from "../generated/visual_assets";
 import { TOWERS } from "./config";
-import type { Point, Tower, TowerId } from "./game_types";
+import { upgradeBurstTier } from "./game_types";
+import type { Point, Tower, TowerId, TowerTier, UpgradeBurstTier } from "./game_types";
 import { getTowerRange } from "./simulation";
 import { actorAnimationDelay } from "./enemy_visuals";
 
-export function towerVisualTier(tier: number): VisualTier {
-  if (tier === 0 || tier === 1 || tier === 2 || tier === 3) return tier;
-  throw new Error(`Tower visual tier must be 0-3, received ${tier}.`);
+export function towerVisualTier(tier: TowerTier): VisualTier {
+  return tier;
 }
 
 function towerAimDegrees(tower: Tower): number {
@@ -36,6 +36,7 @@ export function TowerActor(props: {
   const aim = (): string => `${towerAimDegrees(props.tower)}deg`;
   const upgrading = (): boolean =>
     props.tower.upgradeFlashUntil !== undefined && props.tower.upgradeFlashUntil > props.time;
+  const burstTier = (): UpgradeBurstTier | undefined => upgradeBurstTier(tier());
 
   return (
     <g
@@ -66,13 +67,15 @@ export function TowerActor(props: {
       }}
     >
       <circle class="tower-aura" r="29" />
-      <Show when={upgrading()}>
-        <g class="tower-upgrade-burst" aria-hidden="true">
-          <UpgradeBurstArtwork
-            tier={tier() as 1 | 2 | 3}
-            instanceKey={`upgrade-${props.tower.id}-${props.tower.upgradeFlashUntil ?? 0}`}
-          />
-        </g>
+      <Show when={upgrading() && burstTier()}>
+        {(upgradeTier) => (
+          <g class="tower-upgrade-burst" aria-hidden="true">
+            <UpgradeBurstArtwork
+              tier={upgradeTier()}
+              instanceKey={`upgrade-${props.tower.id}-${props.tower.upgradeFlashUntil ?? 0}`}
+            />
+          </g>
+        )}
       </Show>
       <g class="tower-artwork-aim" style={{ "--tower-aim": aim() }}>
         <TowerArtwork

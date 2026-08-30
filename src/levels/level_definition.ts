@@ -1,6 +1,5 @@
-import type { LevelId, Point, WaveEntry } from "../game_types";
+import type { LevelId, Point, RouteId, WaveEntry } from "../game_types";
 
-export type RouteId = string;
 export type RouteSegmentId = string;
 export type LandmarkId = string;
 export type ObstacleId = string;
