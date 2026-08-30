@@ -89,6 +89,17 @@ function TowerPreview(props: { type: TowerId; tier: VisualTier }): JSX.Element {
           instanceKey={`catalog-tower-${props.type}-${props.tier}`}
         />
       </g>
+      <g
+        class="tower-tier-badge"
+        data-tier={props.tier}
+        aria-hidden="true"
+        transform="translate(18 18)"
+      >
+        <path class="tower-tier-glyph" d="M0-9L9 0L0 9L-9 0Z" />
+        <text class="tower-tier-number" x="0" y="4" text-anchor="middle">
+          {props.tier + 1}
+        </text>
+      </g>
     </svg>
   );
 }

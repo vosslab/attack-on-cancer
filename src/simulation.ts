@@ -434,6 +434,19 @@ function getTowerConfig(tower: Tower): TowerConfig {
   return config;
 }
 
+export function getTowerAttackVisualDuration(tower: Tower): number {
+  const duration = getTowerConfig(tower).attackVisualDurationByTier[tower.tier];
+  return duration ?? getTowerConfig(tower).attackVisualDurationByTier[0];
+}
+
+export function getTowerSplashRadius(tower: Tower): number | undefined {
+  const config = getTowerConfig(tower);
+  if (config.splashRadiusByTier !== undefined) {
+    return config.splashRadiusByTier[tower.tier] ?? config.splashRadiusByTier[0];
+  }
+  return config.splashRadius;
+}
+
 function getUpgradeMultiplier(
   tower: Tower,
   property: "damageMultiplier" | "cooldownMultiplier",
@@ -627,7 +640,7 @@ function fireTower(
       ? target.markedUntil
       : Math.max(target.markedUntil, time + config.markDuration);
   const firstHit = applyDamage({ ...target, markedUntil }, tower.type, getTowerDamage(tower), time);
-  const splashRadius = config.splashRadius;
+  const splashRadius = getTowerSplashRadius(tower);
   if (splashRadius === undefined) {
     const result = enemies.map((enemy) => (enemy.id === target.id ? firstHit : enemy));
     return { enemies: result, tower, reward: 0 };
@@ -814,7 +827,7 @@ function attackWithReadyTowers(state: GameState, deltaSeconds: number): GameStat
         state.level,
         target.routeId,
       ),
-      attackFlashUntil: state.time + (TOWERS[tower.type].attackVisualDuration ?? 0.22),
+      attackFlashUntil: state.time + getTowerAttackVisualDuration(tower),
       cooldownRemaining: getTowerCooldown(tower),
     };
     return firedTower;

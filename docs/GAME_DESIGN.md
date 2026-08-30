@@ -76,14 +76,15 @@ same enemy mix and route order.
 ## Treatments
 
 Every treatment has three named, linear upgrades: Calibrated, Focused, and
-Breakthrough. Typed configuration tables own costs, range, damage, cooldowns,
-repair chances, and special values, so balance changes do not alter simulation
-rules.
+Breakthrough. The tower crest always shows the active Tier 1-4 number and a
+geometric glyph (seed, double chevron, triple chevron, or capstone burst).
+Typed configuration tables own costs, range, damage, cooldowns, repair
+chances, and special values, so balance changes do not alter simulation rules.
 
 | Treatment            | Core role               | Special behavior                                      |
 | -------------------- | ----------------------- | ----------------------------------------------------- |
 | Doctor               | Low-cost nearby target  | Reliable syringe strike.                              |
-| Chemotherapy         | Group control           | Damages a target and nearby cells.                    |
+| Chemotherapy         | Group control           | Damages a target and nearby cells; splash radius is 48, 58, 72, then 90 by tier. |
 | Cytotoxic T Cell     | Fast single target      | Immune-evasive cells resist it unless marked.         |
 | Radiation Bot        | Long-range heavy damage | Slow, high-energy precision damage.                   |
 | Antibody Therapy     | Support and control     | Marks, slows, sensitizes, and removes immune evasion. |

@@ -2,6 +2,7 @@ import type { JSX } from "solid-js";
 
 import { AttackEffectArtwork } from "../generated/visual_assets";
 import type { Point, Tower } from "./game_types";
+import { TOWERS } from "./config";
 
 function relayPoint(start: Point, end: Point, fraction: number): Point {
   const point = {
@@ -24,7 +25,11 @@ export function AttackEffect(props: { tower: Tower }): JSX.Element {
       class={`attack-effect attack-${props.tower.type}`}
       data-visual-state="attacking"
       data-attack-type={props.tower.type}
+      data-visual-tier={props.tower.tier}
       data-attack-outcome={props.tower.attackOutcome ?? "hit"}
+      style={{
+        "--attack-tier-duration": `${TOWERS[props.tower.type].attackVisualDurationByTier[props.tower.tier] ?? 0.22}s`,
+      }}
       pointer-events="none"
     >
       {props.tower.type !== "chemotherapy" ? (
@@ -40,7 +45,9 @@ export function AttackEffect(props: { tower: Tower }): JSX.Element {
         </g>
       ) : null}
       <g transform={`translate(${point.x} ${point.y})`}>
-        <AttackEffectArtwork type={props.tower.type} instanceKey={instanceKey} />
+        <g class="attack-impact-art">
+          <AttackEffectArtwork type={props.tower.type} instanceKey={instanceKey} />
+        </g>
       </g>
     </g>
   );

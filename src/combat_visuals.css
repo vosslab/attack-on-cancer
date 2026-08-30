@@ -6,7 +6,11 @@
   --tower-face: #e9f8ff;
   --tower-light: #bfe6ff;
   cursor: pointer;
+  --tier-accent: #f7fbff;
 }
+.tower[data-visual-tier="1"], .attack-effect[data-visual-tier="1"] { --tier-accent: #43e6ff; }
+.tower[data-visual-tier="2"], .attack-effect[data-visual-tier="2"] { --tier-accent: #ffc247; }
+.tower[data-visual-tier="3"], .attack-effect[data-visual-tier="3"] { --tier-accent: #f08cff; }
 .tower-doctor {
   --tower-base: #3178c6;
   --tower-dark: #173858;
@@ -75,6 +79,12 @@
   stroke: var(--tower-dark);
   stroke-width: 1;
 }
+.tower-tier-badge { pointer-events: none; }
+.tower-tier-glyph { fill: var(--tier-accent); stroke: #102238; stroke-width: 2.2; filter: drop-shadow(0 0 2px var(--tier-accent)); }
+.tower-tier-number { fill: #102238; font-size: 8px; font-weight: 800; paint-order: stroke; stroke: #f7fbff; stroke-width: 0.8px; }
+.tower[data-visual-tier="1"] .tower-tier-glyph { d: path("M0-9L9 0L0 9L-9 0Z"); }
+.tower[data-visual-tier="2"] .tower-tier-glyph { d: path("M-10-4L-4 0L-10 4M0-4L6 0L0 4"); fill: none; stroke-width: 3; }
+.tower[data-visual-tier="3"] .tower-tier-glyph { d: path("M0-11L3-4L10-6L6 0L12 4L4 5L4 12L0 6L-5 11L-4 3L-11 2L-5-2L-8-9L-2-5Z"); stroke-width: 2; }
 .tower-aura,
 .tower-range {
   fill: none;
@@ -93,6 +103,10 @@
   fill: transparent;
   pointer-events: all;
 }
+.attack-impact-art { transform-box: fill-box; transform-origin: center; }
+.attack-effect[data-visual-tier="1"] .attack-impact-art { transform: scale(1.12); }
+.attack-effect[data-visual-tier="2"] .attack-impact-art { transform: scale(1.28); }
+.attack-effect[data-visual-tier="3"] .attack-impact-art { transform: scale(1.48); filter: drop-shadow(0 0 5px var(--tier-accent)); }
 /* SVG groups do not receive the browser's regular button outline. Keep focus on the hit ring. */
 .tower:focus .tower-hit-target {
   fill: none;
@@ -803,8 +817,11 @@
   opacity: 0.65;
 }
 .attack-effect {
-  animation: attack-flash 0.22s ease-out both;
+  animation: attack-flash var(--attack-tier-duration, 0.22s) ease-out both;
 }
+.attack-effect[data-visual-tier="1"] .attack-path { stroke-width: 4px; }
+.attack-effect[data-visual-tier="2"] .attack-path { stroke-width: 5px; }
+.attack-effect[data-visual-tier="3"] .attack-path { stroke-width: 6px; filter: drop-shadow(0 0 3px var(--tier-accent)); }
 .attack-path,
 .radiation-core {
   stroke-linecap: round;

@@ -398,3 +398,15 @@
 
 - Kept v1 focused on one Skin Tissue level, five treatments, five enemy types, and 15 manual waves.
 - Kept biology optional and non-clinical; the game does not model patient outcomes or treatment decisions.
+## 2026-08-29
+
+### Additions and New Features
+
+- Replaced subtle tower tier pips with a high-contrast lower-right Tier 1-4 crest and geometric glyphs.
+- Added tier-scaled attack durations, impact emphasis, and shared electric accent progression.
+- Chemotherapy splash radius now grows by tier (48, 58, 72, 90); all other combat rules remain unchanged.
+- Added a four-step upgrade ladder to the selected-treatment inspector.
+
+### Validation
+
+- `./run_fast_checks.sh` passes build, typecheck, lint, format, Node tests, and 958 pytest cases.

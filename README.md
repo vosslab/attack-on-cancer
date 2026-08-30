@@ -91,7 +91,8 @@ metastasis point.
 - Place towers beside routes, not on them or on blocked biological landmarks.
 - Point to, tap, or Tab to a named route, landmark, or obstacle for an optional learning tooltip.
   Press Escape or select open tissue to return to treatment placement.
-- Select a placed treatment to upgrade its three linear tiers or sell it.
+- Select a placed treatment to upgrade its three linear tiers or sell it. The lower-right crest
+  shows Tier 1-4 with a distinct geometric glyph so upgrades are immediately readable.
 - Open the optional inspector for concise biology flavor about a selected treatment or cell.
 - Reaching the selected metastasis capacity ends the run.
 
@@ -117,7 +118,7 @@ metastasis point.
 | Treatment            | Strategic role                           | Attack cue                         |
 | -------------------- | ---------------------------------------- | ---------------------------------- |
 | Doctor               | Low-cost nearby single-target treatment. | Dashed syringe shot.               |
-| Chemotherapy         | Splash treatment for tight groups.       | Purple area burst.                 |
+| Chemotherapy         | Tier-scaled splash treatment for tight groups. | Purple cloud, shock ring, and droplets. |
 | Cytotoxic T Cell     | Fast single-target immune attacks.       | Red rapid immune strike.           |
 | Radiation Bot        | Expensive, long-range, heavy strikes.    | Heavy gold beam and target lock.   |
 | Antibody Therapy     | Marks, slows, and sensitizes cells.      | Teal antibody chain and mark ring. |

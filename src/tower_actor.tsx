@@ -70,6 +70,17 @@ export function TowerActor(props: {
           instanceKey={`tower-${props.tower.id}`}
         />
       </g>
+      <g
+        class="tower-tier-badge"
+        data-tier={tier()}
+        aria-hidden="true"
+        transform="translate(18 18)"
+      >
+        <path class="tower-tier-glyph" d="M0-9L9 0L0 9L-9 0Z" />
+        <text class="tower-tier-number" x="0" y="4" text-anchor="middle">
+          {props.tower.tier + 1}
+        </text>
+      </g>
       <Show when={props.tower.type === "crispr"}>
         <g class="crispr-pity-pips" aria-hidden="true">
           <For each={[0, 1, 2, 3, 4, 5, 6]}>

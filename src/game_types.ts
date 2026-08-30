@@ -6,6 +6,7 @@ export type GameStatus = "briefing" | "playing" | "paused" | "intermission" | "w
 export type LevelId = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 export type RouteId = string;
 export type RepairOutcome = "repair" | "mismatch" | "tumor_suppressed";
+export type TierValues = readonly [number, number, number, number];
 
 export interface Point {
   x: number;
@@ -22,10 +23,11 @@ export interface TowerConfig {
   color: string;
   description: string;
   splashRadius?: number;
+  splashRadiusByTier?: TierValues;
   markDuration?: number;
   slowFactor?: number;
   markedDamageMultiplier?: number;
-  attackVisualDuration?: number;
+  attackVisualDurationByTier: TierValues;
   repairChanceByTier?: readonly [number, number, number, number];
   repairPityStep?: number;
   repairGuaranteeAfterMisses?: number;

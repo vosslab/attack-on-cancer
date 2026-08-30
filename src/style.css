@@ -370,6 +370,11 @@ h1 {
 .tower-card h2 {
   font-size: 1rem;
 }
+.tier-ladder { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.3rem; list-style: none; margin: 0.5rem 0 0.8rem; padding: 0; }
+.tier-ladder li { border: 1px solid #9bb2c8; border-radius: 0.4rem; padding: 0.3rem; font-size: 0.72rem; text-align: center; }
+.tier-ladder li.current { background: #173858; color: #fff; border-color: #173858; }
+.tier-ladder li.complete { background: #dff5ff; }
+.tier-ladder small { display: block; font-size: 0.6rem; }
 .tower-card p {
   flex: 1 1 230px;
   font-size: 0.9rem;

@@ -619,8 +619,22 @@ export function App(): JSX.Element {
           return (
             <aside class="tower-card" aria-label="Selected treatment inspector" aria-live="polite">
               <h2>
-                {TOWERS[tower().type].name} - tier {tower().tier + 1}
+                {TOWERS[tower().type].name} - Tier {tower().tier + 1}
               </h2>
+              <ol class="tier-ladder" aria-label="Treatment upgrade tiers">
+                <For each={[0, 1, 2, 3]}>
+                  {(tier) => (
+                    <li
+                      classList={{ current: tier === tower().tier, complete: tier < tower().tier }}
+                    >
+                      <span>Tier {tier + 1}</span>
+                      <Show when={tier === tower().tier + 1}>
+                        <small>{UPGRADES[tier]?.name ?? ""}</small>
+                      </Show>
+                    </li>
+                  )}
+                </For>
+              </ol>
               <p>{TOWERS[tower().type].description}</p>
               <Show when={tower().type === "crispr"}>
                 <p class="repair-status" aria-live="polite">

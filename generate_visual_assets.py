@@ -588,8 +588,9 @@ def render_enemy_and_tower_components(sheets: tuple[VisualSheet, ...]) -> list[s
 				f"export function {public_name}(props: {props_name}): JSX.Element {{",
 				f"  const renderer = (): {kind.capitalize()}Renderer => {renderer_name}[props.type];",
 				(
-					f"  return <Dynamic component={{renderer()}} "
-					f"{prop_name}={{props.{prop_name}}} instanceKey={{props.instanceKey}} />;"
+					f"  return <g class=\"generated-{kind}-artwork\">"
+					f"<Dynamic component={{renderer()}} {prop_name}={{props.{prop_name}}} instanceKey={{props.instanceKey}} />"
+					+ "</g>;"
 				),
 				"}",
 				"",
