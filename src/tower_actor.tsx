@@ -1,7 +1,7 @@
 import { For, Show } from "solid-js";
 import type { JSX } from "solid-js";
 
-import { TowerArtwork } from "../generated/visual_assets";
+import { TowerArtwork, UpgradeBurstArtwork } from "../generated/visual_assets";
 import type { VisualTier } from "../generated/visual_assets";
 import { TOWERS } from "./config";
 import type { Point, Tower, TowerId } from "./game_types";
@@ -34,6 +34,8 @@ export function TowerActor(props: {
     props.tower.attackFlashUntil !== undefined && props.tower.attackFlashUntil > props.time;
   const tier = (): VisualTier => towerVisualTier(props.tower.tier);
   const aim = (): string => `${towerAimDegrees(props.tower)}deg`;
+  const upgrading = (): boolean =>
+    props.tower.upgradeFlashUntil !== undefined && props.tower.upgradeFlashUntil > props.time;
 
   return (
     <g
@@ -42,6 +44,7 @@ export function TowerActor(props: {
       data-tower-type={props.tower.type}
       data-visual-state={attacking() ? "attacking" : "idle"}
       data-visual-tier={tier()}
+      data-signature={props.tower.tier === 3 ? "unlocked" : undefined}
       data-attack-outcome={props.tower.attackOutcome}
       data-repair-misses={props.tower.repairMisses}
       style={{ "--actor-phase": actorAnimationDelay(props.tower.id) }}
@@ -63,6 +66,14 @@ export function TowerActor(props: {
       }}
     >
       <circle class="tower-aura" r="29" />
+      <Show when={upgrading()}>
+        <g class="tower-upgrade-burst" aria-hidden="true">
+          <UpgradeBurstArtwork
+            tier={tier() as 1 | 2 | 3}
+            instanceKey={`upgrade-${props.tower.id}-${props.tower.upgradeFlashUntil ?? 0}`}
+          />
+        </g>
+      </Show>
       <g class="tower-artwork-aim" style={{ "--tower-aim": aim() }}>
         <TowerArtwork
           type={props.tower.type}

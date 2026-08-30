@@ -52,6 +52,7 @@ EXPECTED_CATALOG: dict[str, dict[str, tuple[str, ...]]] = {
 		"attack_antibody": ("state-0",),
 		"attack_macrophage": ("state-0",),
 		"attack_crispr": ("state-0",),
+		"upgrade_burst": ("tier-1", "tier-2", "tier-3"),
 	},
 	"death": {
 		"apoptosis": ("frame-0", "frame-1", "frame-2", "frame-3", "frame-4"),
@@ -612,7 +613,8 @@ def render_single_catalog_component(
 	constant_name = f"{kind.upper()}_RENDERERS"
 	lines = [f"const {constant_name}: Record<{prop_type}, ArtworkRenderer> = {{"]
 	for sheet in kind_sheets:
-		if len(sheet.panels) != 1:
+		# Tiered upgrade bursts use a separate component because their panel tracks tower tier.
+		if len(sheet.panels) != 1 or (kind == "effect" and not sheet.key.startswith("attack_")):
 			continue
 		function_name = component_name(sheet.kind, sheet.key, sheet.panels[0].attrib["data-aoc-panel"])
 		key = sheet.key.removeprefix("attack_") if kind == "effect" else sheet.key
@@ -682,6 +684,28 @@ def render_death_components(sheets: tuple[VisualSheet, ...]) -> list[str]:
 
 
 #============================================
+def render_upgrade_burst_component(sheets: tuple[VisualSheet, ...]) -> list[str]:
+	"""Render the tier-aware treatment-upgrade burst artwork."""
+	burst = next(sheet for sheet in sheets if sheet.kind == "effect" and sheet.key == "upgrade_burst")
+	lines = ["const UPGRADE_BURST_RENDERERS: Record<1 | 2 | 3, ArtworkRenderer> = {"]
+	for index, panel in enumerate(burst.panels, start=1):
+		name = component_name(burst.kind, burst.key, panel.attrib["data-aoc-panel"])
+		lines.append(f"  {index}: {name},")
+	lines.extend(
+		[
+			"};",
+			"",
+			"export function UpgradeBurstArtwork(props: { tier: 1 | 2 | 3; instanceKey: string }): JSX.Element {",
+			"  const renderer = (): ArtworkRenderer => UPGRADE_BURST_RENDERERS[props.tier];",
+			"  return <Dynamic component={renderer()} instanceKey={props.instanceKey} />;",
+			"}",
+			"",
+		]
+	)
+	return lines
+
+
+#============================================
 def world_artwork_id_type(sheets: tuple[VisualSheet, ...]) -> str:
 	"""Return the generated union of every validated world artwork identity."""
 	world_keys = sorted(sheet.key for sheet in sheets if sheet.kind == "world")
@@ -738,6 +762,7 @@ def render_typescript(sheets: tuple[VisualSheet, ...]) -> str:
 		for panel in sheet.panels:
 			lines.extend(panel_function(sheet, panel))
 	lines.extend(render_enemy_and_tower_components(sheets))
+	lines.extend(render_upgrade_burst_component(sheets))
 	lines.extend(
 		render_single_catalog_component(
 			sheets,

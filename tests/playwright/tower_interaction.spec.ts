@@ -129,3 +129,37 @@ test("the visible inspector upgrades and sells its selected treatment", async ({
   await expect(inspector(page)).toHaveCount(0);
   await expect.poll(() => treatmentPoints(page)).toBe(pointsBeforeSell + Number(sellReturn[1]));
 });
+
+test("a signature upgrade confirms before spending and leaves a visible unlocked state", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const tower = await placeDoctor(page);
+  await tower.click();
+
+  await inspector(page)
+    .getByRole("button", { name: /^Upgrade:/ })
+    .click();
+  await inspector(page)
+    .getByRole("button", { name: /^Upgrade:/ })
+    .click();
+  const pointsBeforeSignature = await treatmentPoints(page);
+  await inspector(page)
+    .getByRole("button", { name: /^Unlock signature:/ })
+    .click();
+  const dialog = page.getByRole("dialog", { name: "Confirm signature upgrade" });
+  await expect(dialog).toBeVisible();
+  await dialog.getByRole("button", { name: "No, keep planning" }).click();
+  await expect(dialog).toHaveCount(0);
+  await expect.poll(() => treatmentPoints(page)).toBe(pointsBeforeSignature);
+
+  await inspector(page)
+    .getByRole("button", { name: /^Unlock signature:/ })
+    .click();
+  await dialog.getByRole("button", { name: "Yes, unlock signature" }).click();
+  await expect(page.getByRole("button", { name: "Doctor treatment, tier 4, id 1" })).toBeVisible();
+  await expect(page.getByRole("status")).toHaveText(/Signature unlocked: DOUBLE TAP/);
+  await expect(page.locator("[data-signature-confetti]")).toBeVisible();
+  await expect(page.locator('[data-tower-id="1"]')).toHaveAttribute("data-visual-tier", "3");
+  await expect(page.locator('[data-tower-id="1"]')).toHaveAttribute("data-signature", "unlocked");
+});

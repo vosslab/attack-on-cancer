@@ -154,7 +154,12 @@ test("every treatment renders its generated tier and visibly evolves after an up
     await tower.click();
     await page.getByRole("button", { name: /^Upgrade:/ }).click();
     await expect(tower).toHaveAttribute("data-visual-tier", "1");
-    await expect(tower.locator('[data-aoc-panel="tier-1"]')).toBeVisible();
+    await expect(
+      tower.locator(
+        `[data-aoc-asset="tower-${towerCase.type.replace("_", "-")}"][data-aoc-panel="tier-1"]`,
+      ),
+    ).toBeVisible();
+    await expect(tower.locator('[data-aoc-asset="effect-upgrade-burst"]')).toBeVisible();
   }
 });
 

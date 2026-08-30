@@ -5,7 +5,6 @@ import type {
   EnemyId,
   TowerConfig,
   TowerId,
-  UpgradeConfig,
 } from "./game_types";
 
 export const PLAYFIELD_WIDTH = 960;
@@ -103,7 +102,6 @@ export const TOWERS: Record<TowerId, TowerConfig> = {
     attackVisualDurationByTier: [0.36, 0.46, 0.6, 0.78],
     repairChanceByTier: [0.12, 0.16, 0.22, 0.3],
     repairPityStep: 0.03,
-    repairGuaranteeAfterMisses: 7,
     tumorEditDamage: 72,
     tumorShedDelay: 82,
     color: "#5968d8",
@@ -112,33 +110,6 @@ export const TOWERS: Record<TowerId, TowerConfig> = {
       "mismatches. Tumor Mass edits only suppress shedding and remove one segment.",
   },
 };
-
-export const UPGRADES: readonly UpgradeConfig[] = [
-  {
-    name: "Calibrated",
-    cost: 65,
-    damageMultiplier: 1.28,
-    rangeBonus: 10,
-    cooldownMultiplier: 0.94,
-    description: "Sharper delivery and a little more reach.",
-  },
-  {
-    name: "Focused",
-    cost: 115,
-    damageMultiplier: 1.35,
-    rangeBonus: 14,
-    cooldownMultiplier: 0.9,
-    description: "More concentrated treatment.",
-  },
-  {
-    name: "Breakthrough",
-    cost: 190,
-    damageMultiplier: 1.5,
-    rangeBonus: 20,
-    cooldownMultiplier: 0.84,
-    description: "Maximum v1 treatment potency.",
-  },
-] as const;
 
 export const ENEMIES: Record<EnemyId, EnemyConfig> = {
   basic: {

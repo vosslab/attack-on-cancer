@@ -305,9 +305,9 @@ export const LEVEL_08_FIBROTIC_SIEVE: LevelDefinition = {
     },
   ],
   economy: {
-    entryTpMinimum: 900,
-    entryTpMaximum: 1000,
-    reinforcementTp: 460,
+    entryTpMinimum: 1400,
+    entryTpMaximum: 1600,
+    reinforcementTp: 1000,
     carryoverTpCap: 500,
   },
   waves: [

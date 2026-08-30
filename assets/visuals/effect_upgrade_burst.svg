@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 324 108" data-aoc-kind="effect" data-aoc-key="upgrade_burst" data-aoc-frame-width="108" data-aoc-frame-height="108">
+  <title>Upgrade burst</title>
+  <desc>Tier-colored expanding ring and rising treatment particles.</desc>
+  <g data-aoc-panel="tier-1" transform="translate(54 54)"><g data-aoc-part="burst">
+    <circle class="upgrade-burst-ring" r="18" fill="none" stroke="#43e6ff" stroke-width="4" />
+    <circle class="upgrade-burst-mote" cx="-18" cy="-8" r="3" fill="#dfffff" />
+    <circle class="upgrade-burst-mote" cx="13" cy="-17" r="2.5" fill="#43e6ff" />
+    <circle class="upgrade-burst-mote" cx="20" cy="12" r="3" fill="#dfffff" />
+  </g></g>
+  <g data-aoc-panel="tier-2" transform="translate(162 54)"><g data-aoc-part="burst">
+    <circle class="upgrade-burst-ring" r="22" fill="none" stroke="#ffc247" stroke-width="4.5" />
+    <path class="upgrade-burst-star" d="M0-30L4-8L25-17L9 1L29 12L6 10L3 32L-4 11L-25 21L-10 3L-31-8L-7-7Z" fill="#fff3bf" stroke="#ffc247" stroke-width="2" />
+  </g></g>
+  <g data-aoc-panel="tier-3" transform="translate(270 54)"><g data-aoc-part="burst">
+    <circle class="upgrade-burst-ring" r="26" fill="none" stroke="#f08cff" stroke-width="5" />
+    <path class="upgrade-burst-star" d="M0-38L6-12L34-20L13 2L37 17L9 13L4 39L-7 14L-33 27L-15 4L-39-9L-10-9Z" fill="#ffe5fb" stroke="#f08cff" stroke-width="2.5" />
+    <circle class="upgrade-burst-mote" cx="-29" cy="-18" r="4" fill="#f08cff" />
+    <circle class="upgrade-burst-mote" cx="31" cy="-8" r="3" fill="#ffe5fb" />
+  </g></g>
+</svg>

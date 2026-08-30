@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { DIFFICULTIES, ENEMIES, TOWERS, UPGRADES } from "../src/config.ts";
+import { DIFFICULTIES, ENEMIES, TOWERS } from "../src/config.ts";
+import { UPGRADE_PATHS } from "../src/upgrade_paths.ts";
 import { getCampaignLevel, getLevelRoutePoints, getLevelWaves } from "../src/levels/campaign.ts";
 import {
   canStartWave,
@@ -56,6 +57,39 @@ test("path endpoints and first wave scheduling are deterministic", () => {
   assert.ok(advanced.enemies[0].pathDistance > 0);
 });
 
+test("LINGERING CLOUD damage is invariant to tick partitioning", () => {
+  const initial = createGameState("practice");
+  const position = getPathPosition(0);
+  const field = {
+    position,
+    radius: 200,
+    damagePerSecond: 12,
+    expiresAt: 2,
+    sourceTowerId: 1,
+  };
+  const state = {
+    ...initial,
+    status: "playing",
+    enemies: [
+      {
+        id: 1,
+        type: "basic",
+        routeId: "skin_tissue_main",
+        health: 100,
+        pathDistance: 0,
+        markedUntil: 0,
+      },
+    ],
+    lingeringFields: [field],
+  };
+  const oneStep = tickGame(state, 1);
+  let tenSteps = state;
+  for (let index = 0; index < 10; index += 1) tenSteps = tickGame(tenSteps, 0.1);
+
+  assert.ok(Math.abs(oneStep.enemies[0].health - tenSteps.enemies[0].health) < 0.000001);
+  assert.equal(oneStep.enemies[0].health, 88);
+});
+
 test("placement, upgrades, and selling update treatment points only for legal actions", () => {
   const initial = createGameState("practice");
   const invalid = placeTower(initial, "doctor", { x: 52, y: 324 });
@@ -68,7 +102,7 @@ test("placement, upgrades, and selling update treatment points only for legal ac
 
   const upgraded = upgradeTower(placed, tower.id);
   assert.equal(upgraded.towers[0].tier, 1);
-  assert.equal(upgraded.tp, placed.tp - UPGRADES[0].cost);
+  assert.equal(upgraded.tp, placed.tp - UPGRADE_PATHS.doctor[0].cost);
 
   const sold = sellTower(upgraded, tower.id);
   assert.equal(sold.towers.length, 0);

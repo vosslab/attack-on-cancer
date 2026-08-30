@@ -1,4 +1,4 @@
-import { For, createSignal } from "solid-js";
+import { For, Show, createSignal } from "solid-js";
 import type { JSX } from "solid-js";
 import { render } from "solid-js/web";
 
@@ -8,6 +8,7 @@ import {
   RepairArtwork,
   RuptureArtwork,
   TowerArtwork,
+  UpgradeBurstArtwork,
 } from "../generated/visual_assets";
 import type { ApoptosisFrame, VisualTier, VisualVariant } from "../generated/visual_assets";
 import { AttackEffect } from "./attack_effect";
@@ -126,6 +127,19 @@ function AttackPreview(props: {
   return (
     <svg class="catalog-attack-artboard" viewBox="0 0 160 100">
       <AttackEffect tower={sampleTower(props.type, props.index + 1, props.outcome)} />
+    </svg>
+  );
+}
+
+function UpgradeBurstPreview(props: { tier: 1 | 2 | 3 }): JSX.Element {
+  return (
+    <svg class="catalog-artboard catalog-artboard-game" viewBox="-54 -54 108 108">
+      <g class="tower-upgrade-burst">
+        <UpgradeBurstArtwork
+          tier={props.tier}
+          instanceKey={`catalog-upgrade-burst-${props.tier}`}
+        />
+      </g>
     </svg>
   );
 }
@@ -291,6 +305,16 @@ export function VisualCatalog(): JSX.Element {
                   <AttackPreview type={type} index={index()} />
                   <figcaption>{displayName(type)} attack</figcaption>
                 </figure>
+                <Show when={type === "doctor"}>
+                  <For each={[1, 2, 3] as const}>
+                    {(tier) => (
+                      <figure>
+                        <UpgradeBurstPreview tier={tier} />
+                        <figcaption>Upgrade burst tier {tier + 1}</figcaption>
+                      </figure>
+                    )}
+                  </For>
+                </Show>
                 <For
                   each={
                     type === "crispr"

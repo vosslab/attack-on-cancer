@@ -1,3 +1,26 @@
+## 2026-08-30
+
+### Additions and New Features
+
+- Replaced the shared treatment-upgrade list with validated per-treatment paths that own their
+  costs, biology facts, game roles, and tier-4 signature abilities.
+- Added the seven bounded signature mechanics, tier-aware upgrade burst artwork, upgrade-card
+  previews, signature confirmation, milestone banner, and upgrade/signature sound cues.
+
+### Behavior or Interface Changes
+
+- Tier-4 upgrades now require a visible confirm/cancel decision; ordinary upgrades remain
+  one-click actions. The Fibrotic Sieve entry reinforcement now supports its constrained mixed
+  defense under the new treatment-specific upgrade costs.
+- Made LINGERING CLOUD damage time-based so its balance is independent of frame rate, and removed
+  obsolete upgrade-state and CRISPR guarantee configuration ownership.
+
+### Developer Tests and Notes
+
+- Added deterministic signature-contract tests and built-browser coverage for tier-4 cancellation
+  and confirmation. Added deterministic time-partition coverage for LINGERING CLOUD damage.
+  Generated-art validation accepts the new editable upgrade-burst sheet.
+
 ## 2026-08-25
 
 ### Additions and New Features

@@ -1,0 +1,171 @@
+/* Upgrade-only presentation: this stays separate from continuous combat motion. */
+.tower[data-signature="unlocked"] .tower-aura {
+  animation: signature-aura 3.4s var(--actor-phase) linear infinite;
+  stroke: var(--tier-accent);
+  stroke-width: 3;
+}
+.tower-tier-badge {
+  filter: drop-shadow(0 1px 1px #10223888);
+}
+.tower[data-signature="unlocked"] .tower-tier-badge {
+  filter: drop-shadow(0 0 4px var(--tier-accent));
+}
+.tower-upgrade-burst {
+  animation: upgrade-burst 0.6s ease-out both;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.upgrade-burst-ring {
+  vector-effect: non-scaling-stroke;
+}
+.upgrade-burst-mote {
+  animation: upgrade-mote 0.6s ease-out both;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.upgrade-preview {
+  background: #fff;
+  border: 1px solid #c9deeb;
+  border-left: 5px solid #43aee8;
+  border-radius: 10px;
+  flex: 1 1 310px;
+  padding: 0.65rem;
+}
+.upgrade-preview h3,
+.upgrade-preview p {
+  margin: 0.2rem 0;
+}
+.upgrade-preview dl {
+  display: grid;
+  gap: 0.2rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0.5rem 0;
+}
+.upgrade-preview dl div {
+  background: #edf7fc;
+  border-radius: 7px;
+  padding: 0.3rem;
+}
+.upgrade-preview dt {
+  color: #526b80;
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+.upgrade-preview dd {
+  margin: 0.12rem 0 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+.signature-modal-backdrop {
+  align-items: center;
+  background: #10223899;
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  padding: 1rem;
+  position: fixed;
+  z-index: 20;
+}
+.signature-modal {
+  background: #f8fdff;
+  border: 4px solid #f08cff;
+  border-radius: 18px;
+  box-shadow: 0 14px 40px #06142688;
+  max-width: 430px;
+  padding: 1.15rem;
+}
+.signature-modal button {
+  margin: 0.25rem;
+  min-height: 48px;
+}
+.signature-banner {
+  background: #173858;
+  border: 3px solid #f08cff;
+  border-radius: 999px;
+  bottom: 1.2rem;
+  box-shadow: 0 5px 16px #06142677;
+  color: #fff;
+  font-weight: 800;
+  left: 50%;
+  padding: 0.7rem 1.1rem;
+  position: fixed;
+  transform: translateX(-50%);
+  z-index: 15;
+}
+.signature-confetti {
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  position: fixed;
+  z-index: 16;
+}
+.signature-confetti i {
+  animation: signature-confetti 1.2s ease-out both;
+  background: #f08cff;
+  height: 11px;
+  left: 12%;
+  position: absolute;
+  top: 20%;
+  transform: rotate(20deg);
+  width: 7px;
+}
+.signature-confetti i:nth-child(2n) { background: #ffe55c; }
+.signature-confetti i:nth-child(3n) { background: #43d9ad; }
+.signature-confetti i:nth-child(4n) { background: #58b8f7; }
+.signature-confetti i:nth-child(2) { left: 23%; }
+.signature-confetti i:nth-child(3) { left: 34%; }
+.signature-confetti i:nth-child(4) { left: 45%; }
+.signature-confetti i:nth-child(5) { left: 56%; }
+.signature-confetti i:nth-child(6) { left: 67%; }
+.signature-confetti i:nth-child(7) { left: 78%; }
+.signature-confetti i:nth-child(8) { left: 89%; }
+@keyframes signature-confetti {
+  from { opacity: 1; transform: translateY(0) rotate(0deg); }
+  to { opacity: 0; transform: translateY(340px) rotate(420deg); }
+}
+@keyframes signature-aura {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes upgrade-burst {
+  from {
+    opacity: 1;
+    transform: scale(0.35);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.7);
+  }
+}
+@keyframes upgrade-mote {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(0.7);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-22px) scale(1.25);
+  }
+}
+@media (max-width: 560px) {
+  .upgrade-preview dl {
+    grid-template-columns: 1fr;
+  }
+  .signature-banner {
+    max-width: calc(100% - 2rem);
+    text-align: center;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tower[data-signature="unlocked"] .tower-aura,
+  .tower-upgrade-burst,
+  .upgrade-burst-mote {
+    animation: none;
+  }
+  .signature-confetti i { animation: none; opacity: 0.75; }
+  .tower-upgrade-burst {
+    opacity: 0.55;
+    transform: scale(1.25);
+  }
+}

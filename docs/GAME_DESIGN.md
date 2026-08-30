@@ -75,21 +75,22 @@ same enemy mix and route order.
 
 ## Treatments
 
-Every treatment has three named, linear upgrades: Calibrated, Focused, and
-Breakthrough. The tower crest always shows the active Tier 1-4 number and a
-geometric glyph (seed, double chevron, triple chevron, or capstone burst).
-Typed configuration tables own costs, range, damage, cooldowns, repair
-chances, and special values, so balance changes do not alter simulation rules.
+Every treatment has its own named linear path: two conventional upgrades followed
+by a tier-4 signature that changes play. The inspector shows each card's game role
+and biological connection before purchase. The tower crest always shows the active
+Tier 1-4 number and a geometric glyph (seed, double chevron, triple chevron, or
+capstone burst). Typed configuration tables own costs, range, damage, cooldowns,
+repair chances, and signature rules, so balance changes do not alter simulation rules.
 
 | Treatment            | Core role               | Special behavior                                      |
 | -------------------- | ----------------------- | ----------------------------------------------------- |
-| Doctor               | Low-cost nearby target  | Reliable syringe strike.                              |
-| Chemotherapy         | Group control           | Damages a target and nearby cells; splash radius is 48, 58, 72, then 90 by tier. |
-| Cytotoxic T Cell     | Fast single target      | Immune-evasive cells resist it unless marked.         |
-| Radiation Bot        | Long-range heavy damage | Slow, high-energy precision damage.                   |
-| Antibody Therapy     | Support and control     | Marks, slows, sensitizes, and removes immune evasion. |
-| CAR Macrophage       | Close-range heavy hit   | Engulfs slowly; antibody marks amplify its damage.    |
-| CRISPR Repair Editor | High-variance support   | Repairs ordinary cells or gains sequence confidence.  |
+| Doctor               | Low-cost nearby target  | DOUBLE TAP: every third shot also reaches another cell. |
+| Chemotherapy         | Group control           | LINGERING CLOUD: splash leaves a short toxic field.    |
+| Cytotoxic T Cell     | Fast single target      | CLONAL SURGE: same-target hits ramp damage.            |
+| Radiation Bot        | Long-range heavy damage | PIERCING BEAM: a reduced hit continues down-route.     |
+| Antibody Therapy     | Support and control     | BISPECIFIC LINK: a new mark reaches one nearby cell.   |
+| CAR Macrophage       | Close-range heavy hit   | TROGOCYTOSIS: a kill refunds TP and resets cooldown.   |
+| CRISPR Repair Editor | High-variance support   | BASE EDITOR: guarantees repair after four mismatches.  |
 
 The CAR Macrophage is explicitly experimental. Its game role is inspired by
 [antigen-specific phagocytosis by engineered human macrophages](https://www.nature.com/articles/s41587-020-0462-y)
@@ -98,7 +99,8 @@ not a claim about an approved treatment or patient outcome.
 
 The CRISPR Repair Editor is explicitly speculative game fiction. Its tier
 chances are 12%, 16%, 22%, and 30%; each mismatch adds a small confidence
-bonus, and seven consecutive mismatches guarantee the next repair. A repaired
+bonus, and seven consecutive mismatches guarantee the next repair at tiers 1-3.
+The tier-4 BASE EDITOR signature shortens that guarantee to four mismatches. A repaired
 ordinary cell becomes a mint smiling cell, leaves the route, and awards normal
 TP without destruction or division. The editor prioritizes ordinary cells. A
 successful Tumor Mass attempt removes only a bounded health segment and delays

@@ -10,14 +10,8 @@ import {
 } from "solid-js";
 import type { JSX } from "solid-js";
 import { createStore, reconcile } from "solid-js/store";
-import {
-  DIFFICULTIES,
-  ENEMIES,
-  PLAYFIELD_HEIGHT,
-  PLAYFIELD_WIDTH,
-  TOWERS,
-  UPGRADES,
-} from "./config";
+import { DIFFICULTIES, ENEMIES, PLAYFIELD_HEIGHT, PLAYFIELD_WIDTH, TOWERS } from "./config";
+import { UPGRADE_PATHS } from "./upgrade_paths";
 import type { DifficultyId, Enemy, GameState, LevelId, Point, Tower, TowerId } from "./game_types";
 import { activateAudio, playTreatmentSound, playUiSound } from "./audio";
 import { AttackEffect } from "./attack_effect";
@@ -30,6 +24,7 @@ import {
 } from "./enemy_visuals";
 import { loadSettings, recordBestResult, updateSettings } from "./persistence";
 import { TowerActor, TowerPlacementGhost } from "./tower_actor";
+import { TowerInspector } from "./tower_inspector";
 import { WorldLandmarks } from "./world_landmarks";
 import { getCampaignLevel, getLevelWaves } from "./levels/campaign";
 import {
@@ -37,9 +32,6 @@ import {
   canPlaceTower,
   canStartWave,
   createGameState,
-  getRepairChance,
-  getSellValue,
-  getUpgradeCost,
   placeTower,
   sellTower,
   startWave,
@@ -67,6 +59,9 @@ interface UiState {
   selectedEnemyId?: number;
   inspectOpen: boolean;
   settingsOpen: boolean;
+  signatureConfirmTowerId?: number;
+  signatureBanner?: string;
+  signatureCelebration?: number;
   cursor: Point;
 }
 
@@ -242,6 +237,43 @@ export function App(): JSX.Element {
     const tower = selectedTower();
     if (tower !== undefined) {
       setGame((current) => upgradeTower(current, tower.id));
+      if (soundEnabled()) {
+        activateAudio();
+        playUiSound("upgrade");
+      }
+    }
+  }
+
+  function requestSignatureUnlock(): void {
+    const tower = selectedTower();
+    if (tower !== undefined) setUi("signatureConfirmTowerId", tower.id);
+  }
+
+  function cancelSignatureUnlock(): void {
+    setUi("signatureConfirmTowerId", undefined);
+  }
+
+  function confirmSignatureUnlock(): void {
+    const tower = selectedTower();
+    if (tower === undefined) return;
+    const signature = UPGRADE_PATHS[tower.type][2];
+    const beforeTier = tower.tier;
+    setGame((current) => upgradeTower(current, tower.id));
+    if (beforeTier === 2) {
+      const signatureCelebration = Date.now();
+      setUi({
+        signatureConfirmTowerId: undefined,
+        signatureBanner: signature.signatureName,
+        signatureCelebration,
+      });
+      window.setTimeout(() => {
+        if (ui.signatureCelebration === signatureCelebration)
+          setUi("signatureCelebration", undefined);
+      }, 1200);
+      if (soundEnabled()) {
+        activateAudio();
+        playUiSound("signature");
+      }
     }
   }
 
@@ -280,7 +312,8 @@ export function App(): JSX.Element {
     if (event.key === "Enter") {
       commitPlacement(ui.cursor);
     } else if (event.key === "Escape") {
-      cancelPlacement();
+      if (ui.signatureConfirmTowerId !== undefined) cancelSignatureUnlock();
+      else cancelPlacement();
     } else if (event.key === " ") {
       event.preventDefault();
       pauseGame();
@@ -614,50 +647,58 @@ export function App(): JSX.Element {
       </section>
 
       <Show when={selectedTower()}>
-        {(tower) => {
-          const upgradeCost = getUpgradeCost(tower());
-          return (
-            <aside class="tower-card" aria-label="Selected treatment inspector" aria-live="polite">
-              <h2>
-                {TOWERS[tower().type].name} - Tier {tower().tier + 1}
-              </h2>
-              <ol class="tier-ladder" aria-label="Treatment upgrade tiers">
-                <For each={[0, 1, 2, 3]}>
-                  {(tier) => (
-                    <li
-                      classList={{ current: tier === tower().tier, complete: tier < tower().tier }}
-                    >
-                      <span>Tier {tier + 1}</span>
-                      <Show when={tier === tower().tier + 1}>
-                        <small>{UPGRADES[tier]?.name ?? ""}</small>
-                      </Show>
-                    </li>
-                  )}
-                </For>
-              </ol>
-              <p>{TOWERS[tower().type].description}</p>
-              <Show when={tower().type === "crispr"}>
-                <p class="repair-status" aria-live="polite">
-                  Next repair chance: {Math.round(getRepairChance(tower()) * 100)}% after{" "}
-                  {tower().repairMisses ?? 0} sequence mismatches. Seven consecutive mismatches
-                  guarantee the next repair.
-                </p>
-              </Show>
-              <button
-                type="button"
-                disabled={upgradeCost === undefined || game().tp < (upgradeCost ?? 0)}
-                onClick={improveTower}
-              >
-                {upgradeCost === undefined
-                  ? "Maximum tier"
-                  : `Upgrade: ${UPGRADES[tower().tier]?.name ?? ""} (${upgradeCost} TP)`}
+        {(tower) => (
+          <TowerInspector
+            tower={tower()}
+            treatmentPoints={game().tp}
+            onUpgrade={improveTower}
+            onRequestSignature={requestSignatureUnlock}
+            onSell={removeTower}
+          />
+        )}
+      </Show>
+
+      <Show when={ui.signatureConfirmTowerId !== undefined && selectedTower()}>
+        {(tower) => (
+          <div
+            class="signature-modal-backdrop"
+            role="presentation"
+            onPointerDown={cancelSignatureUnlock}
+          >
+            <section
+              class="signature-modal"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Confirm signature upgrade"
+              onPointerDown={(event) => event.stopPropagation()}
+            >
+              <h2>Unlock {UPGRADE_PATHS[tower().type][2].signatureName}?</h2>
+              <p>{UPGRADE_PATHS[tower().type][2].gameRole}</p>
+              <button type="button" onClick={confirmSignatureUnlock}>
+                Yes, unlock signature
               </button>
-              <button type="button" onClick={removeTower}>
-                Sell for {getSellValue(tower())} TP
+              <button type="button" onClick={cancelSignatureUnlock}>
+                No, keep planning
               </button>
-            </aside>
-          );
-        }}
+            </section>
+          </div>
+        )}
+      </Show>
+      <Show when={ui.signatureBanner}>
+        <div class="signature-banner" role="status">
+          Signature unlocked: {ui.signatureBanner}
+        </div>
+      </Show>
+      <Show when={ui.signatureCelebration}>
+        {(celebration) => (
+          <div
+            class="signature-confetti"
+            data-signature-confetti={celebration()}
+            aria-hidden="true"
+          >
+            <For each={[0, 1, 2, 3, 4, 5, 6, 7]}>{(piece) => <i data-piece={piece} />}</For>
+          </div>
+        )}
       </Show>
 
       <section class="inspect">

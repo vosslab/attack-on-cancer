@@ -6,8 +6,20 @@ import {
   PLAYFIELD_WIDTH,
   SELL_REFUND_RATE,
   TOWERS,
-  UPGRADES,
 } from "./config";
+import { UPGRADE_PATHS } from "./upgrade_paths";
+import {
+  advanceClonalSurge,
+  advanceDoubleTap,
+  getBispecificTarget,
+  getClonalSurgeMultiplier,
+  getPiercingTarget,
+  getRepairGuaranteeAfterMisses,
+  getTrogocytosisRefund,
+  getTumorEditMultiplier,
+  hasSignature,
+  shouldDoubleTap,
+} from "./tower_signatures";
 import { getCampaignLevel, getLevelRoutePoints, getLevelWaves } from "./levels/campaign";
 import type {
   CellRepairEvent,
@@ -21,6 +33,7 @@ import type {
   Tower,
   TowerConfig,
   TowerId,
+  LingeringField,
 } from "./game_types";
 
 const TOWER_OVERLAP_RADIUS = 42;
@@ -221,6 +234,7 @@ export function createGameState(difficulty: DifficultyId): GameState {
     nextTowerId: 1,
     pendingSpawns: [],
     repairEvents: [],
+    lingeringFields: [],
     time: 0,
   };
   return state;
@@ -287,7 +301,7 @@ export function placeTower(state: GameState, type: TowerId, position: Point): Ga
 export function getSellValue(tower: Tower): number {
   let totalSpent = TOWERS[tower.type].cost;
   for (let index = 0; index < tower.tier; index += 1) {
-    const upgrade = UPGRADES[index];
+    const upgrade = UPGRADE_PATHS[tower.type][index];
     if (upgrade !== undefined) {
       totalSpent += upgrade.cost;
     }
@@ -310,7 +324,7 @@ export function sellTower(state: GameState, towerId: number): GameState {
 }
 
 export function getUpgradeCost(tower: Tower): number | undefined {
-  const upgrade = UPGRADES[tower.tier];
+  const upgrade = UPGRADE_PATHS[tower.type][tower.tier];
   const cost = upgrade?.cost;
   return cost;
 }
@@ -328,7 +342,11 @@ export function upgradeTower(state: GameState, towerId: number): GameState {
   ) {
     return state;
   }
-  const upgradedTower: Tower = { ...tower, tier: tower.tier + 1 };
+  const upgradedTower: Tower = {
+    ...tower,
+    tier: tower.tier + 1,
+    upgradeFlashUntil: state.time + 0.6,
+  };
   const nextTowers = state.towers.map((candidate) =>
     candidate.id === towerId ? upgradedTower : candidate,
   );
@@ -412,6 +430,7 @@ export function advanceLevel(state: GameState): GameState {
     enemies: [],
     pendingSpawns: [],
     repairEvents: [],
+    lingeringFields: [],
     nextTowerId: 1,
   };
 }
@@ -453,7 +472,7 @@ function getUpgradeMultiplier(
 ): number {
   let multiplier = 1;
   for (let index = 0; index < tower.tier; index += 1) {
-    const upgrade = UPGRADES[index];
+    const upgrade = UPGRADE_PATHS[tower.type][index];
     if (upgrade !== undefined) {
       multiplier *= upgrade[property];
     }
@@ -464,7 +483,7 @@ function getUpgradeMultiplier(
 export function getTowerRange(tower: Tower): number {
   let range = getTowerConfig(tower).range;
   for (let index = 0; index < tower.tier; index += 1) {
-    const upgrade = UPGRADES[index];
+    const upgrade = UPGRADE_PATHS[tower.type][index];
     if (upgrade !== undefined) {
       range += upgrade.rangeBonus;
     }
@@ -472,12 +491,12 @@ export function getTowerRange(tower: Tower): number {
   return range;
 }
 
-function getTowerDamage(tower: Tower): number {
+export function getTowerDamage(tower: Tower): number {
   const damage = getTowerConfig(tower).damage * getUpgradeMultiplier(tower, "damageMultiplier");
   return damage;
 }
 
-function getTowerCooldown(tower: Tower): number {
+export function getTowerCooldown(tower: Tower): number {
   const cooldown =
     getTowerConfig(tower).cooldown * getUpgradeMultiplier(tower, "cooldownMultiplier");
   return cooldown;
@@ -487,20 +506,14 @@ export function getRepairChance(tower: Tower): number {
   const config = getTowerConfig(tower);
   const chances = config.repairChanceByTier;
   const pityStep = config.repairPityStep;
-  const guaranteeAfter = config.repairGuaranteeAfterMisses;
-  if (
-    tower.type !== "crispr" ||
-    chances === undefined ||
-    pityStep === undefined ||
-    guaranteeAfter === undefined
-  ) {
+  if (tower.type !== "crispr" || chances === undefined || pityStep === undefined) {
     throw new Error("The CRISPR Repair Editor requires complete repair-chance configuration.");
   }
   if (!Number.isInteger(tower.tier) || tower.tier < 0 || tower.tier >= chances.length) {
     throw new Error(`CRISPR tier must be 0-${chances.length - 1}, received ${tower.tier}.`);
   }
   const misses = Math.max(0, tower.repairMisses ?? 0);
-  if (misses >= guaranteeAfter) {
+  if (misses >= getRepairGuaranteeAfterMisses(tower)) {
     return 1;
   }
   const tierChance = chances[tower.tier];
@@ -571,6 +584,7 @@ interface TowerFireResult {
   tower: Tower;
   reward: number;
   repairEvent?: CellRepairEvent;
+  lingeringField?: LingeringField;
 }
 
 function fireCrispr(tower: Tower, target: Enemy, enemies: readonly Enemy[]): TowerFireResult {
@@ -598,7 +612,7 @@ function fireCrispr(tower: Tower, target: Enemy, enemies: readonly Enemy[]): Tow
     }
     const editedTarget: Enemy = {
       ...target,
-      health: target.health - tumorEditDamage,
+      health: target.health - tumorEditDamage * getTumorEditMultiplier(tower),
       nextShedDistance: (target.nextShedDistance ?? target.pathDistance + 105) + tumorShedDelay,
     };
     return {
@@ -639,11 +653,59 @@ function fireTower(
     config.markDuration === undefined
       ? target.markedUntil
       : Math.max(target.markedUntil, time + config.markDuration);
-  const firstHit = applyDamage({ ...target, markedUntil }, tower.type, getTowerDamage(tower), time);
+  const clonalDamage = getTowerDamage(tower) * getClonalSurgeMultiplier(tower, target.id);
+  const firstHit = applyDamage({ ...target, markedUntil }, tower.type, clonalDamage, time);
+  let signatureTower: Tower = {
+    ...advanceClonalSurge(tower, target.id),
+    signatureTriggered: undefined,
+  };
+  const doubleTap = shouldDoubleTap(tower);
+  signatureTower = advanceDoubleTap(signatureTower);
   const splashRadius = getTowerSplashRadius(tower);
   if (splashRadius === undefined) {
-    const result = enemies.map((enemy) => (enemy.id === target.id ? firstHit : enemy));
-    return { enemies: result, tower, reward: 0 };
+    let result = enemies.map((enemy) => (enemy.id === target.id ? firstHit : enemy));
+    if (hasSignature(tower) && tower.type === "doctor" && doubleTap) {
+      const secondTarget = getTarget(
+        tower,
+        result.filter((enemy) => enemy.id !== target.id),
+        level,
+      );
+      if (secondTarget !== undefined) {
+        result = result.map((enemy) =>
+          enemy.id === secondTarget.id
+            ? applyDamage(enemy, tower.type, getTowerDamage(tower), time)
+            : enemy,
+        );
+      }
+    }
+    if (hasSignature(tower) && tower.type === "radiation") {
+      const piercingTarget = getPiercingTarget(target, result);
+      if (piercingTarget !== undefined) {
+        result = result.map((enemy) =>
+          enemy.id === piercingTarget.id
+            ? applyDamage(enemy, tower.type, getTowerDamage(tower) * 0.6, time)
+            : enemy,
+        );
+      }
+    }
+    if (hasSignature(tower) && tower.type === "antibody") {
+      const linked = getBispecificTarget(target, result, (enemy) =>
+        getPathPosition(enemy.pathDistance, level, enemy.routeId),
+      );
+      if (linked !== undefined) {
+        result = result.map((enemy) =>
+          enemy.id === linked.id ? { ...enemy, markedUntil } : enemy,
+        );
+      }
+    }
+    const trogocytosis = hasSignature(tower) && tower.type === "macrophage" && firstHit.health <= 0;
+    return {
+      enemies: result,
+      tower: trogocytosis
+        ? { ...signatureTower, signatureTriggered: "trogocytosis" }
+        : signatureTower,
+      reward: trogocytosis ? getTrogocytosisRefund(target) : 0,
+    };
   }
 
   const targetPosition = getPathPosition(target.pathDistance, level, target.routeId);
@@ -655,7 +717,33 @@ function fireTower(
     const insideSplash = distanceBetween(targetPosition, enemyPosition) <= splashRadius;
     return insideSplash ? applyDamage(enemy, tower.type, getTowerDamage(tower), time) : enemy;
   });
-  return { enemies: damagedEnemies, tower, reward: 0 };
+  const lingering = hasSignature(tower) && tower.type === "chemotherapy";
+  const lingeringField = lingering
+    ? {
+        position: targetPosition,
+        radius: splashRadius,
+        damagePerSecond: getTowerDamage(tower) * 0.45,
+        expiresAt: time + 1.6,
+        sourceTowerId: tower.id,
+      }
+    : undefined;
+  return { enemies: damagedEnemies, tower: signatureTower, reward: 0, lingeringField };
+}
+
+function applyLingeringFields(state: GameState, deltaSeconds: number): GameState {
+  const lingeringFields = state.lingeringFields.filter((field) => field.expiresAt > state.time);
+  if (lingeringFields.length === 0) return { ...state, lingeringFields };
+  const enemies = state.enemies.map((enemy) => {
+    const position = getPathPosition(enemy.pathDistance, state.level, enemy.routeId);
+    let health = enemy.health;
+    for (const field of lingeringFields) {
+      if (distanceBetween(position, field.position) <= field.radius) {
+        health -= field.damagePerSecond * deltaSeconds;
+      }
+    }
+    return health === enemy.health ? enemy : { ...enemy, health };
+  });
+  return { ...state, enemies, lingeringFields };
 }
 
 function spawnReadyEnemies(state: GameState, time: number): GameState {
@@ -804,6 +892,7 @@ function attackWithReadyTowers(state: GameState, deltaSeconds: number): GameStat
   let enemies = state.enemies;
   let reward = 0;
   const repairEvents = [...state.repairEvents];
+  const lingeringFields = [...state.lingeringFields];
   const towers = state.towers.map((tower) => {
     const cooldownRemaining = Math.max(0, tower.cooldownRemaining - deltaSeconds);
     if (cooldownRemaining > 0) {
@@ -819,6 +908,7 @@ function attackWithReadyTowers(state: GameState, deltaSeconds: number): GameStat
     if (result.repairEvent !== undefined) {
       repairEvents.push(result.repairEvent);
     }
+    if (result.lingeringField !== undefined) lingeringFields.push(result.lingeringField);
     const firedTower: Tower = {
       ...result.tower,
       attackPoint: getEnemyVisualPosition(
@@ -828,7 +918,8 @@ function attackWithReadyTowers(state: GameState, deltaSeconds: number): GameStat
         target.routeId,
       ),
       attackFlashUntil: state.time + getTowerAttackVisualDuration(tower),
-      cooldownRemaining: getTowerCooldown(tower),
+      cooldownRemaining:
+        result.tower.signatureTriggered === "trogocytosis" ? 0 : getTowerCooldown(tower),
     };
     return firedTower;
   });
@@ -838,6 +929,7 @@ function attackWithReadyTowers(state: GameState, deltaSeconds: number): GameStat
     enemies,
     towers,
     repairEvents,
+    lingeringFields,
   };
   return nextState;
 }
@@ -866,6 +958,7 @@ export function tickGame(state: GameState, deltaSeconds: number): GameState {
   if (nextState.status === "lost") {
     return nextState;
   }
+  nextState = applyLingeringFields(nextState, elapsed);
   nextState = attackWithReadyTowers(nextState, elapsed);
   nextState = resolveDestroyedEnemies(nextState);
   nextState = resolveWin(nextState);

@@ -11,13 +11,13 @@
 #   - Resolves the entry: src/main.tsx, src/main.ts, then src/init.ts.
 #     Aborts with an actionable error if neither exists.
 #   - Generates the validated SolidJS visual components before TypeScript checks.
-#   - Verifies src/index.html, src/favicon.svg, and all four source stylesheets exist before copying;
+#   - Verifies src/index.html, src/favicon.svg, and all five source stylesheets exist before copying;
 #     aborts with an actionable error if missing.
 #   - Verifies src/index.html references dist/main.js with a module script
 #     tag (warns if missing -- the page will load but main.js is dead).
 #   - Bundles the entry into dist/main.js with esbuild (ESM, es2020,
 #     browser, minified, with sourcemap).
-#   - Copies src/index.html and all four source stylesheets into dist/.
+#   - Copies src/index.html and all five source stylesheets into dist/.
 #   - Writes dist/.nojekyll so GitHub Pages serves files starting with _.
 #   - Asserts the HTML, bundle, and component stylesheet exist before exiting.
 #
@@ -48,6 +48,7 @@ REQUIRED_FILES=(
 	src/world_visuals.css
 	src/combat_visuals.css
 	src/combat_motion.css
+	src/upgrade_visuals.css
 	generate_visual_assets.py
 )
 for required in "${REQUIRED_FILES[@]}"; do
@@ -66,6 +67,8 @@ for required in "${REQUIRED_FILES[@]}"; do
 				echo "  Create src/combat_visuals.css for combat motion." >&2 ;;
 			src/combat_motion.css)
 				echo "  Create src/combat_motion.css for combat animation and reduced-motion rules." >&2 ;;
+			src/upgrade_visuals.css)
+				echo "  Create src/upgrade_visuals.css for upgrade feedback and milestone visuals." >&2 ;;
 		esac
 		exit 1
 	fi
@@ -95,6 +98,7 @@ cp src/style.css dist/style.css
 cp src/world_visuals.css dist/world_visuals.css
 cp src/combat_visuals.css dist/combat_visuals.css
 cp src/combat_motion.css dist/combat_motion.css
+cp src/upgrade_visuals.css dist/upgrade_visuals.css
 touch dist/.nojekyll
 
 test -f dist/index.html
@@ -103,5 +107,6 @@ test -f dist/main.js
 test -f dist/world_visuals.css
 test -f dist/combat_visuals.css
 test -f dist/combat_motion.css
+test -f dist/upgrade_visuals.css
 
 echo "Built dist/ with component styles (GitHub Pages-ready)."

@@ -70,9 +70,21 @@ export function playTreatmentSound(type: TowerId): void {
   TREATMENT_TONES[type].forEach((tone, index) => playTone(tone, index * 0.025));
 }
 
-export function playUiSound(kind: "place" | "wave" | "win" | "loss"): void {
+export function playUiSound(
+  kind: "place" | "upgrade" | "signature" | "wave" | "win" | "loss",
+): void {
   const tones: Record<typeof kind, readonly Tone[]> = {
     place: [{ frequency: 660, duration: 0.07, gain: 0.04, type: "triangle" }],
+    upgrade: [
+      { frequency: 523, duration: 0.07, gain: 0.045, type: "triangle" },
+      { frequency: 659, duration: 0.09, gain: 0.05, type: "triangle" },
+    ],
+    signature: [
+      { frequency: 523, duration: 0.09, gain: 0.05, type: "triangle" },
+      { frequency: 659, duration: 0.11, gain: 0.055, type: "triangle" },
+      { frequency: 784, duration: 0.16, gain: 0.06, type: "triangle" },
+      { frequency: 1047, duration: 0.2, gain: 0.055, type: "triangle" },
+    ],
     wave: [
       { frequency: 440, duration: 0.08, gain: 0.045, type: "triangle" },
       { frequency: 660, duration: 0.1, gain: 0.045, type: "triangle" },

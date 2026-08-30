@@ -6,6 +6,14 @@ export type GameStatus = "briefing" | "playing" | "paused" | "intermission" | "w
 export type LevelId = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 export type RouteId = string;
 export type RepairOutcome = "repair" | "mismatch" | "tumor_suppressed";
+export type SignatureId =
+  | "double_tap"
+  | "lingering_cloud"
+  | "clonal_surge"
+  | "piercing_beam"
+  | "bispecific_link"
+  | "trogocytosis"
+  | "base_editor";
 export type TierValues = readonly [number, number, number, number];
 
 export interface Point {
@@ -30,7 +38,6 @@ export interface TowerConfig {
   attackVisualDurationByTier: TierValues;
   repairChanceByTier?: readonly [number, number, number, number];
   repairPityStep?: number;
-  repairGuaranteeAfterMisses?: number;
   tumorEditDamage?: number;
   tumorShedDelay?: number;
 }
@@ -42,6 +49,13 @@ export interface UpgradeConfig {
   rangeBonus: number;
   cooldownMultiplier: number;
   description: string;
+  biologicalFact: string;
+  gameRole: string;
+}
+
+export interface SignatureUpgradeConfig extends UpgradeConfig {
+  signature: SignatureId;
+  signatureName: string;
 }
 
 export interface EnemyConfig {
@@ -83,9 +97,14 @@ export interface Tower {
   cooldownRemaining: number;
   attackPoint?: Point;
   attackFlashUntil?: number;
+  upgradeFlashUntil?: number;
   attackOutcome?: RepairOutcome;
   repairMisses?: number;
   attackSequence?: number;
+  // Doctor stores shots modulo three; T-cell stores capped same-target stacks.
+  signatureCharge?: number;
+  signatureTargetId?: number;
+  signatureTriggered?: SignatureId;
 }
 
 export interface CellRepairEvent {
@@ -116,7 +135,16 @@ export interface GameState {
   nextTowerId: number;
   pendingSpawns: PendingSpawn[];
   repairEvents: CellRepairEvent[];
+  lingeringFields: LingeringField[];
   time: number;
+}
+
+export interface LingeringField {
+  position: Point;
+  radius: number;
+  damagePerSecond: number;
+  expiresAt: number;
+  sourceTowerId: number;
 }
 
 export interface SettingsSave {
