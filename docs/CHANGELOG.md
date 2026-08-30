@@ -30,6 +30,8 @@
   obsolete upgrade-state and CRISPR guarantee configuration ownership.
 - Made treatment identity, tiers, and treatment-specific configuration requirements explicit
   TypeScript contracts. Saved settings now have their own persistence-owned boundary.
+- Routed player-command feedback through accepted simulation state changes, so rejected keyboard or
+  stale UI actions no longer clear selection, play action audio, or announce a signature unlock.
 
 ### Developer Tests and Notes
 

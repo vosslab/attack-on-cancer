@@ -57,6 +57,8 @@ interface UiState {
   cursor: Point;
 }
 
+type GameAction = (state: GameState) => GameState;
+
 function formatTreatmentName(type: TowerId): string {
   return TOWERS[type].name;
 }
@@ -124,6 +126,20 @@ export function App(): JSX.Element {
       : `${level().title} campaign map`,
   );
 
+  /**
+   * Simulation actions return their original state when the player request is rejected.
+   * Keep UI feedback downstream of that authoritative outcome instead of duplicating rules here.
+   */
+  function applyGameAction(action: GameAction): boolean {
+    const current = game();
+    const next = action(current);
+    if (next === current) {
+      return false;
+    }
+    setGame(next);
+    return true;
+  }
+
   function resetGame(difficulty: DifficultyId): void {
     setGame(createGameState(difficulty));
     setCellDeaths([]);
@@ -132,7 +148,9 @@ export function App(): JSX.Element {
   }
 
   function beginWave(): void {
-    setGame((current) => startWave(current));
+    if (!applyGameAction(startWave)) {
+      return;
+    }
     setUi({ selectedTowerId: undefined, selectedEnemyId: undefined });
     if (soundEnabled()) {
       activateAudio();
@@ -141,8 +159,9 @@ export function App(): JSX.Element {
   }
 
   function advanceCampaignLevel(): void {
-    // The pure simulation is the authority for sequential campaign eligibility.
-    setGame((current) => advanceLevel(current));
+    if (!applyGameAction(advanceLevel)) {
+      return;
+    }
     setCellDeaths([]);
     setCellRepairs([]);
     setUi({ selectedTreatment: undefined, selectedTowerId: undefined, selectedEnemyId: undefined });
@@ -159,7 +178,7 @@ export function App(): JSX.Element {
   }
 
   function pauseGame(): void {
-    setGame((current) => togglePause(current));
+    applyGameAction(togglePause);
   }
 
   function changeSpeed(nextSpeed: 1 | 2 | 4): void {
@@ -180,15 +199,13 @@ export function App(): JSX.Element {
     if (treatment === undefined) {
       return;
     }
-    const validPlacement = canPlaceTower(game(), treatment, position);
-    // The simulation revalidates this untrusted pointer position before committing a tower.
-    setGame((current) => placeTower(current, treatment, position));
-    if (validPlacement) {
-      setUi({ selectedTreatment: undefined });
-      if (soundEnabled()) {
-        activateAudio();
-        playUiSound("place");
-      }
+    if (!applyGameAction((current) => placeTower(current, treatment, position))) {
+      return;
+    }
+    setUi({ selectedTreatment: undefined });
+    if (soundEnabled()) {
+      activateAudio();
+      playUiSound("place");
     }
   }
 
@@ -239,12 +256,12 @@ export function App(): JSX.Element {
 
   function improveTower(): void {
     const tower = selectedTower();
-    if (tower !== undefined) {
-      setGame((current) => upgradeTower(current, tower.id));
-      if (soundEnabled()) {
-        activateAudio();
-        playUiSound("upgrade");
-      }
+    if (tower === undefined || !applyGameAction((current) => upgradeTower(current, tower.id))) {
+      return;
+    }
+    if (soundEnabled()) {
+      activateAudio();
+      playUiSound("upgrade");
     }
   }
 
@@ -262,31 +279,32 @@ export function App(): JSX.Element {
     if (tower === undefined) return;
     const signature = UPGRADE_PATHS[tower.type][2];
     const beforeTier = tower.tier;
-    setGame((current) => upgradeTower(current, tower.id));
-    if (beforeTier === 2) {
-      const signatureCelebration = Date.now();
-      setUi({
-        signatureConfirmTowerId: undefined,
-        signatureBanner: signature.signatureName,
-        signatureCelebration,
-      });
-      window.setTimeout(() => {
-        if (ui.signatureCelebration === signatureCelebration)
-          setUi("signatureCelebration", undefined);
-      }, 1200);
-      if (soundEnabled()) {
-        activateAudio();
-        playUiSound("signature");
-      }
+    const upgraded = applyGameAction((current) => upgradeTower(current, tower.id));
+    if (!upgraded || beforeTier !== 2) {
+      return;
+    }
+    const signatureCelebration = Date.now();
+    setUi({
+      signatureConfirmTowerId: undefined,
+      signatureBanner: signature.signatureName,
+      signatureCelebration,
+    });
+    window.setTimeout(() => {
+      if (ui.signatureCelebration === signatureCelebration)
+        setUi("signatureCelebration", undefined);
+    }, 1200);
+    if (soundEnabled()) {
+      activateAudio();
+      playUiSound("signature");
     }
   }
 
   function removeTower(): void {
     const tower = selectedTower();
-    if (tower !== undefined) {
-      setGame((current) => sellTower(current, tower.id));
-      setUi({ selectedTowerId: undefined });
+    if (tower === undefined || !applyGameAction((current) => sellTower(current, tower.id))) {
+      return;
     }
+    setUi({ selectedTowerId: undefined });
   }
 
   function keyboardInput(event: KeyboardEvent): void {
