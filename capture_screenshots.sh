@@ -44,12 +44,21 @@ if [ "${server_ready}" -ne 1 ]; then
 fi
 
 mkdir -p "${capture_dir}"
-node tools/capture_docs_screenshots.mjs "http://127.0.0.1:${port}/dist/" "${capture_dir}"
+node tools/capture_docs_screenshots.mjs \
+	"http://127.0.0.1:${port}/dist/" \
+	"http://127.0.0.1:${port}/test-results/visual-assets/" \
+	"${capture_dir}"
 node tools/capture_visual_catalog.mjs \
 	"http://127.0.0.1:${port}/test-results/visual-assets/"
 
 mkdir -p docs/screenshots
-for screenshot in skin_tissue_battle.png antibody_targeting.png; do
+for screenshot in \
+	skin_tissue_battle.png \
+	antibody_targeting.png \
+	chemotherapy_tier_three.png \
+	doctor_signature_review.png \
+	primary_tumor_tooltip.png \
+	tower_tier_palette.png; do
 	cp "${capture_dir}/${screenshot}" "docs/screenshots/${screenshot}"
 	echo "Captured docs/screenshots/${screenshot}"
 done

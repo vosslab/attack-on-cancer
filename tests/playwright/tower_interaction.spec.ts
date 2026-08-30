@@ -40,7 +40,7 @@ async function treatmentPoints(page: Page): Promise<number> {
 }
 
 async function expectDoctorInspector(page: Page): Promise<void> {
-  await expect(inspector(page).getByRole("heading", { name: "Doctor - tier 1" })).toBeVisible();
+  await expect(inspector(page).getByRole("heading", { name: "Doctor" })).toBeVisible();
   await expect(inspector(page).getByRole("button", { name: /^Upgrade:/ })).toBeVisible();
   await expect(inspector(page).getByRole("button", { name: /^Sell for \d+ TP$/ })).toBeVisible();
 }
@@ -145,18 +145,20 @@ test("a signature upgrade confirms before spending and leaves a visible unlocked
     .click();
   const pointsBeforeSignature = await treatmentPoints(page);
   await inspector(page)
-    .getByRole("button", { name: /^Unlock signature:/ })
+    .getByRole("button", { name: /^Review signature:/ })
     .click();
-  const dialog = page.getByRole("dialog", { name: "Confirm signature upgrade" });
-  await expect(dialog).toBeVisible();
-  await dialog.getByRole("button", { name: "No, keep planning" }).click();
-  await expect(dialog).toHaveCount(0);
+  const confirmation = inspector(page).getByLabel("Confirm signature upgrade");
+  await expect(confirmation).toBeVisible();
+  await confirmation.getByRole("button", { name: "Keep planning" }).click();
+  await expect(confirmation).toHaveCount(0);
   await expect.poll(() => treatmentPoints(page)).toBe(pointsBeforeSignature);
 
   await inspector(page)
-    .getByRole("button", { name: /^Unlock signature:/ })
+    .getByRole("button", { name: /^Review signature:/ })
     .click();
-  await dialog.getByRole("button", { name: "Yes, unlock signature" }).click();
+  await inspector(page)
+    .getByRole("button", { name: /^Unlock for \d+ TP$/ })
+    .click();
   await expect(page.getByRole("button", { name: "Doctor treatment, tier 4, id 1" })).toBeVisible();
   await expect(page.getByRole("status")).toHaveText(/Signature unlocked: DOUBLE TAP/);
   await expect(page.locator("[data-signature-confetti]")).toBeVisible();

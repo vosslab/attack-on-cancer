@@ -14,15 +14,67 @@ interface Placement {
   position: { x: number; y: number };
 }
 
-const TOWER_CASES = [
-  { name: /1\. Doctor/, type: "doctor", cost: 90 },
-  { name: /2\. Chemotherapy/, type: "chemotherapy", cost: 150 },
-  { name: /3\. Cytotoxic T Cell/, type: "t_cell", cost: 125 },
-  { name: /4\. Radiation Bot/, type: "radiation", cost: 240 },
-  { name: /5\. Antibody Therapy/, type: "antibody", cost: 145 },
-  { name: /6\. CAR Macrophage/, type: "macrophage", cost: 210 },
-  { name: /7\. CRISPR Repair Editor/, type: "crispr", cost: 180 },
-] as const;
+type MaterialPaint = "fill" | "stroke";
+
+interface TowerCase {
+  readonly name: RegExp;
+  readonly type: string;
+  readonly cost: number;
+  readonly materialSelector: string;
+  readonly materialPaint: MaterialPaint;
+}
+
+const TOWER_CASES: readonly TowerCase[] = [
+  {
+    name: /1\. Doctor/,
+    type: "doctor",
+    cost: 90,
+    materialSelector: ".doctor-fluid",
+    materialPaint: "fill",
+  },
+  {
+    name: /2\. Chemotherapy/,
+    type: "chemotherapy",
+    cost: 150,
+    materialSelector: ".chemo-fluid",
+    materialPaint: "fill",
+  },
+  {
+    name: /3\. Cytotoxic T Cell/,
+    type: "t_cell",
+    cost: 125,
+    materialSelector: ".t-cell-granule",
+    materialPaint: "fill",
+  },
+  {
+    name: /4\. Radiation Bot/,
+    type: "radiation",
+    cost: 240,
+    materialSelector: ".radiation-core-lens",
+    materialPaint: "fill",
+  },
+  {
+    name: /5\. Antibody Therapy/,
+    type: "antibody",
+    cost: 145,
+    materialSelector: ".antibody-binding",
+    materialPaint: "fill",
+  },
+  {
+    name: /6\. CAR Macrophage/,
+    type: "macrophage",
+    cost: 210,
+    materialSelector: ".macrophage-lysosomes circle",
+    materialPaint: "fill",
+  },
+  {
+    name: /7\. CRISPR Repair Editor/,
+    type: "crispr",
+    cost: 180,
+    materialSelector: ".crispr-guide",
+    materialPaint: "stroke",
+  },
+];
 
 const SKIN_TISSUE_CAMPAIGN_PLACEMENTS: Placement[] = [
   { name: /3\. Cytotoxic T Cell/, cost: 125, position: { x: 330, y: 100 } },
@@ -151,6 +203,16 @@ test("every treatment renders its generated tier and visibly evolves after an up
     const tower = page.locator(`[data-tower-type="${towerCase.type}"]`).first();
     await expect(tower).toHaveAttribute("data-visual-tier", "0");
     await expect(tower.locator('[data-aoc-panel="tier-0"]')).toBeVisible();
+    const tierOneMaterial = tower
+      .locator(`[data-aoc-panel="tier-1"] ${towerCase.materialSelector}`)
+      .first();
+    const initialMaterial = tower
+      .locator(`[data-aoc-panel="tier-0"] ${towerCase.materialSelector}`)
+      .first();
+    const initialPaint = await initialMaterial.evaluate(
+      (element, paint) => getComputedStyle(element)[paint],
+      towerCase.materialPaint,
+    );
     await tower.click();
     await page.getByRole("button", { name: /^Upgrade:/ }).click();
     await expect(tower).toHaveAttribute("data-visual-tier", "1");
@@ -160,6 +222,14 @@ test("every treatment renders its generated tier and visibly evolves after an up
       ),
     ).toBeVisible();
     await expect(tower.locator('[data-aoc-asset="effect-upgrade-burst"]')).toBeVisible();
+    await expect
+      .poll(() =>
+        tierOneMaterial.evaluate(
+          (element, paint) => getComputedStyle(element)[paint],
+          towerCase.materialPaint,
+        ),
+      )
+      .not.toBe(initialPaint);
   }
 });
 

@@ -92,7 +92,7 @@ test("a player can select a treatment, place it in open tissue, and inspect it",
 
   await page.getByRole("button", { name: "Doctor treatment, tier 1, id 1", exact: true }).click();
   const inspector = page.getByRole("complementary", { name: "Selected treatment inspector" });
-  await expect(inspector.getByRole("heading", { name: "Doctor - tier 1" })).toBeVisible();
+  await expect(inspector.getByRole("heading", { name: "Doctor" })).toBeVisible();
   await expect(inspector.getByText("A reliable syringe for nearby cells.")).toBeVisible();
 });
 

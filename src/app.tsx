@@ -50,7 +50,6 @@ interface UiState {
   selectedTreatment?: TowerId;
   selectedTowerId?: number;
   selectedEnemyId?: number;
-  inspectOpen: boolean;
   settingsOpen: boolean;
   signatureConfirmTowerId?: number;
   signatureBanner?: string;
@@ -84,7 +83,6 @@ export function App(): JSX.Element {
   const [cellDeaths, setCellDeaths] = createSignal<CellDeathVisual[]>([]);
   const [cellRepairs, setCellRepairs] = createSignal<CellRepairVisual[]>([]);
   const [ui, setUi] = createStore<UiState>({
-    inspectOpen: false,
     settingsOpen: false,
     cursor: { x: 470, y: 120 },
   });
@@ -96,9 +94,6 @@ export function App(): JSX.Element {
     ui.selectedTowerId === undefined
       ? undefined
       : game().towers.find((tower) => tower.id === ui.selectedTowerId),
-  );
-  const selectedType = createMemo<TowerId | undefined>(
-    () => selectedTower()?.type ?? ui.selectedTreatment,
   );
   const selectedEnemy = createMemo<Enemy | undefined>(() =>
     ui.selectedEnemyId === undefined
@@ -224,12 +219,22 @@ export function App(): JSX.Element {
   }
 
   function pickTower(tower: Tower): void {
-    setUi({ selectedTowerId: tower.id, selectedTreatment: undefined, selectedEnemyId: undefined });
+    setUi({
+      selectedTowerId: tower.id,
+      selectedTreatment: undefined,
+      selectedEnemyId: undefined,
+      signatureConfirmTowerId: undefined,
+    });
   }
 
   function pickEnemy(event: MouseEvent, enemy: Enemy): void {
     event.stopPropagation();
-    setUi({ selectedEnemyId: enemy.id, selectedTowerId: undefined, selectedTreatment: undefined });
+    setUi({
+      selectedEnemyId: enemy.id,
+      selectedTowerId: undefined,
+      selectedTreatment: undefined,
+      signatureConfirmTowerId: undefined,
+    });
   }
 
   function improveTower(): void {
@@ -593,6 +598,7 @@ export function App(): JSX.Element {
 
       <section class="controls-panel">
         <div class="treatment-tray" aria-label="Treatment tray">
+          <p class="tray-label">Place a treatment</p>
           <For each={TOWER_IDS}>
             {(type, index) => (
               <button
@@ -650,37 +656,13 @@ export function App(): JSX.Element {
           <TowerInspector
             tower={tower()}
             treatmentPoints={game().tp}
+            signatureConfirmation={ui.signatureConfirmTowerId === tower().id}
             onUpgrade={improveTower}
             onRequestSignature={requestSignatureUnlock}
+            onConfirmSignature={confirmSignatureUnlock}
+            onCancelSignature={cancelSignatureUnlock}
             onSell={removeTower}
           />
-        )}
-      </Show>
-
-      <Show when={ui.signatureConfirmTowerId !== undefined && selectedTower()}>
-        {(tower) => (
-          <div
-            class="signature-modal-backdrop"
-            role="presentation"
-            onPointerDown={cancelSignatureUnlock}
-          >
-            <section
-              class="signature-modal"
-              role="dialog"
-              aria-modal="true"
-              aria-label="Confirm signature upgrade"
-              onPointerDown={(event) => event.stopPropagation()}
-            >
-              <h2>Unlock {UPGRADE_PATHS[tower().type][2].signatureName}?</h2>
-              <p>{UPGRADE_PATHS[tower().type][2].gameRole}</p>
-              <button type="button" onClick={confirmSignatureUnlock}>
-                Yes, unlock signature
-              </button>
-              <button type="button" onClick={cancelSignatureUnlock}>
-                No, keep planning
-              </button>
-            </section>
-          </div>
         )}
       </Show>
       <Show when={ui.signatureBanner}>
@@ -700,34 +682,15 @@ export function App(): JSX.Element {
         )}
       </Show>
 
-      <section class="inspect">
-        <button
-          type="button"
-          aria-expanded={ui.inspectOpen}
-          onClick={() => setUi("inspectOpen", !ui.inspectOpen)}
-        >
-          Inspect {ui.inspectOpen ? "-" : "+"}
-        </button>
-        <Show when={ui.inspectOpen}>
-          <Show
-            when={selectedEnemy()}
-            fallback={
-              <Show
-                when={selectedType()}
-                fallback={
-                  <p>
-                    Choose a treatment, tower, or cancer cell to see its optional biology flavor.
-                  </p>
-                }
-              >
-                {(type) => <p>{TOWERS[type()].description}</p>}
-              </Show>
-            }
-          >
-            {(enemy) => <p>{ENEMIES[enemy().type].description}</p>}
-          </Show>
-        </Show>
-      </section>
+      <Show when={selectedEnemy()}>
+        {(enemy) => (
+          <aside class="target-context" aria-label="Selected cancer cell">
+            <p class="inspector-kicker">Selected cancer cell</p>
+            <h2>{ENEMIES[enemy().type].name}</h2>
+            <p>{ENEMIES[enemy().type].description}</p>
+          </aside>
+        )}
+      </Show>
       <Show when={ui.settingsOpen}>
         <aside class="settings-popover">
           <h2>Settings</h2>

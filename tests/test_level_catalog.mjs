@@ -381,10 +381,7 @@ test("preserves Level 1 and Level 2 route, wave, and economy contracts", () => {
       },
       waves: legacyWaves(
         [
-          [
-            { type: "basic", count: 30, gap: 0.19 },
-            { type: "fast", count: 22, gap: 0.17 },
-          ],
+          [{ type: "basic", count: 5, gap: 0.7 }],
           [
             { type: "tough", count: 16, gap: 0.38 },
             { type: "dividing", count: 20, gap: 0.25 },

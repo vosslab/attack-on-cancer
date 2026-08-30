@@ -8,50 +8,149 @@
   cursor: pointer;
   --tier-accent: #f7fbff;
 }
-.tower[data-visual-tier="1"], .attack-effect[data-visual-tier="1"] { --tier-accent: #43e6ff; }
-.tower[data-visual-tier="2"], .attack-effect[data-visual-tier="2"] { --tier-accent: #ffc247; }
-.tower[data-visual-tier="3"], .attack-effect[data-visual-tier="3"] { --tier-accent: #f08cff; }
+.tower[data-visual-tier="1"],
+.attack-effect[data-visual-tier="1"] {
+  --tier-accent: #43e6ff;
+}
+.tower[data-visual-tier="2"],
+.attack-effect[data-visual-tier="2"] {
+  --tier-accent: #ffc247;
+}
+.tower[data-visual-tier="3"],
+.attack-effect[data-visual-tier="3"] {
+  --tier-accent: #f08cff;
+}
 .tower-doctor {
   --tower-base: #3178c6;
   --tower-dark: #173858;
   --tower-face: #e9f8ff;
   --tower-light: #9fd7ff;
+  --doctor-fluid: #9fd7ff;
+}
+.tower-doctor[data-visual-tier="1"] {
+  --doctor-fluid: #64ddf4;
+}
+.tower-doctor[data-visual-tier="2"] {
+  --doctor-fluid: #57d7a6;
+}
+.tower-doctor[data-visual-tier="3"] {
+  --doctor-fluid: #ffc45d;
 }
 .tower-chemotherapy {
   --tower-base: #9b45c6;
   --tower-dark: #522468;
   --tower-face: #f2d9ff;
   --tower-light: #dca4f5;
+  --chemo-fluid: #8f49b4;
+  --chemo-fluid-light: #dfa6f5;
+}
+.tower-chemotherapy[data-visual-tier="1"] {
+  --chemo-fluid: #3c9ddc;
+  --chemo-fluid-light: #91def8;
+}
+.tower-chemotherapy[data-visual-tier="2"] {
+  --chemo-fluid: #188fd6;
+  --chemo-fluid-light: #73dcff;
+}
+.tower-chemotherapy[data-visual-tier="3"] {
+  --chemo-fluid: #0776bf;
+  --chemo-fluid-light: #a8f0ff;
 }
 .tower-t_cell {
   --tower-base: #e5534b;
   --tower-dark: #7f2b32;
   --tower-face: #ffb3a9;
   --tower-light: #ffd1ca;
+  --t-cell-granule: #ffd36e;
+  --t-cell-synapse: #ffb3a9;
+}
+.tower-t_cell[data-visual-tier="1"] {
+  --t-cell-granule: #b9ef7a;
+  --t-cell-synapse: #c9f58a;
+}
+.tower-t_cell[data-visual-tier="2"] {
+  --t-cell-granule: #61dccc;
+  --t-cell-synapse: #91eee5;
+}
+.tower-t_cell[data-visual-tier="3"] {
+  --t-cell-granule: #bd9bff;
+  --t-cell-synapse: #d9c2ff;
 }
 .tower-radiation {
   --tower-base: #ec9c27;
   --tower-dark: #704516;
   --tower-face: #fff1a9;
   --tower-light: #ffd56a;
+  --radiation-energy: #fff1a9;
+  --radiation-charge: #ffd56a;
+}
+.tower-radiation[data-visual-tier="1"] {
+  --radiation-energy: #6fe1ff;
+  --radiation-charge: #64d9ff;
+}
+.tower-radiation[data-visual-tier="2"] {
+  --radiation-energy: #b5f07b;
+  --radiation-charge: #91e86c;
+}
+.tower-radiation[data-visual-tier="3"] {
+  --radiation-energy: #ff9ed0;
+  --radiation-charge: #f08cff;
 }
 .tower-antibody {
   --tower-base: #18a890;
   --tower-dark: #0a5f56;
   --tower-face: #bff9e8;
   --tower-light: #77e5c8;
+  --antibody-binding: #77e5c8;
+}
+.tower-antibody[data-visual-tier="1"] {
+  --antibody-binding: #74d9ff;
+}
+.tower-antibody[data-visual-tier="2"] {
+  --antibody-binding: #b99aff;
+}
+.tower-antibody[data-visual-tier="3"] {
+  --antibody-binding: #ffd36e;
 }
 .tower-macrophage {
   --tower-base: #287f85;
   --tower-dark: #173858;
   --tower-face: #d2faf2;
   --tower-light: #7ed9cf;
+  --macrophage-cup: #d2faf2;
+  --macrophage-lysosome: #f2bd56;
+}
+.tower-macrophage[data-visual-tier="1"] {
+  --macrophage-cup: #c6ef98;
+  --macrophage-lysosome: #a9df72;
+}
+.tower-macrophage[data-visual-tier="2"] {
+  --macrophage-cup: #a7f4e5;
+  --macrophage-lysosome: #55d4bf;
+}
+.tower-macrophage[data-visual-tier="3"] {
+  --macrophage-cup: #b9cbff;
+  --macrophage-lysosome: #7eabff;
 }
 .tower-crispr {
   --tower-base: #5968d8;
   --tower-dark: #25285f;
   --tower-face: #edf0ff;
   --tower-light: #a7f06e;
+  --crispr-guide: #a7f06e;
+  --crispr-dna: #5968d8;
+}
+.tower-crispr[data-visual-tier="1"] {
+  --crispr-guide: #68dfff;
+  --crispr-dna: #4c9be4;
+}
+.tower-crispr[data-visual-tier="2"] {
+  --crispr-guide: #ffd469;
+  --crispr-dna: #b67be6;
+}
+.tower-crispr[data-visual-tier="3"] {
+  --crispr-guide: #ff9fcc;
+  --crispr-dna: #dd6eaa;
 }
 .tower-base {
   fill: var(--tower-base);
@@ -79,12 +178,35 @@
   stroke: var(--tower-dark);
   stroke-width: 1;
 }
-.tower-tier-badge { pointer-events: none; }
-.tower-tier-glyph { fill: var(--tier-accent); stroke: #102238; stroke-width: 2.2; filter: drop-shadow(0 0 2px var(--tier-accent)); }
-.tower-tier-number { fill: #102238; font-size: 8px; font-weight: 800; paint-order: stroke; stroke: #f7fbff; stroke-width: 0.8px; }
-.tower[data-visual-tier="1"] .tower-tier-glyph { d: path("M0-9L9 0L0 9L-9 0Z"); }
-.tower[data-visual-tier="2"] .tower-tier-glyph { d: path("M-10-4L-4 0L-10 4M0-4L6 0L0 4"); fill: none; stroke-width: 3; }
-.tower[data-visual-tier="3"] .tower-tier-glyph { d: path("M0-11L3-4L10-6L6 0L12 4L4 5L4 12L0 6L-5 11L-4 3L-11 2L-5-2L-8-9L-2-5Z"); stroke-width: 2; }
+.tower-tier-badge {
+  pointer-events: none;
+}
+.tower-tier-glyph {
+  fill: var(--tier-accent);
+  stroke: #102238;
+  stroke-width: 2.2;
+  filter: drop-shadow(0 0 2px var(--tier-accent));
+}
+.tower-tier-number {
+  fill: #102238;
+  font-size: 8px;
+  font-weight: 800;
+  paint-order: stroke;
+  stroke: #f7fbff;
+  stroke-width: 0.8px;
+}
+.tower[data-visual-tier="1"] .tower-tier-glyph {
+  d: path("M0-9L9 0L0 9L-9 0Z");
+}
+.tower[data-visual-tier="2"] .tower-tier-glyph {
+  d: path("M-10-4L-4 0L-10 4M0-4L6 0L0 4");
+  fill: none;
+  stroke-width: 3;
+}
+.tower[data-visual-tier="3"] .tower-tier-glyph {
+  d: path("M0-11L3-4L10-6L6 0L12 4L4 5L4 12L0 6L-5 11L-4 3L-11 2L-5-2L-8-9L-2-5Z");
+  stroke-width: 2;
+}
 .tower-aura,
 .tower-range {
   fill: none;
@@ -103,10 +225,20 @@
   fill: transparent;
   pointer-events: all;
 }
-.attack-impact-art { transform-box: fill-box; transform-origin: center; }
-.attack-effect[data-visual-tier="1"] .attack-impact-art { transform: scale(1.12); }
-.attack-effect[data-visual-tier="2"] .attack-impact-art { transform: scale(1.28); }
-.attack-effect[data-visual-tier="3"] .attack-impact-art { transform: scale(1.48); filter: drop-shadow(0 0 5px var(--tier-accent)); }
+.attack-impact-art {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.attack-effect[data-visual-tier="1"] .attack-impact-art {
+  transform: scale(1.12);
+}
+.attack-effect[data-visual-tier="2"] .attack-impact-art {
+  transform: scale(1.28);
+}
+.attack-effect[data-visual-tier="3"] .attack-impact-art {
+  transform: scale(1.48);
+  filter: drop-shadow(0 0 5px var(--tier-accent));
+}
 /* SVG groups do not receive the browser's regular button outline. Keep focus on the hit ring. */
 .tower:focus .tower-hit-target {
   fill: none;
@@ -153,7 +285,7 @@
   opacity: 0.82;
 }
 .doctor-fluid {
-  fill: var(--tower-light);
+  fill: var(--doctor-fluid);
   stroke: var(--tower-base);
   stroke-width: 1.2;
 }
@@ -185,7 +317,7 @@
   stroke-width: 2;
 }
 .chemo-fluid {
-  fill: var(--tower-base);
+  fill: var(--chemo-fluid, var(--tower-base));
   opacity: 0.82;
 }
 .chemo-fluid-secondary,
@@ -198,7 +330,7 @@
   stroke-width: 1.5;
 }
 .chemo-bubble {
-  fill: var(--tower-light);
+  fill: var(--chemo-fluid-light, var(--tower-light));
   stroke: var(--tower-dark);
   stroke-width: 1;
 }
@@ -263,7 +395,7 @@
 .t-cell-synapse,
 .t-cell-synapse-secondary {
   fill: none;
-  stroke: var(--tower-face);
+  stroke: var(--t-cell-synapse);
   stroke-linecap: round;
   stroke-width: 4;
 }
@@ -285,7 +417,7 @@
   stroke-width: 1.5;
 }
 .t-cell-granule {
-  fill: #ffd36e;
+  fill: var(--t-cell-granule);
   stroke: var(--tower-dark);
   stroke-width: 1;
 }
@@ -327,7 +459,7 @@
 }
 .radiation-core-lens,
 .radiation-emitter-lens {
-  fill: var(--tower-face);
+  fill: var(--radiation-energy);
   stroke: var(--tower-dark);
   stroke-width: 2;
 }
@@ -338,6 +470,9 @@
   stroke: var(--tower-dark);
   stroke-linecap: round;
   stroke-width: 2;
+}
+.radiation-charge {
+  stroke: var(--radiation-charge);
 }
 .tower-radiation .aoc-motion--track {
   animation: emitter-track 2.8s var(--actor-phase) ease-in-out infinite alternate;
@@ -375,7 +510,7 @@
 }
 .antibody-binding,
 .antibody-molecule {
-  fill: var(--tower-light);
+  fill: var(--antibody-binding);
   stroke: var(--tower-dark);
   stroke-width: 1.5;
 }
@@ -394,7 +529,7 @@
 }
 .crispr-dna-a,
 .crispr-dna-b {
-  stroke: var(--tower-base);
+  stroke: var(--crispr-dna);
   stroke-width: 3;
 }
 .crispr-dna-rungs,
@@ -416,9 +551,12 @@
   stroke-linecap: round;
   stroke-width: 2;
 }
+.crispr-guide {
+  stroke: var(--crispr-guide);
+}
 .crispr-guide-tip,
 .crispr-focus {
-  fill: var(--tower-light);
+  fill: var(--crispr-guide);
   stroke: var(--tower-dark);
   stroke-width: 1.5;
 }
@@ -426,6 +564,28 @@
 .crispr-confidence-halo {
   fill: none;
   stroke: var(--tower-light);
+}
+.macrophage-nucleus {
+  fill: var(--tower-dark);
+  fill-opacity: 0.86;
+  stroke: var(--macrophage-cup);
+  stroke-width: 1.5;
+}
+.macrophage-cup {
+  fill: none;
+  stroke: var(--macrophage-cup);
+  stroke-linecap: round;
+}
+.macrophage-receptors {
+  fill: none;
+  stroke: var(--macrophage-cup);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.macrophage-lysosomes {
+  fill: var(--macrophage-lysosome);
+  stroke: var(--tower-dark);
+  stroke-width: 1;
 }
 .crispr-confidence-halo {
   stroke-dasharray: 3 5;
@@ -819,9 +979,16 @@
 .attack-effect {
   animation: attack-flash var(--attack-tier-duration, 0.22s) ease-out both;
 }
-.attack-effect[data-visual-tier="1"] .attack-path { stroke-width: 4px; }
-.attack-effect[data-visual-tier="2"] .attack-path { stroke-width: 5px; }
-.attack-effect[data-visual-tier="3"] .attack-path { stroke-width: 6px; filter: drop-shadow(0 0 3px var(--tier-accent)); }
+.attack-effect[data-visual-tier="1"] .attack-path {
+  stroke-width: 4px;
+}
+.attack-effect[data-visual-tier="2"] .attack-path {
+  stroke-width: 5px;
+}
+.attack-effect[data-visual-tier="3"] .attack-path {
+  stroke-width: 6px;
+  filter: drop-shadow(0 0 3px var(--tier-accent));
+}
 .attack-path,
 .radiation-core {
   stroke-linecap: round;

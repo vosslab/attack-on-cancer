@@ -2,6 +2,13 @@
 
 ### Additions and New Features
 
+- Added reproducible documentation captures for the in-game Tier 3 Chemotherapy Command deck
+  and the all-treatment upgrade palette, then embedded both progression views in the README.
+- Expanded the reproducible documentation capture set with the inline Tier 4 Doctor signature
+  review and the Primary tumor's in-map learning tooltip, then embedded both views in the README.
+- Added tower-specific upgrade-material palettes. Doctor doses, Chemotherapy reservoirs, T Cell
+  granules, Radiation energy cores, Antibody binding molecules, CAR Macrophage lysosomes, and
+  CRISPR guide/RNA hardware each change color through their upgrade tiers.
 - Replaced the shared treatment-upgrade list with validated per-treatment paths that own their
   costs, biology facts, game roles, and tier-4 signature abilities.
 - Added the seven bounded signature mechanics, tier-aware upgrade burst artwork, upgrade-card
@@ -9,6 +16,13 @@
 
 ### Behavior or Interface Changes
 
+- Rebalanced Cluster Corridor's first wave for its fresh-field handoff: it now introduces five
+  widely spaced basic cells before later waves reintroduce faster and mixed threats.
+- Rebuilt the selected-treatment interface as a contextual Command deck: placement now has its
+  own labeled tray, tiers and upgrade evidence stay together, selling remains secondary, and the
+  tier-4 signature decision is an inline review rather than a screen-blocking modal. Selected
+  cancer cells now receive their own concise context card, replacing the generic Inspect
+  accordion. Chemotherapy's liquid shifts from purple toward blue across upgraded visual tiers.
 - Tier-4 upgrades now require a visible confirm/cancel decision; ordinary upgrades remain
   one-click actions. The Fibrotic Sieve entry reinforcement now supports its constrained mixed
   defense under the new treatment-specific upgrade costs.
@@ -22,6 +36,12 @@
 - Added deterministic signature-contract tests and built-browser coverage for tier-4 cancellation
   and confirmation. Added deterministic time-partition coverage for LINGERING CLOUD damage.
   Generated-art validation accepts the new editable upgrade-burst sheet.
+- Updated the existing browser interaction contracts for the Command deck and inline signature
+  review; no new snapshot or one-off visual test was retained.
+- Extended the existing visual-evolution browser contract to confirm each tower's designated
+  material changes paint when it reaches Tier 2.
+- Added a deterministic real-simulation balance contract showing the minimum Challenge rebuild
+  clears Cluster Corridor's introductory wave without reaching metastasis capacity.
 
 ## 2026-08-25
 

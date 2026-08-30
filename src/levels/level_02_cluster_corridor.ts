@@ -285,10 +285,7 @@ export const LEVEL_02_CLUSTER_CORRIDOR: LevelDefinition = {
   },
   waves: [
     {
-      entries: [
-        { type: "basic", count: 30, gap: 0.19, routeCycle: ["cluster-corridor"] },
-        { type: "fast", count: 22, gap: 0.17, routeCycle: ["cluster-corridor"] },
-      ],
+      entries: [{ type: "basic", count: 5, gap: 0.7, routeCycle: ["cluster-corridor"] }],
     },
     {
       entries: [

@@ -3,8 +3,8 @@
 A bright browser tower-defense game for students and curious players who want to explore a
 microscopic cancer-defense campaign through readable, strategic treatment placement.
 
-**Status:** a playable, linear ten-level campaign that builds as a static GitHub Pages site. It
-uses no accounts, backend, analytics, or external art assets.
+**Status:** a playable, linear ten-level campaign that builds as a static site. It uses no
+accounts, backend, analytics, or external art assets.
 
 **Play online:** [vosslab.github.io/attack-on-cancer](https://vosslab.github.io/attack-on-cancer/)
 
@@ -27,7 +27,7 @@ The campaign is a teaching game model, not clinical advice, a diagnostic tool, o
 patient outcomes. In particular, the CRISPR Repair Editor is a speculative game abstraction, not
 an approved treatment.
 
-## A microscopic campaign
+## See progression in play
 
 Skin Tissue introduces open-tissue placement. Cluster Corridor asks for a fresh build along a
 longer, winding route. Levels 3-10 add route structure and original microscopic world sheets:
@@ -37,10 +37,18 @@ Fibrotic Sieve, Marrow Lattice, and Metastatic Confluence.
 Each level opens only after the prior field is contained. The campaign deliberately has no level
 select or mid-campaign replay screen: the next map is part of the strategic progression.
 
+The treatment artwork evolves with its upgrades. The command deck explains the next biological
+and gameplay change, while each tower's visible material palette makes a stronger treatment easy
+to spot in the middle of a wave.
+
 <!-- screenshots:begin (managed by screenshot-docs) -->
 
 ![Paused Level 1 Skin Tissue battlefield with treatments guarding the cell route](docs/screenshots/skin_tissue_battle.png)
 ![Selected Antibody Therapy treatment showing its range and the accessible treatment inspector](docs/screenshots/antibody_targeting.png)
+![Tier 3 Chemotherapy treatment with blue infusion liquid and its Command deck](docs/screenshots/chemotherapy_tier_three.png)
+![Tier 4 Doctor signature review kept inline in the Command deck](docs/screenshots/doctor_signature_review.png)
+![Primary tumor learning tooltip connecting the map object to its biology and game role](docs/screenshots/primary_tumor_tooltip.png)
+![All seven treatment towers shown through their four visually distinct upgrade tiers](docs/screenshots/tower_tier_palette.png)
 ![Level 3 Capillary Crossroads at 1600 pixels with its shared vessel crossing](docs/screenshots/capillary_crossroads.png)
 ![Level 10 Metastatic Confluence at 1600 pixels with four source routes converging](docs/screenshots/metastatic_confluence.png)
 <!-- screenshots:end -->
@@ -75,7 +83,8 @@ To regenerate the editable-world components and run the complete fast source gat
 ```
 
 The build writes the GitHub Pages-ready site to `dist/`.
-`./capture_screenshots.sh` refreshes the Level 1 documentation views and
+`./capture_screenshots.sh` refreshes six current documentation views, including upgrade,
+signature-review, and map-learning states, and
 builds the separate all-world browser contact sheet under
 `test-results/visual-assets/`. The Level 3 and Level 10 campaign screenshots
 above come from the real-UI visual matrix.
@@ -91,9 +100,9 @@ metastasis point.
 - Place towers beside routes, not on them or on blocked biological landmarks.
 - Point to, tap, or Tab to a named route, landmark, or obstacle for an optional learning tooltip.
   Press Escape or select open tissue to return to treatment placement.
-- Select a placed treatment to upgrade its three linear tiers or sell it. The lower-right crest
-  shows Tier 1-4 with a distinct geometric glyph so upgrades are immediately readable.
-- Open the optional inspector for concise biology flavor about a selected treatment or cell.
+- Select a placed treatment to open its Command deck, upgrade its three linear tiers, or sell it.
+  The lower-right crest and treatment-specific material colors make Tier 1-4 immediately readable.
+- Select a cancer cell to see concise biology context without opening a separate generic panel.
 - Reaching the selected metastasis capacity ends the run.
 
 > Example: Antibody Therapy marks a blue Immune-Evasive cell. Its teal ring means the cell slows,

@@ -445,6 +445,39 @@ test("advanceLevel opens every campaign boundary with capped carryover and prese
   }
 });
 
+test("Cluster Corridor opens with a survivable fresh-field calibration wave", () => {
+  const level = getCampaignLevel(2);
+  const legalProbes = level.placementProbes.filter((probe) => probe.expectation === "legal");
+  assert.equal(legalProbes.length, 2);
+
+  let state = advanceLevel({
+    ...createGameState("challenge"),
+    status: "intermission",
+    level: 1,
+    wave: getLevelWaves(1).length,
+    tp: 0,
+  });
+  for (const probe of legalProbes) {
+    const placed = placeTower(state, "doctor", probe.position);
+    assert.notEqual(placed, state, `${probe.label} accepts an introductory Doctor treatment`);
+    state = placed;
+  }
+  state = startWave(state);
+
+  for (
+    let tick = 0;
+    tick < 200_000 && state.pendingSpawns.length + state.enemies.length > 0;
+    tick += 1
+  ) {
+    state = tickGame(state, 0.025);
+  }
+
+  assert.equal(state.pendingSpawns.length, 0);
+  assert.equal(state.enemies.length, 0);
+  assert.notEqual(state.status, "lost");
+  assert.ok(state.metastases < DIFFICULTIES.challenge.metastasisCapacity);
+});
+
 function createCappedTransitionSource(nextLevelId) {
   const previousLevelId = nextLevelId - 1;
   const economy = getCampaignLevel(nextLevelId).economy;

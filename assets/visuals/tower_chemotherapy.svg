@@ -22,7 +22,7 @@
     <g data-aoc-part="base">
       <circle class="tower-base" r="23" />
       <rect class="chemo-reservoir" x="-18" y="-18" width="21" height="33" rx="7" />
-      <path class="chemo-fluid" d="M-16-1Q-11-5-5-1T1-1V13H-16Z" />
+      <path class="chemo-fluid chemo-fluid-upgrade" d="M-16-1Q-11-5-5-1T1-1V13H-16Z" />
       <path class="chemo-canister-band" d="M-16-8H1" />
       <circle class="tower-tier-light" cx="-17" cy="16" r="3" />
     </g>
@@ -43,8 +43,8 @@
       <circle class="tower-base" r="24" />
       <rect class="chemo-reservoir" x="-20" y="-18" width="18" height="34" rx="7" />
       <rect class="chemo-reservoir chemo-reservoir-secondary" x="-6" y="-14" width="13" height="27" rx="6" />
-      <path class="chemo-fluid" d="M-18-1Q-13-5-8-1T-4-1V14H-18Z" />
-      <path class="chemo-fluid chemo-fluid-secondary" d="M-4 1Q0-2 5 1V11H-4Z" />
+      <path class="chemo-fluid chemo-fluid-upgrade" d="M-18-1Q-13-5-8-1T-4-1V14H-18Z" />
+      <path class="chemo-fluid chemo-fluid-secondary chemo-fluid-upgrade" d="M-4 1Q0-2 5 1V11H-4Z" />
       <circle class="tower-tier-light" cx="-18" cy="17" r="3" />
       <circle class="tower-tier-light" cx="-20" cy="9" r="2.5" />
     </g>
@@ -66,8 +66,8 @@
       <circle class="tower-base tower-base-elite" r="25" />
       <rect class="chemo-reservoir" x="-21" y="-19" width="18" height="36" rx="7" />
       <rect class="chemo-reservoir chemo-reservoir-secondary" x="-7" y="-16" width="14" height="31" rx="6" />
-      <path class="chemo-fluid" d="M-19-2Q-14-6-9-2T-5-2V15H-19Z" />
-      <path class="chemo-fluid chemo-fluid-secondary" d="M-5 0Q0-4 5 0V13H-5Z" />
+      <path class="chemo-fluid chemo-fluid-upgrade" d="M-19-2Q-14-6-9-2T-5-2V15H-19Z" />
+      <path class="chemo-fluid chemo-fluid-secondary chemo-fluid-upgrade" d="M-5 0Q0-4 5 0V13H-5Z" />
       <circle class="tower-tier-light" cx="-19" cy="18" r="3" />
       <circle class="tower-tier-light" cx="-21" cy="10" r="2.5" />
       <circle class="tower-tier-light" cx="-22" cy="2" r="2" />
